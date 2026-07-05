@@ -4,116 +4,11 @@ title: LA FINE DI MANCUSPIE
 author: MANCUSPIE
 date: 2026-07-06T00:00:00.000+02:00
 tags: testi
-excerpt: addio, è tutto finito. tutto
+excerpt: addio, è tutto finito.
 permalink: /testi/la-fine-di-mancuspie/
 ---
 <style>
-  .fine-mancuspie-page {
-    background:
-      radial-gradient(circle at 70% 18%, rgba(31, 28, 24, .10), transparent 28%),
-      linear-gradient(115deg, var(--paper), var(--paper2));
-  }
-
-  .fine-mancuspie-inner {
-    max-width: 980px;
-  }
-
-  .fine-mancuspie-figure-link {
-    display: block;
-    max-width: 620px;
-    margin: 34px 0 34px;
-    cursor: pointer;
-  }
-
-  .fine-mancuspie-figure {
-    position: relative;
-    min-height: 330px;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    background:
-      radial-gradient(ellipse at 50% 62%, rgba(31, 28, 24, .10), transparent 42%),
-      linear-gradient(135deg, rgba(255,255,255,.18), rgba(31,28,24,.04));
-    overflow: hidden;
-    transform-origin: 50% 80%;
-    transition: filter .2s ease;
-  }
-
-  .fine-mancuspie-figure::before,
-  .fine-mancuspie-figure::after {
-    content: "";
-    position: absolute;
-    pointer-events: none;
-  }
-
-  .fine-mancuspie-figure::before {
-    left: 19%;
-    bottom: 61px;
-    width: 58%;
-    height: 126px;
-    border: 2px solid rgba(31, 28, 24, .82);
-    border-radius: 48% 54% 42% 46%;
-    background:
-      radial-gradient(circle at 25% 22%, rgba(130, 50, 75, .40), transparent 9%),
-      radial-gradient(circle at 75% 22%, rgba(77, 60, 120, .36), transparent 9%),
-      rgba(246, 242, 232, .62);
-    box-shadow: 0 28px 60px rgba(31, 28, 24, .12);
-    transform: rotate(2deg);
-  }
-
-  .fine-mancuspie-figure::after {
-    left: 36%;
-    top: 45px;
-    width: 166px;
-    height: 140px;
-    border: 2px solid rgba(31, 28, 24, .82);
-    border-radius: 49% 51% 44% 48%;
-    background:
-      linear-gradient(80deg, transparent 0 45%, rgba(141, 57, 72, .55) 46% 49%, transparent 50%),
-      linear-gradient(100deg, transparent 0 53%, rgba(87, 68, 122, .50) 54% 57%, transparent 58%),
-      rgba(246, 242, 232, .78);
-    transform: rotate(-7deg);
-  }
-
-  .fine-mancuspie-limb {
-    position: absolute;
-    height: 4px;
-    background: rgba(31, 28, 24, .82);
-    transform-origin: left center;
-  }
-
-  .limb-a { width: 178px; left: 18%; bottom: 128px; transform: rotate(-20deg); }
-  .limb-b { width: 204px; left: 59%; bottom: 140px; transform: rotate(-13deg); }
-  .limb-c { width: 145px; left: 37%; bottom: 63px; transform: rotate(79deg); }
-  .limb-d { width: 155px; left: 51%; bottom: 68px; transform: rotate(51deg); }
-
-  .fine-mancuspie-eye {
-    position: absolute;
-    top: 105px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(31, 28, 24, .75);
-    z-index: 2;
-  }
-
-  .eye-a { left: calc(36% + 55px); }
-  .eye-b { left: calc(36% + 111px); }
-
-  .fine-mancuspie-figure-link:hover .fine-mancuspie-figure {
-    animation: fineOscilla .82s ease-in-out infinite alternate;
-    filter: contrast(1.03) saturate(.92);
-  }
-
-  @keyframes fineOscilla {
-    0% { transform: rotate(-1.6deg) translateY(0); }
-    100% { transform: rotate(1.9deg) translateY(-5px); }
-  }
-
-  .fine-mancuspie-body {
-    font-size: clamp(28px, 4vw, 54px);
-    line-height: 1.05;
-    max-width: 760px;
-  }
+  .fine-mancuspie-page{background:radial-gradient(circle at 74% 22%,rgba(198,55,130,.12),transparent 28%),radial-gradient(circle at 28% 72%,rgba(53,42,92,.10),transparent 34%),linear-gradient(115deg,var(--paper),var(--paper2))}.fine-mancuspie-inner{max-width:1040px}.hxh-link{display:block;max-width:760px;margin:36px 0 38px;cursor:pointer}.hxh-scene{position:relative;min-height:430px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:radial-gradient(ellipse at 50% 75%,rgba(31,28,24,.16),transparent 36%),repeating-linear-gradient(110deg,rgba(31,28,24,.035) 0 1px,transparent 1px 14px),linear-gradient(135deg,rgba(255,255,255,.24),rgba(31,28,24,.05));overflow:hidden;transform-origin:50% 78%;transition:filter .2s ease}.hxh-scene::before{content:"HUNTER × HUNTER";position:absolute;right:22px;bottom:18px;font:10px Arial,sans-serif;letter-spacing:.22em;color:rgba(31,28,24,.35)}.hxh-shadow{position:absolute;left:15%;bottom:58px;width:68%;height:56px;border-radius:50%;background:rgba(31,28,24,.16);filter:blur(8px)}.hxh-body{position:absolute;left:23%;bottom:103px;width:390px;height:142px;border:2px solid rgba(31,28,24,.86);border-radius:52% 46% 44% 54%;background:linear-gradient(102deg,transparent 0 18%,rgba(199,58,137,.55) 19% 23%,transparent 24% 44%,rgba(80,58,131,.48) 45% 50%,transparent 51%),rgba(244,238,226,.75);box-shadow:0 38px 72px rgba(31,28,24,.16);transform:rotate(3deg)}.hxh-neck{position:absolute;left:49%;bottom:229px;width:44px;height:58px;border-left:2px solid rgba(31,28,24,.78);border-right:2px solid rgba(31,28,24,.78);background:rgba(244,238,226,.75);transform:rotate(-8deg)}.hxh-head{position:absolute;left:42%;bottom:266px;width:162px;height:150px;border:2px solid rgba(31,28,24,.88);border-radius:48% 52% 44% 48%;background:linear-gradient(80deg,transparent 0 42%,rgba(199,58,137,.38) 43% 48%,transparent 49%),linear-gradient(102deg,transparent 0 56%,rgba(80,58,131,.32) 57% 62%,transparent 63%),rgba(247,242,233,.93);transform:rotate(-13deg);z-index:4}.hxh-hair{position:absolute;left:41%;bottom:386px;width:178px;height:92px;z-index:5}.hxh-hair span{position:absolute;bottom:0;width:32px;height:92px;background:linear-gradient(#cc3f91,#7d315f);border:2px solid rgba(31,28,24,.76);border-radius:60% 60% 22% 22%;transform-origin:bottom center}.hxh-hair span:nth-child(1){left:8px;transform:rotate(-34deg);height:76px}.hxh-hair span:nth-child(2){left:35px;transform:rotate(-18deg);height:96px}.hxh-hair span:nth-child(3){left:70px;transform:rotate(0);height:108px}.hxh-hair span:nth-child(4){left:106px;transform:rotate(17deg);height:96px}.hxh-hair span:nth-child(5){left:134px;transform:rotate(32deg);height:78px}.hxh-eye{position:absolute;bottom:331px;width:18px;height:2px;background:rgba(31,28,24,.82);z-index:6}.eye-left{left:calc(42% + 45px);transform:rotate(20deg)}.eye-right{left:calc(42% + 99px);transform:rotate(-16deg)}.hxh-star{position:absolute;left:calc(42% + 31px);bottom:303px;width:26px;height:26px;z-index:7;background:#c73a89;clip-path:polygon(50% 0%,61% 35%,98% 35%,67% 56%,79% 91%,50% 68%,21% 91%,33% 56%,2% 35%,39% 35%);opacity:.82}.hxh-drop{position:absolute;left:calc(42% + 111px);bottom:300px;width:19px;height:29px;z-index:7;background:#503a83;border-radius:50% 50% 50% 0;transform:rotate(-36deg);opacity:.82}.hxh-smile{position:absolute;left:calc(42% + 61px);bottom:292px;width:58px;height:22px;border-bottom:2px solid rgba(31,28,24,.72);border-radius:0 0 60px 60px;z-index:6;transform:rotate(-5deg)}.hxh-limb{position:absolute;height:5px;background:rgba(31,28,24,.82);transform-origin:left center}.limb-a{width:210px;left:15%;bottom:196px;transform:rotate(-21deg)}.limb-b{width:226px;left:63%;bottom:203px;transform:rotate(-11deg)}.limb-c{width:164px;left:35%;bottom:105px;transform:rotate(80deg)}.limb-d{width:176px;left:51%;bottom:111px;transform:rotate(54deg)}.hxh-card{position:absolute;width:43px;height:60px;border:1.5px solid rgba(31,28,24,.70);background:rgba(246,242,232,.72);border-radius:3px;transform:rotate(var(--r));opacity:.78}.card-a{left:16%;top:85px;--r:-17deg}.card-b{right:20%;top:148px;--r:12deg}.card-c{right:12%;bottom:78px;--r:-9deg}.hxh-card::after{content:"♦";position:absolute;inset:14px 0 0;text-align:center;color:#a33b5f;font-size:28px}.hxh-link:hover .hxh-scene{animation:hxhOscilla .78s ease-in-out infinite alternate;filter:contrast(1.04) saturate(1.08)}@keyframes hxhOscilla{0%{transform:rotate(-1.8deg) translateY(0)}100%{transform:rotate(2.1deg) translateY(-6px)}}.fine-mancuspie-body{font-size:clamp(28px,4vw,54px);line-height:1.05;max-width:760px}
 </style>
 
 <section class="single-page panel fine-mancuspie-page">
@@ -122,14 +17,9 @@ permalink: /testi/la-fine-di-mancuspie/
     <h1>LA FINE DI MANCUSPIE</h1>
     <p class="meta">MANCUSPIE</p>
 
-    <a class="fine-mancuspie-figure-link" href="https://www.youtube.com/results?search_query=Coyote+Peterson" target="_blank" rel="noopener" aria-label="Apri un video di Coyote Peterson">
-      <div class="fine-mancuspie-figure" role="img" aria-label="Hisoka morto, immagine stilizzata">
-        <span class="fine-mancuspie-limb limb-a"></span>
-        <span class="fine-mancuspie-limb limb-b"></span>
-        <span class="fine-mancuspie-limb limb-c"></span>
-        <span class="fine-mancuspie-limb limb-d"></span>
-        <span class="fine-mancuspie-eye eye-a"></span>
-        <span class="fine-mancuspie-eye eye-b"></span>
+    <a class="hxh-link" href="https://www.youtube.com/@BraveWilderness/videos" target="_blank" rel="noopener" aria-label="Apri un video di Coyote Peterson">
+      <div class="hxh-scene" role="img" aria-label="Personaggio HxH dai capelli rosa disteso, con stella e goccia sul volto">
+        <span class="hxh-shadow"></span><span class="hxh-card card-a"></span><span class="hxh-card card-b"></span><span class="hxh-card card-c"></span><span class="hxh-limb limb-a"></span><span class="hxh-limb limb-b"></span><span class="hxh-limb limb-c"></span><span class="hxh-limb limb-d"></span><span class="hxh-body"></span><span class="hxh-neck"></span><span class="hxh-head"></span><span class="hxh-hair"><span></span><span></span><span></span><span></span><span></span></span><span class="hxh-eye eye-left"></span><span class="hxh-eye eye-right"></span><span class="hxh-star"></span><span class="hxh-drop"></span><span class="hxh-smile"></span>
       </div>
     </a>
 
