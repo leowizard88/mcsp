@@ -1,0 +1,13 @@
+---
+layout: base.njk
+---
+<article class="single-page panel">
+  <div class="single-inner">
+    {% if tags %}<p class="eyebrow">{{ tags }}</p>{% endif %}
+    <h1>{{ title }}</h1>
+    {% if author %}<p class="meta">di {{ author }}</p>{% endif %}
+    {% if deadline %}<p class="meta">Scadenza: {{ deadline }}</p>{% endif %}
+    <div class="single-body">{{ content | safe }}</div>
+    <a class="text-link" href="/">← Torna alla home</a>
+  </div>
+</article>

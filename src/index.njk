@@ -1,0 +1,99 @@
+---
+layout: base.njk
+title: MANCUSPIE
+---
+<section id="home" class="panel hero-panel">
+  <div class="bg-layer bg-daisies"></div>
+  <div class="bg-layer bg-mechanical"></div>
+  <div class="bg-layer bg-score"></div>
+  <div class="bg-layer bg-figure"></div>
+  <div class="hero-copy">
+    <p class="eyebrow">{{ home.hero_note }}</p>
+    <h1>MANCUSPIE</h1>
+    <div class="hairline"></div>
+    <h2>{{ site.subtitle }}</h2>
+    <p>{{ site.intro }}</p>
+  </div>
+</section>
+
+<section id="call" class="panel content-panel call-panel">
+  <div class="bg-layer bg-fog"></div>
+  <article class="section-block wide">
+    <p class="section-kicker">01</p>
+    <h2>{{ home.call_title }}</h2>
+    <p>{{ home.call_text }}</p>
+    <p class="meta">Scadenza: {{ home.call_deadline }}</p>
+    {% for call in collections.call | reverse %}
+      {% if loop.index0 < 1 %}<a class="text-link" href="{{ call.url }}">Leggi il bando →</a>{% endif %}
+    {% endfor %}
+  </article>
+</section>
+
+<section id="testi" class="panel content-panel testi-panel">
+  <div class="bg-layer bg-tree"></div>
+  <article class="section-block list-block">
+    <p class="section-kicker">02</p>
+    <h2>Testi</h2>
+    <div class="item-list">
+      {% for post in collections.testi | reverse %}
+      {% if loop.index0 < 4 %}
+      <a class="item" href="{{ post.url }}">
+        <span>{{ post.data.title }}</span>
+        <em>{{ post.data.author }}</em>
+      </a>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </article>
+</section>
+
+<section id="note" class="panel content-panel note-panel">
+  <div class="bg-layer bg-sigils"></div>
+  <article class="section-block list-block offset-right">
+    <p class="section-kicker">03</p>
+    <h2>Note</h2>
+    <div class="item-list">
+      {% for post in collections.note | reverse %}
+      {% if loop.index0 < 4 %}
+      <a class="item" href="{{ post.url }}">
+        <span>{{ post.data.title }}</span>
+        <em>{{ post.data.author }}</em>
+      </a>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </article>
+</section>
+
+<section id="noi" class="panel content-panel noi-panel">
+  <div class="bg-layer bg-archive"></div>
+  <article class="section-block wide">
+    <p class="section-kicker">04</p>
+    <h2>Noi</h2>
+    <p>{{ home.noi_text }}</p>
+    <a class="text-link" href="/noi/">Chi siamo →</a>
+  </article>
+</section>
+
+<section id="progetti" class="panel content-panel projects-panel">
+  <div class="bg-layer bg-spine"></div>
+  <article class="section-block list-block">
+    <p class="section-kicker">05</p>
+    <h2>Altri progetti</h2>
+    <div class="item-list">
+      {% for project in collections.progetti | reverse %}
+      {% if loop.index0 < 4 %}
+      <a class="item" href="{{ project.url }}">
+        <span>{{ project.data.title }}</span>
+        <em>{{ project.data.excerpt }}</em>
+      </a>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </article>
+  <footer class="footer">
+    <span>© MANCUSPIE</span>
+    <span>{{ site.email }}</span>
+    <span>{{ home.newsletter_text }}</span>
+  </footer>
+</section>
