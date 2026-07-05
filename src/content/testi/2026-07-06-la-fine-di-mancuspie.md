@@ -4,7 +4,7 @@ title: LA FINE DI MANCUSPIE
 author: MANCUSPIE
 date: 2026-07-06T00:00:00.000+02:00
 tags: testi
-excerpt: addio, è tutto finito.
+excerpt: addio, è tutto finito. tutto
 permalink: /testi/la-fine-di-mancuspie/
 ---
 <style>
