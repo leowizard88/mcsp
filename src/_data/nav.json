@@ -1,8 +1,0 @@
-[
-  { "label": "Home", "url": "/#home" },
-  { "label": "Call", "url": "/#call" },
-  { "label": "Testi", "url": "/#testi" },
-  { "label": "Note", "url": "/#note" },
-  { "label": "Noi", "url": "/#noi" },
-  { "label": "Progetti", "url": "/#progetti" }
-]
