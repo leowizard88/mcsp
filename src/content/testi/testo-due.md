@@ -1,8 +1,8 @@
 ---
-title: "Inventario delle ombre"
-author: "G. Ferri"
+title: ??????
+author: X
 date: 2026-07-03
 tags: testi
-excerpt: "Appunti narrativi intorno a ciò che resta non nominato."
+excerpt: follia nell'eta futuristica
 ---
 Testo dimostrativo. Sostituiscilo dal pannello admin.
