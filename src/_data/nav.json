@@ -2,7 +2,8 @@
   { "label": "Home", "url": "/#home" },
   { "label": "Call", "url": "/#call" },
   { "label": "Testi", "url": "/#testi" },
-  { "label": "Note", "url": "/#note" },
+  { "label": "Manifesti", "url": "/#note" },
+  { "label": "Latest drama", "url": "/ultimi-movimenti/" },
   { "label": "Noi", "url": "/#noi" },
   { "label": "Progetti", "url": "/#progetti" }
 ]
