@@ -18,6 +18,8 @@
     });
   };
 
+  const safeAttr = value => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+
   const setNames = () => {
     const name = state.user?.username || 'Anonimo';
     localStorage.setItem(nameKey, name);
@@ -41,8 +43,9 @@
   const style = document.createElement('style');
   style.textContent = `
     .mc-account-wrap{position:fixed;right:24px;top:16px;z-index:9999;display:grid;justify-items:end;gap:7px}
-    .mc-account-button{border:0;background:transparent;color:#050505;padding:0;cursor:pointer;filter:drop-shadow(0 4px 0 rgba(0,0,0,.20)) drop-shadow(0 0 18px rgba(255,248,214,.78)) drop-shadow(0 0 34px rgba(234,215,179,.52))}
-    .mc-account-button img{display:block;width:128px;height:128px;object-fit:contain;mix-blend-mode:screen;filter:brightness(1.22) contrast(1.08) saturate(1.05)}
+    .mc-account-button{border:0;background:transparent;color:#050505;padding:0;cursor:pointer;display:grid;justify-items:end;gap:7px;filter:drop-shadow(0 4px 0 rgba(0,0,0,.20)) drop-shadow(0 0 18px rgba(255,248,214,.78)) drop-shadow(0 0 34px rgba(234,215,179,.52))}
+    .mc-account-icon{display:block;width:128px;height:128px;object-fit:contain;mix-blend-mode:screen;filter:brightness(1.22) contrast(1.08) saturate(1.05)}
+    .mc-account-user-avatar{display:block;width:72px;height:72px;object-fit:cover;border:1px solid rgba(234,215,179,.78);background:rgba(5,0,0,.38);box-shadow:5px 5px 0 rgba(139,0,0,.78);filter:brightness(1.08) contrast(1.05)}
     .mc-account-name{display:block;max-width:190px;border:1px solid rgba(5,5,5,.42);background:rgba(234,215,179,.74);padding:10px 12px;font:300 13px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.13em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#050505}
     .mc-logout-button{display:none;border:1px solid rgba(255,210,190,.48);background:#9b0000;color:#fbfaf5;padding:8px 10px;font:700 10px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;box-shadow:3px 3px 0 rgba(5,5,5,.80)}
     .mc-logout-button.is-visible{display:block}
@@ -57,7 +60,7 @@
     .mc-account-card form{position:relative;display:grid;gap:10px}.mc-account-card input{width:100%;box-sizing:border-box;border:0;border-bottom:1px solid rgba(5,5,5,.58);background:rgba(255,255,255,.18);color:#050505;padding:14px 12px;font:300 18px/1.15 var(--font-serif,Georgia,serif);outline:none}.mc-account-card input:focus{background:rgba(255,255,255,.32);border-bottom-color:#050505}
     .mc-account-card form button{justify-self:start;margin-top:6px;border:1px solid #050505;background:#050505;color:#ead7b3;padding:13px 16px;font:300 11px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.18em;text-transform:uppercase;cursor:pointer}.mc-account-card form button:hover,.mc-account-close:hover{transform:translateY(-1px)}
     .mc-account-error{position:relative;min-height:18px;margin:12px 0 0;color:#6c0000;font-size:13px;letter-spacing:.04em}.mc-account-close{position:absolute;right:14px;top:12px;z-index:3;background:transparent;color:#050505;border:0;padding:0;font:300 34px/.8 var(--font-serif,Georgia,serif);cursor:pointer}
-    @media(max-width:760px){.mc-account-wrap{right:8px;top:8px;gap:5px}.mc-account-button img{width:86px;height:86px}.mc-account-name{max-width:126px;padding:8px 9px;font-size:10px}.mc-logout-button{padding:7px 8px;font-size:9px}.mc-account-card{box-shadow:8px 8px 0 rgba(5,5,5,.82)}}
+    @media(max-width:760px){.mc-account-wrap{right:8px;top:8px;gap:5px}.mc-account-icon{width:86px;height:86px}.mc-account-user-avatar{width:54px;height:54px}.mc-account-name{max-width:126px;padding:8px 9px;font-size:10px}.mc-logout-button{padding:7px 8px;font-size:9px}.mc-account-card{box-shadow:8px 8px 0 rgba(5,5,5,.82)}}
   `;
   document.head.appendChild(style);
   const wrap = document.createElement('div');
@@ -78,7 +81,12 @@
   document.body.appendChild(modal);
   let mode = 'signup';
   const render = () => {
-    button.innerHTML = state.user?.username ? `<span class="mc-account-name">${state.user.username.replace(/[&<>"']/g, '')}</span>` : `<img src="/assets/img/ICON.png" alt="Account">`;
+    if (state.user?.username) {
+      const avatar = state.user.avatar ? `<img class="mc-account-user-avatar" src="${safeAttr(state.user.avatar)}" alt="${safeAttr(state.user.username)}">` : '';
+      button.innerHTML = `${avatar}<span class="mc-account-name">${safeAttr(state.user.username)}</span>`;
+    } else {
+      button.innerHTML = `<img class="mc-account-icon" src="/assets/img/ICON.png" alt="Account">`;
+    }
     logoutButton.classList.toggle('is-visible', !!state.user);
   };
   const logout = async () => {
