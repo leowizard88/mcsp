@@ -4,8 +4,8 @@ title: Profilo | MANCUSPIE
 permalink: /profilo/
 ---
 <section class="profile-page panel">
-  <div class="profile-card" data-profile-root>
-    <p class="eyebrow">Account</p>
+  <div class="profile-shell" data-profile-root>
+    <p class="profile-kicker">Account</p>
     <h1>Profilo</h1>
     <p class="profile-status">Caricamento profilo...</p>
   </div>
@@ -14,140 +14,177 @@ permalink: /profilo/
 <style>
   body:has(.profile-page),
   body:has(.profile-page) .site-main {
-    background: #8b0000 !important;
+    background: #6f0000 !important;
   }
 
   .profile-page {
     min-height: 100vh;
-    color: #ead7b3;
-    padding: clamp(34px, 6vw, 86px);
+    color: #f0dcc0;
+    padding: clamp(28px, 5.8vw, 78px);
     display: block !important;
     background:
-      radial-gradient(circle at 14% 18%, rgba(234,215,179,.24), transparent 24%),
-      radial-gradient(circle at 84% 74%, rgba(5,0,0,.52), transparent 38%),
-      linear-gradient(118deg, #a40000 0%, #8b0000 38%, #4a0000 74%, #130000 100%) !important;
+      radial-gradient(circle at 12% 16%, rgba(240, 220, 192, .25), transparent 22%),
+      radial-gradient(circle at 82% 78%, rgba(20, 0, 0, .62), transparent 42%),
+      linear-gradient(132deg, #b00000 0%, #860000 38%, #4b0000 72%, #120000 100%) !important;
     overflow: hidden;
+    position: relative;
   }
 
-  .profile-page::after {
+  .profile-page::before {
     content: "";
     position: fixed;
     inset: 0;
     pointer-events: none;
     background:
-      repeating-linear-gradient(90deg, transparent 0 34px, rgba(234,215,179,.07) 34px 35px, transparent 35px 96px),
-      repeating-linear-gradient(0deg, transparent 0 44px, rgba(234,215,179,.04) 44px 45px, transparent 45px 112px);
+      repeating-linear-gradient(90deg, transparent 0 46px, rgba(240,220,192,.055) 46px 47px, transparent 47px 118px),
+      repeating-linear-gradient(0deg, transparent 0 58px, rgba(240,220,192,.035) 58px 59px, transparent 59px 140px);
     opacity: .72;
   }
 
-  .profile-card {
+  .profile-shell {
     position: relative;
     z-index: 2;
-    max-width: 980px;
+    width: min(1080px, 100%);
     margin: 0 auto;
-    color: #ead7b3;
   }
 
-  .profile-card .eyebrow {
-    color: rgba(234,215,179,.78);
-    letter-spacing: .18em;
-  }
-
-  .profile-card h1 {
-    margin: 0 0 clamp(24px, 4vw, 44px);
-    font-family: var(--font-serif, Georgia, serif);
-    font-size: clamp(84px, 14vw, 184px);
-    line-height: .74;
-    font-weight: 300;
-    letter-spacing: -.055em;
+  .profile-kicker,
+  .profile-card-kicker {
+    margin: 0 0 10px;
+    color: rgba(240,220,192,.72);
+    font: 300 11px/1 var(--font-sans, system-ui, sans-serif);
+    letter-spacing: .22em;
     text-transform: uppercase;
-    color: #ead7b3;
-    text-shadow: 0 0 26px rgba(234,215,179,.24);
   }
 
-  .profile-box {
+  .profile-shell > h1 {
+    margin: 0 0 clamp(24px, 4vw, 44px);
+    color: #f0dcc0;
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: clamp(82px, 14.5vw, 188px);
+    line-height: .72;
+    font-weight: 300;
+    letter-spacing: -.06em;
+    text-transform: uppercase;
+    text-shadow: 0 0 32px rgba(240,220,192,.22);
+  }
+
+  .profile-card {
     display: grid;
-    gap: 18px;
-    max-width: 820px;
+    grid-template-columns: minmax(170px, 240px) minmax(0, 1fr);
+    gap: clamp(22px, 4vw, 46px);
+    align-items: start;
+    max-width: 980px;
+    padding: clamp(22px, 4.2vw, 44px);
     background:
-      linear-gradient(90deg, rgba(234,215,179,.13), rgba(234,215,179,.05)),
-      linear-gradient(180deg, rgba(5,0,0,.18), rgba(5,0,0,.34));
-    padding: clamp(24px, 4vw, 38px);
+      linear-gradient(110deg, rgba(255,236,204,.13), rgba(255,236,204,.035)),
+      rgba(40, 0, 0, .28);
     border: 0 !important;
     box-shadow: none !important;
+    backdrop-filter: blur(1px);
   }
 
-  .profile-public-box { max-width: 740px; }
+  .profile-left {
+    display: grid;
+    gap: 14px;
+    align-content: start;
+  }
 
-  .profile-username {
-    font: 300 clamp(44px, 6.8vw, 88px)/.9 var(--font-serif, Georgia, serif);
-    margin: 0;
-    letter-spacing: -.05em;
-    color: #ead7b3;
+  .profile-avatar {
+    display: block;
+    width: min(220px, 100%);
+    aspect-ratio: 1 / 1;
+    height: auto;
+    object-fit: cover;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: rgba(20,0,0,.22) !important;
+  }
+
+  .profile-avatar[src=""] {
+    display: none;
   }
 
   .profile-role {
     justify-self: start;
-    margin: -8px 0 0;
-    padding: 0;
+    margin: 0;
+    padding: 8px 10px;
+    color: #2a0000;
+    background: rgba(240,220,192,.88);
     border: 0 !important;
-    font: 300 11px/1 var(--font-sans, system-ui, sans-serif);
+    font: 700 10px/1 var(--font-sans, system-ui, sans-serif);
     letter-spacing: .18em;
     text-transform: uppercase;
-    color: rgba(234,215,179,.72);
   }
 
-  .profile-avatar {
-    width: 158px;
-    height: 158px;
-    border: 0 !important;
-    object-fit: cover;
-    background: transparent !important;
-    box-shadow: none !important;
+  .profile-right {
+    min-width: 0;
+    display: grid;
+    gap: 18px;
   }
 
-  .profile-avatar[src=""] { display: none; }
+  .profile-username {
+    margin: 0;
+    color: #f0dcc0;
+    font: 300 clamp(48px, 7.8vw, 104px)/.86 var(--font-serif, Georgia, serif);
+    letter-spacing: -.055em;
+    word-break: break-word;
+  }
 
   .profile-bio-public {
     margin: 0;
-    max-width: 690px;
+    max-width: 720px;
     white-space: pre-wrap;
-    font: 300 clamp(22px,2.4vw,32px)/1.22 var(--font-serif, Georgia, serif);
-    color: rgba(234,215,179,.9);
+    color: rgba(240,220,192,.9);
+    font: 300 clamp(22px, 2.4vw, 34px)/1.2 var(--font-serif, Georgia, serif);
   }
 
-  .profile-card label {
+  .profile-form {
+    display: contents;
+  }
+
+  .profile-fields {
     display: grid;
-    gap: 8px;
+    gap: 14px;
+  }
+
+  .profile-field {
+    display: grid;
+    gap: 7px;
+    color: rgba(240,220,192,.82);
     font: 300 11px/1 var(--font-sans, system-ui, sans-serif);
     letter-spacing: .16em;
     text-transform: uppercase;
-    color: rgba(234,215,179,.84);
   }
 
-  .profile-card textarea,
-  .profile-card input[type="text"],
-  .profile-card input[type="file"] {
+  .profile-field textarea,
+  .profile-field input[type="text"],
+  .profile-field input[type="file"] {
     width: 100%;
     box-sizing: border-box;
     border: 0 !important;
-    background: rgba(5,0,0,.36);
-    color: #ead7b3;
+    background: rgba(30, 0, 0, .50);
+    color: #f0dcc0;
     padding: 14px;
     font: 16px/1.35 var(--font-sans, system-ui, sans-serif);
     outline: none;
     box-shadow: none !important;
   }
 
-  .profile-card textarea:focus,
-  .profile-card input[type="text"]:focus {
-    background: rgba(5,0,0,.58);
+  .profile-field textarea:focus,
+  .profile-field input[type="text"]:focus {
+    background: rgba(20,0,0,.68);
   }
 
-  .profile-card textarea::placeholder,
-  .profile-card input::placeholder { color: rgba(234,215,179,.48); }
+  .profile-field textarea::placeholder,
+  .profile-field input::placeholder {
+    color: rgba(240,220,192,.42);
+  }
 
-  .profile-card textarea { min-height: 160px; resize: vertical; }
+  .profile-field textarea {
+    min-height: 178px;
+    resize: vertical;
+  }
 
   .profile-actions {
     display: flex;
@@ -160,10 +197,10 @@ permalink: /profilo/
   .profile-actions a,
   .profile-login-link {
     border: 0 !important;
-    background: #ead7b3;
-    color: #250000;
+    background: #f0dcc0;
+    color: #260000;
     padding: 12px 14px;
-    font: 300 11px/1 var(--font-sans, system-ui, sans-serif);
+    font: 700 10px/1 var(--font-sans, system-ui, sans-serif);
     letter-spacing: .15em;
     text-transform: uppercase;
     cursor: pointer;
@@ -173,27 +210,28 @@ permalink: /profilo/
   }
 
   .profile-actions button[data-logout] {
-    background: #2b0000;
-    color: #fbfaf5;
+    background: rgba(20,0,0,.88);
+    color: #f0dcc0;
   }
 
   .profile-status {
     min-height: 18px;
-    color: #ffb19c;
+    margin: 0;
+    color: #ffd0bd;
     font: 15px/1.35 var(--font-sans, system-ui, sans-serif);
   }
 
   .sec-box {
-    border: 0 !important;
-    padding-top: 8px;
     display: grid;
-    gap: 10px;
+    gap: 9px;
+    padding: 14px 0 0;
+    border: 0 !important;
   }
 
   .sec-box p {
     margin: 0;
     max-width: 620px;
-    color: rgba(234,215,179,.72);
+    color: rgba(240,220,192,.68);
     font: 14px/1.4 var(--font-sans, system-ui, sans-serif);
   }
 
@@ -205,14 +243,15 @@ permalink: /profilo/
   }
 
   .writer-link {
-    background: #fbfaf5 !important;
+    background: #fff2d9 !important;
     color: #250000 !important;
   }
 
   @media(max-width:760px) {
-    .profile-page { padding: 34px 20px; }
-    .profile-card h1 { font-size: clamp(66px, 20vw, 104px); }
-    .profile-box { padding: 21px; box-shadow: none !important; }
+    .profile-page { padding: 34px 18px; }
+    .profile-shell > h1 { font-size: clamp(66px, 20vw, 104px); }
+    .profile-card { grid-template-columns: 1fr; padding: 22px; }
+    .profile-avatar { width: 138px; }
     .sec-row { grid-template-columns: 1fr; }
   }
 </style>
@@ -226,43 +265,60 @@ permalink: /profilo/
   const headers = () => token() ? { authorization: `Bearer ${token()}` } : {};
   const viewedUsername = new URLSearchParams(location.search).get('u') || '';
   const fileToDataUrl = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(file); });
-
   const roleLabel = user => user?.isRedattore ? 'redattore' : 'user';
 
   const loggedOut = message => {
-    root.innerHTML = `<p class="eyebrow">Account</p><h1>Profilo</h1><p class="profile-status">${esc(message || 'Non risulti loggato su questo browser.')}</p><a class="profile-login-link" href="/">Torna alla home e accedi dall’icona</a>`;
+    root.innerHTML = `
+      <p class="profile-kicker">Account</p>
+      <h1>Profilo</h1>
+      <div class="profile-card">
+        <div class="profile-right">
+          <p class="profile-status">${esc(message || 'Non risulti loggato su questo browser.')}</p>
+          <div class="profile-actions"><a class="profile-login-link" href="/">Torna alla home e accedi dall’icona</a></div>
+        </div>
+      </div>`;
   };
 
   const renderPublicUser = user => {
     root.innerHTML = `
-      <p class="eyebrow">Profilo pubblico</p>
+      <p class="profile-kicker">Profilo pubblico</p>
       <h1>Profilo</h1>
-      <div class="profile-box profile-public-box">
-        <p class="profile-username">${esc(user.username)}</p>
-        <p class="profile-role">${esc(roleLabel(user))}</p>
-        <img class="profile-avatar" src="${esc(user.avatar || '')}" alt="Foto profilo">
-        <p class="profile-bio-public">${esc(user.bio || 'Nessuna descrizione pubblicata.')}</p>
-        <div class="profile-actions"><a href="/">Home</a></div>
+      <div class="profile-card profile-public-card">
+        <div class="profile-left">
+          <img class="profile-avatar" src="${esc(user.avatar || '')}" alt="Foto profilo">
+          <p class="profile-role">${esc(roleLabel(user))}</p>
+        </div>
+        <div class="profile-right">
+          <p class="profile-username">${esc(user.username)}</p>
+          <p class="profile-bio-public">${esc(user.bio || 'Nessuna descrizione pubblicata.')}</p>
+          <div class="profile-actions"><a href="/">Home</a></div>
+        </div>
       </div>`;
   };
 
   const renderOwnUser = user => {
     const redattoreTools = user.isRedattore
       ? `<div class="profile-actions"><a class="writer-link" href="/scrivi/">Scrivi un articolo</a></div>`
-      : `<div class="sec-box"><label>Codice SEC <div class="sec-row"><input data-sec-code type="text" maxlength="120" placeholder="codice monouso"><button type="button" data-sec-submit>Invia codice</button></div></label><p>Il codice SEC monouso abilita il permesso redattore.</p></div>`;
+      : `<div class="sec-box"><label class="profile-field">Codice SEC <div class="sec-row"><input data-sec-code type="text" maxlength="120" placeholder="codice monouso"><button type="button" data-sec-submit>Invia codice</button></div></label><p>Il codice SEC monouso abilita il permesso redattore.</p></div>`;
 
     root.innerHTML = `
-      <p class="eyebrow">Account</p>
+      <p class="profile-kicker">Account</p>
       <h1>Profilo</h1>
-      <form class="profile-box" data-profile-form>
-        <p class="profile-username">${esc(user.username)}</p>
-        <p class="profile-role">${esc(roleLabel(user))}</p>
-        <img class="profile-avatar" data-profile-avatar src="${esc(user.avatar || '')}" alt="Foto profilo">
-        <label>Foto profilo <input data-avatar-input name="avatar" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label>
-        <label>Descrizione <textarea data-bio-input name="bio" maxlength="900" placeholder="scrivi una piccola bacheca personale">${esc(user.bio || '')}</textarea></label>
-        ${redattoreTools}
-        <p class="profile-status" data-profile-status></p>
-        <div class="profile-actions"><button type="submit">Salva</button><button type="button" data-logout>Logout</button><a href="/">Home</a></div>
+      <form class="profile-card profile-form" data-profile-form>
+        <div class="profile-left">
+          <img class="profile-avatar" data-profile-avatar src="${esc(user.avatar || '')}" alt="Foto profilo">
+          <label class="profile-field">Foto profilo <input data-avatar-input name="avatar" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label>
+          <p class="profile-role">${esc(roleLabel(user))}</p>
+        </div>
+        <div class="profile-right">
+          <p class="profile-username">${esc(user.username)}</p>
+          <div class="profile-fields">
+            <label class="profile-field">Descrizione <textarea data-bio-input name="bio" maxlength="900" placeholder="scrivi una piccola bacheca personale">${esc(user.bio || '')}</textarea></label>
+            ${redattoreTools}
+          </div>
+          <p class="profile-status" data-profile-status></p>
+          <div class="profile-actions"><button type="submit">Salva</button><button type="button" data-logout>Logout</button><a href="/">Home</a></div>
+        </div>
       </form>`;
 
     const form = root.querySelector('[data-profile-form]');
@@ -272,7 +328,12 @@ permalink: /profilo/
     const avatarPreview = root.querySelector('[data-profile-avatar]');
     let avatar = user.avatar || '';
 
-    avatarInput.addEventListener('change', async () => { if (!avatarInput.files || !avatarInput.files[0]) return; avatar = await fileToDataUrl(avatarInput.files[0]); avatarPreview.src = avatar; avatarPreview.style.display = 'block'; });
+    avatarInput.addEventListener('change', async () => {
+      if (!avatarInput.files || !avatarInput.files[0]) return;
+      avatar = await fileToDataUrl(avatarInput.files[0]);
+      avatarPreview.src = avatar;
+      avatarPreview.style.display = 'block';
+    });
 
     form.addEventListener('submit', async event => {
       event.preventDefault();
@@ -294,7 +355,12 @@ permalink: /profilo/
       setTimeout(() => renderOwnUser(result.user), 350);
     });
 
-    root.querySelector('[data-logout]').addEventListener('click', async () => { await fetch('/api/auth', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify({ action: 'logout' }) }); localStorage.removeItem(tokenKey); localStorage.setItem('mancuspiePublicName', 'Anonimo'); location.href = '/'; });
+    root.querySelector('[data-logout]').addEventListener('click', async () => {
+      await fetch('/api/auth', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify({ action: 'logout' }) });
+      localStorage.removeItem(tokenKey);
+      localStorage.setItem('mancuspiePublicName', 'Anonimo');
+      location.href = '/';
+    });
   };
 
   const load = async () => {
@@ -302,11 +368,16 @@ permalink: /profilo/
     if (!viewedUsername && !token()) { loggedOut('Qui non c’è nessuna sessione salvata. Rifai il login dalla home.'); return; }
     const response = await fetch(url, { headers: headers(), cache: 'no-store' });
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) { root.innerHTML = `<p class="eyebrow">Account</p><h1>Profilo</h1><p class="profile-status">${esc(data.error || 'Profilo non trovato.')}</p><a class="profile-login-link" href="/">Home</a>`; return; }
+    if (!response.ok) {
+      root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">${esc(data.error || 'Profilo non trovato.')}</p><div class="profile-actions"><a href="/">Home</a></div></div></div>`;
+      return;
+    }
     if (!data.user) { loggedOut('Sessione assente o scaduta. Rifai il login dalla home.'); return; }
     if (data.user.canEdit) renderOwnUser(data.user); else renderPublicUser(data.user);
   };
 
-  load().catch(error => { root.innerHTML = `<p class="eyebrow">Account</p><h1>Profilo</h1><p class="profile-status">Profilo non disponibile: ${esc(error.message)}</p><a class="profile-login-link" href="/">Home</a>`; });
+  load().catch(error => {
+    root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">Profilo non disponibile: ${esc(error.message)}</p><div class="profile-actions"><a href="/">Home</a></div></div></div>`;
+  });
 })();
 </script>
