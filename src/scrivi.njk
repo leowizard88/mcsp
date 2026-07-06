@@ -4,38 +4,155 @@ title: Scrivi | MANCUSPIE
 permalink: /scrivi/
 ---
 <section class="write-page panel">
-  <div class="write-card" data-write-root>
-    <p class="eyebrow">Redazione</p>
+  <div class="write-root" data-write-root>
+    <p class="write-kicker">Redazione</p>
     <h1>Scrivi</h1>
     <p class="write-status">Verifica permessi...</p>
   </div>
 </section>
 
 <style>
-  body:has(.write-page), body:has(.write-page) .site-main { background:#050000!important; }
-  .write-page{min-height:100vh;color:#ead7b3;padding:clamp(34px,6vw,86px);background:radial-gradient(circle at 18% 82%,rgba(139,0,0,.42),transparent 34%),repeating-linear-gradient(90deg,transparent 0 34px,rgba(234,215,179,.045) 34px 35px,transparent 35px 96px),#050000!important}
-  .write-card{max-width:860px;margin:0 auto;border-left:1px solid rgba(234,215,179,.35);padding-left:clamp(18px,3vw,38px)}
-  .write-card h1{margin:0 0 24px;font-family:var(--font-serif,Georgia,serif);font-size:clamp(72px,12vw,154px);line-height:.78;font-weight:300;letter-spacing:-.035em;text-transform:uppercase;color:#ead7b3}
-  .write-box{border-top:1px solid rgba(234,215,179,.38);display:grid;gap:14px;background:linear-gradient(90deg,rgba(234,215,179,.08),rgba(234,215,179,.02));padding:26px}
-  .write-status{color:#ffb19c;font:15px/1.35 var(--font-sans,system-ui,sans-serif)}
-  .write-box p{margin:0;max-width:680px;color:rgba(234,215,179,.78);font:300 clamp(20px,2.2vw,29px)/1.25 var(--font-serif,Georgia,serif)}
-  .write-box a{justify-self:start;border:1px solid rgba(234,215,179,.56);background:#ead7b3;color:#050000;padding:11px 13px;font:300 11px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.15em;text-transform:uppercase;text-decoration:none}
+  body:has(.write-page), body:has(.write-page) .site-main { background:#650000!important; }
+  .write-page{min-height:100vh;color:#f0dcc0;padding:clamp(28px,5.8vw,78px);background:radial-gradient(circle at 12% 16%,rgba(240,220,192,.22),transparent 22%),radial-gradient(circle at 82% 78%,rgba(20,0,0,.62),transparent 42%),linear-gradient(132deg,#a80000 0%,#7f0000 38%,#410000 72%,#120000 100%)!important;position:relative;overflow:hidden}.write-page::before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0 46px,rgba(240,220,192,.055) 46px 47px,transparent 47px 118px),repeating-linear-gradient(0deg,transparent 0 58px,rgba(240,220,192,.035) 58px 59px,transparent 59px 140px);opacity:.72}.write-root{position:relative;z-index:2;width:min(1180px,100%);margin:0 auto}.write-kicker{margin:0 0 10px;color:rgba(240,220,192,.72);font:300 11px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.22em;text-transform:uppercase}.write-root>h1{margin:0 0 clamp(24px,4vw,44px);color:#f0dcc0;font-family:var(--font-serif,Georgia,serif);font-size:clamp(82px,14.5vw,188px);line-height:.72;font-weight:300;letter-spacing:-.06em;text-transform:uppercase;text-shadow:0 0 32px rgba(240,220,192,.22)}.write-shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,360px);gap:clamp(18px,3vw,34px);align-items:start}.write-card,.write-side{background:linear-gradient(110deg,rgba(255,236,204,.13),rgba(255,236,204,.035)),rgba(40,0,0,.28);padding:clamp(20px,3vw,34px);border:0!important;box-shadow:none!important}.write-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.write-field{display:grid;gap:7px;color:rgba(240,220,192,.84);font:300 11px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.16em;text-transform:uppercase}.write-field.is-wide{grid-column:1/-1}.write-field input,.write-field select,.write-field textarea{width:100%;box-sizing:border-box;border:0!important;background:rgba(30,0,0,.50);color:#f0dcc0;padding:13px;font:16px/1.35 var(--font-sans,system-ui,sans-serif);outline:none;box-shadow:none!important}.write-field textarea{min-height:420px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:15px;line-height:1.5}.write-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 10px}.write-toolbar button,.write-actions button,.write-actions a,.write-upload-label{border:0!important;background:#f0dcc0;color:#260000;padding:10px 12px;font:700 10px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.13em;text-transform:uppercase;cursor:pointer;text-decoration:none;box-shadow:none!important}.write-toolbar button{background:rgba(240,220,192,.88)}.write-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.write-status{min-height:18px;margin:0;color:#ffd0bd;font:15px/1.35 var(--font-sans,system-ui,sans-serif)}.write-preview{min-height:280px;background:rgba(30,0,0,.36);padding:18px;color:#f0dcc0;font-family:var(--font-serif,Georgia,serif);font-size:21px;line-height:1.35}.write-preview h1,.write-preview h2,.write-preview h3{line-height:.95;font-weight:300}.write-preview a{color:#fff2d9}.write-preview img{max-width:100%;height:auto}.write-preview code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:rgba(0,0,0,.3);padding:2px 4px}.write-side p{margin:0 0 12px;color:rgba(240,220,192,.72);font:14px/1.4 var(--font-sans,system-ui,sans-serif)}.write-side h2{margin:0 0 14px;font:300 38px/.9 var(--font-serif,Georgia,serif);letter-spacing:-.04em}.write-upload-input{display:none}.write-help{display:grid;gap:8px;margin-top:16px;color:rgba(240,220,192,.7);font:13px/1.35 var(--font-sans,system-ui,sans-serif)}@media(max-width:860px){.write-shell{grid-template-columns:1fr}.write-grid{grid-template-columns:1fr}.write-root>h1{font-size:clamp(66px,20vw,104px)}}
 </style>
 
 <script>
 (() => {
   const root = document.querySelector('[data-write-root]');
   const token = localStorage.getItem('mancuspieAuthToken') || '';
-  const headers = token ? { authorization: `Bearer ${token}` } : {};
+  const headers = () => token ? { authorization: `Bearer ${token}` } : {};
   const esc = value => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
-  const fail = message => { root.innerHTML = `<p class="eyebrow">Redazione</p><h1>Scrivi</h1><p class="write-status">${esc(message)}</p><div class="write-box"><a href="/profilo/">Torna al profilo</a></div>`; };
+  const fail = message => { root.innerHTML = `<p class="write-kicker">Redazione</p><h1>Scrivi</h1><p class="write-status">${esc(message)}</p><div class="write-card"><div class="write-actions"><a href="/profilo/">Torna al profilo</a></div></div>`; };
+
+  const wrapSelection = (textarea, before, after = '') => {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selected = textarea.value.slice(start, end) || 'testo';
+    textarea.setRangeText(`${before}${selected}${after}`, start, end, 'select');
+    textarea.focus();
+    updatePreview();
+  };
+  const insertText = (textarea, text) => {
+    textarea.setRangeText(text, textarea.selectionStart, textarea.selectionEnd, 'end');
+    textarea.focus();
+    updatePreview();
+  };
+  const fileToBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+  const inlineMarkdown = value => esc(value)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2">')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+  const renderMarkdown = md => md.split(/\n{2,}/).map(block => {
+    const b = block.trim();
+    if (!b) return '';
+    if (b.startsWith('### ')) return `<h3>${inlineMarkdown(b.slice(4))}</h3>`;
+    if (b.startsWith('## ')) return `<h2>${inlineMarkdown(b.slice(3))}</h2>`;
+    if (b.startsWith('# ')) return `<h1>${inlineMarkdown(b.slice(2))}</h1>`;
+    if (b.startsWith('> ')) return `<blockquote>${inlineMarkdown(b.replace(/^> /gm, ''))}</blockquote>`;
+    if (/^- /m.test(b)) return `<ul>${b.split('\n').filter(Boolean).map(line => `<li>${inlineMarkdown(line.replace(/^- /, ''))}</li>`).join('')}</ul>`;
+    return `<p>${inlineMarkdown(b).replace(/\n/g, '<br>')}</p>`;
+  }).join('');
+  let updatePreview = () => {};
+
+  const buildEditor = user => {
+    root.innerHTML = `
+      <p class="write-kicker">Redazione / ${esc(user.username)}</p>
+      <h1>Scrivi</h1>
+      <div class="write-shell">
+        <form class="write-card" data-editor-form>
+          <div class="write-grid">
+            <label class="write-field is-wide">Titolo <input data-title maxlength="160" required placeholder="titolo articolo"></label>
+            <label class="write-field is-wide">Sottotitolo <input data-subtitle maxlength="220" placeholder="sottotitolo opzionale"></label>
+            <label class="write-field">Tipo <select data-tipo required><option value="saggio">saggio</option><option value="racconto">racconto</option><option value="romanzo">romanzo</option><option value="visivo">visivo</option><option value="marginalia">marginalia</option><option value="impressioni">impressioni</option><option value="notizie">notizie</option><option value="manifesto">manifesto</option></select></label>
+            <label class="write-field">Rubrica <input data-rubrica maxlength="80" required placeholder="rubrica"></label>
+            <label class="write-field is-wide">Corpo del testo
+              <div class="write-toolbar" data-toolbar>
+                <button type="button" data-cmd="h2">H2</button><button type="button" data-cmd="h3">H3</button><button type="button" data-cmd="bold">Bold</button><button type="button" data-cmd="italic">Italic</button><button type="button" data-cmd="quote">Quote</button><button type="button" data-cmd="list">Lista</button><button type="button" data-cmd="link">Link</button><button type="button" data-cmd="wordlink">Link su parole</button><button type="button" data-cmd="code">Code</button>
+                <label class="write-upload-label">Aggiungi file<input class="write-upload-input" data-upload type="file" accept="image/png,image/jpeg,image/webp,image/gif,application/pdf,text/plain"></label>
+              </div>
+              <textarea data-body required placeholder="Scrivi in Markdown. Puoi usare **bold**, *italic*, [link](https://...), immagini, liste, citazioni..."></textarea>
+            </label>
+          </div>
+          <p class="write-status" data-status></p>
+          <div class="write-actions"><button type="submit">Pubblica</button><a href="/profilo/">Profilo</a></div>
+        </form>
+        <aside class="write-side">
+          <h2>Anteprima</h2>
+          <p>L’anteprima è indicativa. La resa finale passa dal template articoli di Mancuspie.</p>
+          <div class="write-preview" data-preview><p>Comincia a scrivere.</p></div>
+          <div class="write-help"><span>Ctrl/Cmd+B: bold</span><span>Ctrl/Cmd+I: italic</span><span>Il nome autore sarà il tuo username: ${esc(user.username)}</span></div>
+        </aside>
+      </div>`;
+
+    const form = root.querySelector('[data-editor-form]');
+    const body = root.querySelector('[data-body]');
+    const preview = root.querySelector('[data-preview]');
+    const status = root.querySelector('[data-status]');
+    updatePreview = () => { preview.innerHTML = renderMarkdown(body.value || ''); };
+    body.addEventListener('input', updatePreview);
+    body.addEventListener('keydown', event => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'b') { event.preventDefault(); wrapSelection(body, '**', '**'); }
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'i') { event.preventDefault(); wrapSelection(body, '*', '*'); }
+    });
+    root.querySelector('[data-toolbar]').addEventListener('click', event => {
+      const button = event.target.closest('[data-cmd]');
+      if (!button) return;
+      const cmd = button.dataset.cmd;
+      if (cmd === 'h2') insertText(body, '\n\n## Titolo sezione\n');
+      if (cmd === 'h3') insertText(body, '\n\n### Sottosezione\n');
+      if (cmd === 'bold') wrapSelection(body, '**', '**');
+      if (cmd === 'italic') wrapSelection(body, '*', '*');
+      if (cmd === 'quote') insertText(body, '\n\n> Citazione\n');
+      if (cmd === 'list') insertText(body, '\n\n- elemento\n- elemento\n');
+      if (cmd === 'code') wrapSelection(body, '`', '`');
+      if (cmd === 'link') insertText(body, '[testo link](https://)');
+      if (cmd === 'wordlink') {
+        const url = prompt('URL del link');
+        if (url) wrapSelection(body, '[', `](${url})`);
+      }
+    });
+    root.querySelector('[data-upload]').addEventListener('change', async event => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      status.textContent = 'Caricamento file...';
+      try {
+        const content = await fileToBase64(file);
+        const response = await fetch('/api/publish', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify({ action: 'upload', filename: file.name, mime: file.type, content }) });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || 'Upload fallito');
+        insertText(body, `\n\n${result.markdown}\n\n`);
+        status.textContent = 'File inserito.';
+      } catch (error) { status.textContent = error.message; }
+      event.target.value = '';
+    });
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      status.textContent = 'Pubblicazione...';
+      const payload = { action: 'publish', title: root.querySelector('[data-title]').value, subtitle: root.querySelector('[data-subtitle]').value, tipo: root.querySelector('[data-tipo]').value, rubrica: root.querySelector('[data-rubrica]').value, body: body.value };
+      try {
+        const response = await fetch('/api/publish', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify(payload) });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || 'Pubblicazione fallita');
+        status.textContent = 'Pubblicato. Deploy in corso, attendi qualche secondo.';
+        setTimeout(() => { location.href = '/archivio/'; }, 1400);
+      } catch (error) { status.textContent = error.message; }
+    });
+  };
+
   const load = async () => {
     if (!token) { fail('Login richiesto.'); return; }
-    const response = await fetch('/api/auth', { headers, cache: 'no-store' });
+    const response = await fetch('/api/auth', { headers: headers(), cache: 'no-store' });
     const data = await response.json().catch(() => ({}));
     if (!response.ok || !data.user) { fail('Sessione non valida.'); return; }
     if (!data.user.isRedattore) { fail('Permesso redattore richiesto.'); return; }
-    root.innerHTML = `<p class="eyebrow">Redazione</p><h1>Scrivi</h1><div class="write-box"><p>Editor articoli in costruzione. Qui monteremo la macchina da scrittura vera.</p><a href="/profilo/">Profilo</a></div>`;
+    buildEditor(data.user);
   };
   load().catch(error => fail(error.message || 'Errore permessi.'));
 })();
