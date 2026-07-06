@@ -12,50 +12,88 @@ permalink: /profilo/
 </section>
 
 <style>
+  body:has(.profile-page),
+  body:has(.profile-page) .site-main {
+    background: #050000 !important;
+  }
+
   .profile-page {
     min-height: 100vh;
-    background: #fbfaf5 !important;
-    color: #050505;
+    color: #ead7b3;
     padding: clamp(34px, 6vw, 86px);
     display: block !important;
+    background:
+      radial-gradient(circle at 82% 18%, rgba(234, 215, 179, .20), transparent 28%),
+      radial-gradient(circle at 18% 82%, rgba(139, 0, 0, .42), transparent 34%),
+      repeating-linear-gradient(90deg, transparent 0 34px, rgba(234,215,179,.045) 34px 35px, transparent 35px 96px),
+      #050000 !important;
+    overflow: hidden;
+  }
+
+  .profile-page::before {
+    content: "";
+    position: fixed;
+    right: -90px;
+    top: 70px;
+    width: clamp(260px, 32vw, 520px);
+    height: clamp(260px, 32vw, 520px);
+    background: url('/assets/img/ICON.png') center/contain no-repeat;
+    opacity: .16;
+    filter: drop-shadow(0 0 34px rgba(234,215,179,.42));
+    pointer-events: none;
+    mix-blend-mode: screen;
   }
 
   .profile-card {
-    max-width: 820px;
+    position: relative;
+    z-index: 2;
+    max-width: 860px;
     margin: 0 auto;
-    color: #050505;
+    color: #ead7b3;
+    border-left: 1px solid rgba(234,215,179,.35);
+    padding-left: clamp(18px, 3vw, 38px);
+  }
+
+  .profile-card .eyebrow {
+    color: rgba(234,215,179,.74);
   }
 
   .profile-card h1 {
-    margin: 0 0 22px;
+    margin: 0 0 26px;
     font-family: var(--font-serif, Georgia, serif);
-    font-size: clamp(62px, 10vw, 132px);
-    line-height: .82;
+    font-size: clamp(72px, 12vw, 154px);
+    line-height: .78;
     font-weight: 300;
+    letter-spacing: -.035em;
     text-transform: uppercase;
-    color: #050505;
+    color: #ead7b3;
+    text-shadow: 0 0 24px rgba(234,215,179,.22);
   }
 
   .profile-box {
-    border-top: 1px solid rgba(5,5,5,.34);
-    padding-top: 24px;
+    border-top: 1px solid rgba(234,215,179,.38);
+    padding-top: 26px;
     display: grid;
-    gap: 16px;
+    gap: 17px;
+    background: linear-gradient(90deg, rgba(234,215,179,.08), rgba(234,215,179,.02));
+    padding: 26px;
+    box-shadow: 12px 12px 0 rgba(139,0,0,.62);
   }
 
   .profile-username {
-    font: 300 clamp(32px, 5vw, 58px)/1 var(--font-serif, Georgia, serif);
+    font: 300 clamp(34px, 5vw, 64px)/1 var(--font-serif, Georgia, serif);
     margin: 0;
     letter-spacing: -.035em;
-    color: #050505;
+    color: #ead7b3;
   }
 
   .profile-avatar {
-    width: 148px;
-    height: 148px;
-    border: 1px solid rgba(5,5,5,.42);
+    width: 158px;
+    height: 158px;
+    border: 1px solid rgba(234,215,179,.56);
     object-fit: cover;
-    background: rgba(5,5,5,.08);
+    background: rgba(234,215,179,.09);
+    box-shadow: 6px 6px 0 rgba(139,0,0,.62);
   }
 
   .profile-avatar[src=""] {
@@ -64,11 +102,11 @@ permalink: /profilo/
 
   .profile-card label {
     display: grid;
-    gap: 7px;
+    gap: 8px;
     font: 300 11px/1 var(--font-sans, system-ui, sans-serif);
-    letter-spacing: .14em;
+    letter-spacing: .16em;
     text-transform: uppercase;
-    color: #050505;
+    color: rgba(234,215,179,.82);
   }
 
   .profile-card textarea,
@@ -76,11 +114,23 @@ permalink: /profilo/
   .profile-card input[type="file"] {
     width: 100%;
     box-sizing: border-box;
-    border: 1px solid rgba(5,5,5,.34);
-    background: rgba(255,255,255,.46);
-    color: #050505;
-    padding: 12px;
+    border: 1px solid rgba(234,215,179,.34);
+    background: rgba(5,0,0,.56);
+    color: #ead7b3;
+    padding: 13px;
     font: 16px/1.35 var(--font-sans, system-ui, sans-serif);
+    outline: none;
+  }
+
+  .profile-card textarea:focus,
+  .profile-card input[type="text"]:focus {
+    border-color: rgba(234,215,179,.82);
+    background: rgba(5,0,0,.78);
+  }
+
+  .profile-card textarea::placeholder,
+  .profile-card input::placeholder {
+    color: rgba(234,215,179,.42);
   }
 
   .profile-card textarea {
@@ -97,9 +147,9 @@ permalink: /profilo/
   .profile-actions button,
   .profile-actions a,
   .profile-login-link {
-    border: 1px solid #050505;
-    background: #050505;
-    color: #fbfaf5;
+    border: 1px solid rgba(234,215,179,.56);
+    background: #ead7b3;
+    color: #050000;
     padding: 11px 13px;
     font: 300 11px/1 var(--font-sans, system-ui, sans-serif);
     letter-spacing: .15em;
@@ -107,17 +157,27 @@ permalink: /profilo/
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
+    box-shadow: 4px 4px 0 rgba(139,0,0,.70);
+  }
+
+  .profile-actions button[data-logout] {
+    background: #9b0000;
+    color: #fbfaf5;
+    border-color: rgba(255,210,190,.44);
   }
 
   .profile-status {
     min-height: 18px;
-    color: #6d0000;
+    color: #ffb19c;
     font: 15px/1.35 var(--font-sans, system-ui, sans-serif);
   }
 
   @media(max-width:760px) {
     .profile-page { padding: 34px 20px; }
-    .profile-card h1 { font-size: clamp(54px, 18vw, 84px); }
+    .profile-page::before { right: -120px; top: 90px; width: 320px; height: 320px; }
+    .profile-card { padding-left: 16px; }
+    .profile-card h1 { font-size: clamp(58px, 18vw, 92px); }
+    .profile-box { padding: 20px; box-shadow: 7px 7px 0 rgba(139,0,0,.62); }
   }
 </style>
 
