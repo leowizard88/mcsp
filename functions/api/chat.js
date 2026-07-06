@@ -4,7 +4,7 @@ const HEADERS = {
 };
 
 const STORE_KEY = 'messages';
-const MAX_MESSAGES = 80;
+const MAX_MESSAGES = 120;
 
 const clean = value => String(value || '')
   .replace(/[\u0000-\u001f\u007f]/g, ' ')
@@ -48,12 +48,18 @@ export async function onRequestPost({ request, env }) {
 
   const name = clean(data.name).slice(0, 24);
   const text = clean(data.text).slice(0, 260);
+  const parentId = clean(data.parentId).slice(0, 80) || null;
 
   if (!name || !text) return json({ error: 'Nickname e messaggio richiesti' }, 400);
 
   const messages = await readMessages(env);
+  if (parentId && !messages.some(message => message.id === parentId)) {
+    return json({ error: 'Messaggio padre non trovato' }, 400);
+  }
+
   messages.push({
     id: crypto.randomUUID(),
+    parentId,
     name,
     text,
     time: new Date().toISOString()
