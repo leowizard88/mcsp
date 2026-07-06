@@ -17,6 +17,7 @@ const randomHex = bytes => {
 const hash = async value => bytesToHex(await crypto.subtle.digest('SHA-256', enc.encode(value)));
 const passHash = (password, salt) => hash(`${salt}:${password}`);
 const publicUser = user => user ? ({ id: user.id, username: user.username, bio: user.bio || '', avatar: user.avatar || '', sec: user.sec || '', createdAt: user.createdAt }) : null;
+const originKey = async request => `auth:origin:${await hash(request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || 'unknown')}`;
 const bearer = request => {
   const auth = request.headers.get('authorization') || '';
   if (auth.toLowerCase().startsWith('bearer ')) return auth.slice(7).trim();
@@ -52,11 +53,14 @@ export async function onRequestPost({ request, env }) {
     if (!validUsername(username)) return json({ error: 'Username: 3-24 caratteri, lettere numeri e _' }, 400);
     if (!validPassword(password)) return json({ error: 'Password: minimo 6 caratteri' }, 400);
     if (await env.CHAT_MESSAGES.get(`auth:username:${key}`)) return json({ error: 'Username già preso' }, 409);
+    const oneSignupKey = await originKey(request);
+    if (await env.CHAT_MESSAGES.get(oneSignupKey)) return json({ error: 'Da questa rete è già stato creato un account' }, 429);
     const id = crypto.randomUUID();
     const salt = randomHex(16);
     const user = { id, username, usernameKey: key, salt, passwordHash: await passHash(password, salt), bio: '', avatar: '', sec: '', createdAt: new Date().toISOString() };
     await env.CHAT_MESSAGES.put(`auth:user:${id}`, JSON.stringify(user));
     await env.CHAT_MESSAGES.put(`auth:username:${key}`, id);
+    await env.CHAT_MESSAGES.put(oneSignupKey, id);
     const token = await saveSession(env, id);
     return json({ token, user: publicUser(user) }, 201);
   }
