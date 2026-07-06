@@ -37,7 +37,7 @@ export async function onRequestPost({ request, env }) {
   try { attachment = getPng(data.cardPng, code); } catch (error) { return json({ error: error.message }, 400); }
 
   const name = `${esc(nome)} ${esc(cognome)}`;
-  const htmlUser = `<div style="font-family:Georgia,serif;line-height:1.55"><h1>Tessera PCZ</h1><p>Compagno/a <strong>${name}</strong>,</p><p>Numero tessera: <strong>${esc(code)}</strong><br>Data: <strong>${esc(date)}</strong></p><p>La tessera PNG completa è allegata.</p><p>Redazione Mancuspie</p></div>`;
+  const htmlUser = `<div style="font-family:Georgia,serif;line-height:1.55"><h1>Benvenuto! Good job!</h1><p>Compagno/a <strong>${name}</strong>,</p><p>Numero tessera: <strong>${esc(code)}</strong><br>Data: <strong>${esc(date)}</strong></p><p>La tessera PNG completa è allegata.</p><p>Redazione Mancuspie</p><p><strong>Nessun confine, nessun padrone</strong></p></div>`;
   const htmlAdmin = `<div style="font-family:sans-serif;line-height:1.55"><h1>Nuova tessera</h1><p>${name}</p><p>${esc(email)}</p><p>${esc(code)} - ${esc(date)}</p><p>${esc(note)}</p></div>`;
 
   const send = async payload => {
