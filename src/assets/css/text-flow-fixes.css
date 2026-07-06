@@ -20,7 +20,7 @@
   white-space: pre-wrap !important;
 }
 
-/* Articles: kill the old static right image and use a narrow moving ornament column instead. */
+/* Articles: kill the old static right image and use a moving ornament column instead. */
 .single-page::after,
 .archive-page::after,
 .article-page-format::after,
@@ -35,8 +35,8 @@ body:has(.article-page-format) .article-page-format::after {
 
 .article-page-format,
 .single-page:has(.article-format-inner) {
-  --article-ornament-width: clamp(58px, 7.4vw, 96px);
-  --article-ornament-gap: clamp(20px, 3vw, 42px);
+  --article-ornament-width: clamp(84px, 10vw, 138px);
+  --article-ornament-gap: clamp(28px, 3.8vw, 56px);
   background: #fbfaf5 !important;
   overflow-x: hidden !important;
   padding-right: calc(var(--article-ornament-width) + var(--article-ornament-gap) + 18px) !important;
@@ -44,8 +44,8 @@ body:has(.article-page-format) .article-page-format::after {
 
 .article-format-inner,
 .single-inner.article-format-inner {
-  width: min(820px, calc(100vw - var(--side, 44px) - var(--article-ornament-width, 86px) - var(--article-ornament-gap, 34px) - 84px)) !important;
-  max-width: min(820px, calc(100vw - var(--side, 44px) - var(--article-ornament-width, 86px) - var(--article-ornament-gap, 34px) - 84px)) !important;
+  width: min(820px, calc(100vw - var(--side, 44px) - var(--article-ornament-width, 116px) - var(--article-ornament-gap, 42px) - 96px)) !important;
+  max-width: min(820px, calc(100vw - var(--side, 44px) - var(--article-ornament-width, 116px) - var(--article-ornament-gap, 42px) - 96px)) !important;
   margin-left: clamp(18px, 5vw, 72px) !important;
   margin-right: auto !important;
   padding-right: 0 !important;
@@ -56,7 +56,7 @@ body:has(.article-page-format) .article-page-format::after {
   top: 0;
   right: 0;
   bottom: 0;
-  width: var(--article-ornament-width, 86px);
+  width: var(--article-ornament-width, 116px);
   z-index: 6;
   overflow: hidden;
   pointer-events: none;
@@ -147,10 +147,10 @@ body:has(.article-page-format) .article-page-format::after {
 
   .article-page-format,
   .single-page:has(.article-format-inner) {
-    --article-ornament-width: 42px;
-    --article-ornament-gap: 16px;
-    padding-left: 14px !important;
-    padding-right: calc(var(--article-ornament-width) + var(--article-ornament-gap) + 14px) !important;
+    --article-ornament-width: 40px;
+    --article-ornament-gap: 18px;
+    padding-left: 12px !important;
+    padding-right: calc(var(--article-ornament-width) + var(--article-ornament-gap) + 18px) !important;
   }
 
   .single-page::after,
@@ -165,10 +165,10 @@ body:has(.article-page-format) .article-page-format::after {
 
   .article-format-inner,
   .single-inner.article-format-inner {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: calc(100vw - var(--side, 38px) - var(--article-ornament-width, 40px) - var(--article-ornament-gap, 18px) - 36px) !important;
+    max-width: calc(100vw - var(--side, 38px) - var(--article-ornament-width, 40px) - var(--article-ornament-gap, 18px) - 36px) !important;
     margin-left: 0 !important;
-    margin-right: 0 !important;
+    margin-right: auto !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
     padding-top: 16px !important;
@@ -182,7 +182,7 @@ body:has(.article-page-format) .article-page-format::after {
   }
 
   .article-format-body {
-    font-size: clamp(17px, 4.7vw, 20px) !important;
+    font-size: clamp(16px, 4.35vw, 19px) !important;
     line-height: 1.56 !important;
   }
 
@@ -206,7 +206,23 @@ body:has(.article-page-format) .article-page-format::after {
     overflow-wrap: normal !important;
     word-break: normal !important;
     hyphens: none !important;
-    font-size: clamp(38px, 11.5vw, 58px) !important;
+    font-size: clamp(34px, 10vw, 52px) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .article-page-format,
+  .single-page:has(.article-format-inner) {
+    --article-ornament-width: 34px;
+    --article-ornament-gap: 14px;
+    padding-left: 10px !important;
+    padding-right: calc(var(--article-ornament-width) + var(--article-ornament-gap) + 14px) !important;
+  }
+
+  .article-format-inner,
+  .single-inner.article-format-inner {
+    width: calc(100vw - var(--side, 38px) - var(--article-ornament-width, 34px) - var(--article-ornament-gap, 14px) - 28px) !important;
+    max-width: calc(100vw - var(--side, 38px) - var(--article-ornament-width, 34px) - var(--article-ornament-gap, 14px) - 28px) !important;
   }
 }
 
