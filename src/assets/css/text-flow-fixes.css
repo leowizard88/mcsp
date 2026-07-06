@@ -146,7 +146,7 @@ body:has(.article-format-inner)::before {
   pointer-events: none !important;
   z-index: 1 !important;
   background: url('/assets/img/a0561d0149768168e5596018d4eb9eae.jpg') top right / contain no-repeat !important;
-  opacity: .055 !important;
+  opacity: .095 !important;
   mix-blend-mode: multiply !important;
 }
 
@@ -162,7 +162,6 @@ body:has(.article-format-inner)::before {
   background: transparent;
   transform: translateZ(0);
   backface-visibility: hidden;
-  contain: paint;
   opacity: 1;
 }
 
@@ -173,13 +172,12 @@ body:has(.article-format-inner)::before {
 .article-ornament-track {
   position: absolute;
   left: 0;
-  top: 0;
+  top: -33.333%;
   width: 100%;
   display: flex;
   flex-direction: column;
   animation: articleOrnamentFlow 38s linear infinite;
-  will-change: transform;
-  transform: translateZ(0);
+  will-change: top;
   backface-visibility: hidden;
 }
 
@@ -195,8 +193,8 @@ body:has(.article-format-inner)::before {
 }
 
 @keyframes articleOrnamentFlow {
-  from { transform: translate3d(0, -33.333%, 0); }
-  to { transform: translate3d(0, 0, 0); }
+  from { top: -33.333%; }
+  to { top: 0; }
 }
 
 .article-format-head,
@@ -263,7 +261,7 @@ body:has(.article-format-inner)::before {
   body:has(.article-format-inner)::before {
     width: 72vw !important;
     height: 72vw !important;
-    opacity: .04 !important;
+    opacity: .07 !important;
   }
 
   body:has(.article-page-format) .site-main,
@@ -307,9 +305,16 @@ body:has(.article-format-inner)::before {
     position: fixed;
     top: 0;
     right: 0;
-    bottom: 0;
+    bottom: auto;
     width: var(--article-ornament-width) !important;
-    min-height: 100dvh;
+    height: 100vh;
+    height: 100svh;
+    min-height: 100svh;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .article-ornament-track {
+    animation-duration: 34s;
   }
 
   .article-format-body,
