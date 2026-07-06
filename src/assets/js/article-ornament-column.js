@@ -1,5 +1,5 @@
 (() => {
-  const isArticle = () => !!document.querySelector('.article-page-format .article-format-inner');
+  const isArticle = () => !!document.querySelector('.article-page-format, .single-page .article-format-inner, [data-article-head]');
   const candidates = name => ['webp', 'png', 'jpg', 'jpeg', 'gif'].map(ext => `/assets/img/${name}.${ext}`);
   const testImage = src => new Promise(resolve => {
     const image = new Image();
@@ -23,9 +23,9 @@
   };
   const makeSequence = (m2, m1) => {
     const rows = [];
-    for (let i = 0; i < 30; i += 1) {
+    for (let i = 0; i < 34; i += 1) {
       rows.push(m2);
-      if (m1 && [5, 13, 22, 28].includes(i)) rows.push(m1);
+      if (m1 && [5, 13, 22, 30].includes(i)) rows.push(m1);
     }
     return rows;
   };
@@ -57,4 +57,6 @@
   const start = () => build().catch(() => {});
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
   else start();
+  setTimeout(start, 600);
+  setTimeout(start, 1600);
 })();
