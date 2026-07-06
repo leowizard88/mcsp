@@ -1,12 +1,13 @@
 const HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' };
 const SESSION_TTL = 60 * 60 * 24 * 90;
+const SIGNUP_TTL = 60 * 20;
 const MAX_AVATAR = 420000;
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: HEADERS });
 const clean = value => String(value || '').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim();
 const usernameKey = value => clean(value).toLowerCase();
 const validUsername = value => /^[a-zA-Z0-9_]{3,24}$/.test(value);
-const validPassword = value => String(value || '').length >= 6 && String(value || '').length <= 120;
+const validPassword = value => String(value || '').length >= 4 && String(value || '').length <= 120;
 const enc = new TextEncoder();
 const bytesToHex = buffer => [...new Uint8Array(buffer)].map(byte => byte.toString(16).padStart(2, '0')).join('');
 const randomHex = bytes => {
@@ -54,17 +55,17 @@ export async function onRequestPost({ request, env }) {
     const username = clean(data.username).slice(0, 24);
     const key = usernameKey(username);
     const password = String(data.password || '');
-    if (!validUsername(username)) return json({ error: 'Username: 3-24 caratteri, lettere numeri e _' }, 400);
-    if (!validPassword(password)) return json({ error: 'Password: minimo 6 caratteri' }, 400);
+    if (!validUsername(username)) return json({ error: 'Username: 3-24 caratteri, solo lettere numeri e _' }, 400);
+    if (!validPassword(password)) return json({ error: 'Password: minimo 4 caratteri' }, 400);
     if (await env.CHAT_MESSAGES.get(`auth:username:${key}`)) return json({ error: 'Username già preso' }, 409);
-    const oneSignupKey = await originKey(request);
-    if (oneSignupKey && await env.CHAT_MESSAGES.get(oneSignupKey)) return json({ error: 'Da questa rete è già stato creato un account' }, 429);
+    const signupKey = await originKey(request);
+    if (signupKey && await env.CHAT_MESSAGES.get(signupKey)) return json({ error: 'Troppi account creati da questa rete. Riprova tra poco.' }, 429);
     const id = crypto.randomUUID();
     const salt = randomHex(16);
     const user = { id, username, usernameKey: key, salt, passwordHash: await passHash(password, salt), bio: '', avatar: '', sec: '', createdAt: new Date().toISOString() };
     await env.CHAT_MESSAGES.put(`auth:user:${id}`, JSON.stringify(user));
     await env.CHAT_MESSAGES.put(`auth:username:${key}`, id);
-    if (oneSignupKey) await env.CHAT_MESSAGES.put(oneSignupKey, id);
+    if (signupKey) await env.CHAT_MESSAGES.put(signupKey, id, { expirationTtl: SIGNUP_TTL });
     const token = await saveSession(env, id);
     return json({ token, user: publicUser(user) }, 201);
   }
