@@ -2,6 +2,7 @@
   "name": "mancuspie-netlify-decap-clean",
   "version": "1.0.0",
   "private": true,
+  "description": "Deploy trigger.",
   "scripts": {
     "build": "eleventy --config=eleventy.config.js",
     "start": "eleventy --serve --config=eleventy.config.js"
