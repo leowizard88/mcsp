@@ -24,12 +24,17 @@ permalink: /zingaristan/tesseramento/
     background: none !important;
   }
 
+  .pcz-tesseramento,
+  .pcz-tesseramento * {
+    box-sizing: border-box;
+  }
+
   .pcz-tesseramento {
     min-height: 100svh !important;
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    padding: clamp(24px, 4vw, 58px) clamp(14px, 4vw, 52px) !important;
+    padding: clamp(24px, 4vw, 58px) clamp(12px, 3vw, 52px) !important;
     position: relative !important;
     display: grid !important;
     place-items: center !important;
@@ -50,23 +55,28 @@ permalink: /zingaristan/tesseramento/
   .pcz-form-card {
     position: relative;
     z-index: 2;
-    width: min(620px, 94vw);
+    width: min(620px, 100%);
+    max-width: 100%;
     padding: clamp(22px, 4vw, 42px);
     background: rgba(250,248,240,.92);
     border: 2px solid rgba(255,211,26,.72);
     box-shadow: 0 18px 70px rgba(0,0,0,.38);
     color: #151515;
     font-family: var(--font-sans);
+    overflow: hidden;
   }
 
   .pcz-form-card h1 {
     margin: 0 0 8px;
+    max-width: 100%;
     color: #050505;
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: clamp(36px, 8vw, 70px);
-    line-height: .9;
+    font-size: clamp(32px, 5.6vw, 56px);
+    line-height: .96;
     text-transform: uppercase;
-    letter-spacing: .03em;
+    letter-spacing: .01em;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .pcz-form-card p {
@@ -78,7 +88,7 @@ permalink: /zingaristan/tesseramento/
   }
 
   .pcz-form { display: grid; gap: 14px; }
-  .pcz-field { display: grid; gap: 6px; }
+  .pcz-field { display: grid; gap: 6px; min-width: 0; }
 
   .pcz-field label,
   .pcz-consenso legend {
@@ -91,6 +101,7 @@ permalink: /zingaristan/tesseramento/
   .pcz-field input,
   .pcz-field textarea {
     width: 100%;
+    max-width: 100%;
     border: 1px solid rgba(6,26,70,.38);
     background: rgba(255,255,255,.86);
     color: #050505;
@@ -108,13 +119,14 @@ permalink: /zingaristan/tesseramento/
   }
 
   .pcz-consenso {
+    min-width: 0;
     margin: 4px 0 0;
     padding: 12px;
     border: 1px solid rgba(6,26,70,.32);
     background: rgba(255,255,255,.48);
   }
 
-  .pcz-choice-row { display: flex; gap: 22px; margin-top: 10px; }
+  .pcz-choice-row { display: flex; flex-wrap: wrap; gap: 18px 22px; margin-top: 10px; }
 
   .pcz-choice-row label {
     display: inline-flex;
@@ -128,6 +140,7 @@ permalink: /zingaristan/tesseramento/
   .pcz-submit {
     margin-top: 12px;
     min-height: 58px;
+    width: 100%;
     border: 2px solid rgba(6,26,70,.35);
     background: rgba(5,5,5,.22);
     color: rgba(5,5,5,.45);
@@ -163,10 +176,11 @@ permalink: /zingaristan/tesseramento/
   .pcz-status.is-ok { color: #0b6b24 !important; }
 
   @media(max-width:760px) {
-    .pcz-tesseramento { padding: 18px 10px !important; }
-    .pcz-form-card { width: min(520px, 94vw); padding: 18px; }
-    .pcz-form-card h1 { font-size: 44px; }
-    .pcz-choice-row { gap: 18px; }
+    .pcz-tesseramento { padding: 14px 8px !important; place-items: start center !important; }
+    .pcz-form-card { width: 100%; max-width: 100%; padding: 14px; }
+    .pcz-form-card h1 { font-size: clamp(28px, 9vw, 36px); line-height: 1; letter-spacing: 0; }
+    .pcz-form-card p { font-size: 12px; letter-spacing: .06em; margin-bottom: 18px; }
+    .pcz-choice-row { gap: 14px; }
   }
 </style>
 
