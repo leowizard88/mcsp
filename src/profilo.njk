@@ -1,0 +1,89 @@
+---
+layout: base.njk
+title: Profilo | MANCUSPIE
+permalink: /profilo/
+---
+<section class="profile-page panel">
+  <div class="profile-card" data-profile-root>
+    <p class="eyebrow">Account</p>
+    <h1>Profilo</h1>
+    <p data-profile-status>Caricamento...</p>
+  </div>
+</section>
+
+<style>
+  .profile-page { min-height: 100vh; background: #fbfaf5 !important; color: #050505; padding: clamp(34px, 6vw, 86px); }
+  .profile-card { max-width: 760px; margin: 0 auto; }
+  .profile-card h1 { margin: 0 0 22px; font-family: var(--font-serif, Georgia, serif); font-size: clamp(62px, 10vw, 132px); line-height: .82; font-weight: 300; text-transform: uppercase; }
+  .profile-box { border-top: 1px solid rgba(5,5,5,.26); padding-top: 22px; display: grid; gap: 14px; }
+  .profile-username { font: 300 clamp(28px, 4vw, 48px)/1 var(--font-sans, system-ui, sans-serif); margin: 0; }
+  .profile-avatar { width: 132px; height: 132px; border: 1px solid rgba(5,5,5,.34); object-fit: cover; background: rgba(5,5,5,.08); }
+  .profile-card label { display: grid; gap: 6px; font: 700 11px/1 var(--font-sans, system-ui, sans-serif); letter-spacing: .12em; text-transform: uppercase; }
+  .profile-card textarea, .profile-card input[type="text"] { width: 100%; box-sizing: border-box; border: 1px solid rgba(5,5,5,.34); background: #fff; color: #050505; padding: 12px; font: 15px/1.35 var(--font-sans, system-ui, sans-serif); }
+  .profile-card textarea { min-height: 150px; resize: vertical; }
+  .profile-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .profile-actions button, .profile-actions a { border: 1px solid #050505; background: #050505; color: #fbfaf5; padding: 11px 13px; font: 700 11px/1 var(--font-sans, system-ui, sans-serif); letter-spacing: .13em; text-transform: uppercase; cursor: pointer; text-decoration: none; }
+  .profile-status { min-height: 18px; color: #6d0000; }
+</style>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-profile-root]');
+  const tokenKey = 'mancuspieAuthToken';
+  const token = () => localStorage.getItem(tokenKey) || '';
+  const esc = value => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+  const headers = () => token() ? { authorization: `Bearer ${token()}` } : {};
+  const fileToDataUrl = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+  const load = async () => {
+    const response = await fetch('/api/auth', { headers: headers(), cache: 'no-store' });
+    const data = await response.json().catch(() => ({}));
+    if (!data.user) {
+      root.innerHTML = `<p class="eyebrow">Account</p><h1>Profilo</h1><p>Sei anonimo. Fai sign up o sign in dall’icona in alto a destra.</p><a class="text-link" href="/">Torna alla home</a>`;
+      return;
+    }
+    const user = data.user;
+    root.innerHTML = `
+      <p class="eyebrow">Account</p>
+      <h1>Profilo</h1>
+      <form class="profile-box" data-profile-form>
+        <p class="profile-username">${esc(user.username)}</p>
+        <img class="profile-avatar" data-profile-avatar src="${esc(user.avatar || '')}" alt="">
+        <label>Foto profilo <input name="avatar" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label>
+        <label>Descrizione <textarea name="bio" maxlength="900" placeholder="scrivi una piccola bacheca personale">${esc(user.bio || '')}</textarea></label>
+        <label>SEC <input name="sec" type="text" maxlength="120" value="${esc(user.sec || '')}" placeholder="codice SEC"></label>
+        <p class="profile-status" data-profile-status></p>
+        <div class="profile-actions"><button type="submit">Salva</button><button type="button" data-logout>Logout</button><a href="/">Home</a></div>
+      </form>`;
+    const form = root.querySelector('[data-profile-form]');
+    const status = root.querySelector('[data-profile-status]');
+    const avatarPreview = root.querySelector('[data-profile-avatar]');
+    let avatar = user.avatar || '';
+    form.avatar.addEventListener('change', async () => {
+      if (!form.avatar.files[0]) return;
+      avatar = await fileToDataUrl(form.avatar.files[0]);
+      avatarPreview.src = avatar;
+    });
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      status.textContent = 'Salvataggio...';
+      const body = { action: 'update', bio: form.bio.value, sec: form.sec.value, avatar };
+      const response = await fetch('/api/auth', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify(body) });
+      const result = await response.json().catch(() => ({}));
+      status.textContent = response.ok ? 'Profilo salvato.' : (result.error || 'Errore salvataggio.');
+    });
+    root.querySelector('[data-logout]').addEventListener('click', async () => {
+      await fetch('/api/auth', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify({ action: 'logout' }) });
+      localStorage.removeItem(tokenKey);
+      localStorage.setItem('mancuspiePublicName', 'Anonimo');
+      location.href = '/';
+    });
+  };
+  load().catch(() => { root.innerHTML = '<p>Profilo non disponibile.</p>'; });
+})();
+</script>
