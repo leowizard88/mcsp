@@ -3,35 +3,41 @@ layout: base.njk
 title: MANCUSPIE
 ---
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Schoolbell&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap');
 
   .hero-panel::after { display: none !important; }
 
   .hero-copy .child-title {
-    font-family: 'Schoolbell', 'Comic Sans MS', cursive;
+    font-family: 'Coming Soon', 'Comic Sans MS', cursive;
     font-size: clamp(74px, 12vw, 178px);
     line-height: .82;
-    letter-spacing: -.035em;
+    letter-spacing: -.045em;
     font-weight: 400;
     margin: 0 0 20px;
-    color: rgba(31,28,24,.92);
+    color: rgba(31,28,24,.72);
     text-transform: uppercase;
-    text-shadow: .5px 1px 0 rgba(31,28,24,.10);
+    -webkit-text-stroke: .35px rgba(31,28,24,.38);
+    text-shadow:
+      .7px .2px 0 rgba(31,28,24,.18),
+      -.45px .65px 0 rgba(31,28,24,.10),
+      .25px -.35px 0 rgba(31,28,24,.08);
+    filter: contrast(.92) saturate(.65);
   }
 
   .child-title span {
     display: inline-block;
     transform-origin: 50% 70%;
+    opacity: .88;
   }
 
   .child-title .l1 { transform: rotate(-5deg) translateY(4px); }
-  .child-title .l2 { transform: rotate(3deg) translateY(-7px); }
-  .child-title .l3 { transform: scaleX(-1) rotate(-7deg) translateY(8px); margin: 0 .015em; }
+  .child-title .l2 { transform: rotate(3deg) translateY(-7px); opacity:.78; }
+  .child-title .l3 { transform: scaleX(-1) rotate(-7deg) translateY(8px); margin: 0 .015em; opacity:.82; }
   .child-title .l4 { transform: rotate(6deg) translateY(-2px); }
-  .child-title .l5 { transform: rotate(-3deg) translateY(6px); }
+  .child-title .l5 { transform: rotate(-3deg) translateY(6px); opacity:.76; }
   .child-title .l6 { transform: rotate(4deg) translateY(-5px); }
-  .child-title .l7 { transform: rotate(-6deg) translateY(4px); }
-  .child-title .l8 { transform: rotate(2deg) translateY(-3px); }
+  .child-title .l7 { transform: rotate(-6deg) translateY(4px); opacity:.84; }
+  .child-title .l8 { transform: rotate(2deg) translateY(-3px); opacity:.70; }
   .child-title .l9 { transform: rotate(-4deg) translateY(5px); }
 
   .ultimi-movimenti-button {
@@ -64,7 +70,7 @@ title: MANCUSPIE
     100% { transform: translate(-1px, 0) rotate(-1.1deg); }
   }
   @media(max-width:760px){
-    .hero-copy .child-title{font-size:58px;letter-spacing:-.04em}
+    .hero-copy .child-title{font-size:58px;letter-spacing:-.05em}
     .ultimi-movimenti-button{width:215px !important;right:10px;bottom:16px;opacity:.9}
   }
 </style>
