@@ -3,6 +3,54 @@ layout: base.njk
 title: Zingaristan
 permalink: /zingaristan/
 ---
+<style>
+  html,
+  body,
+  .site-main {
+    background: #050505 !important;
+  }
+
+  .zingaristan-page {
+    min-height: 100svh;
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: #050505 url('/assets/img/zingaristan-bg.svg') center center / cover no-repeat !important;
+  }
+
+  .zingaristan-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.18);
+    pointer-events: none;
+  }
+
+  .zingaristan-page .single-article {
+    position: relative;
+    z-index: 2;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    color: #f3ead9;
+    text-align: center;
+    mix-blend-mode: screen;
+  }
+
+  .zingaristan-page h1 {
+    font-size: clamp(54px, 10vw, 142px);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    text-shadow: 0 0 18px rgba(0,0,0,.72);
+  }
+
+  .zingaristan-page .section-kicker {
+    color: #f3ead9;
+    opacity: .82;
+  }
+</style>
+
 <section class="single-page zingaristan-page">
   <article class="single-article">
     <p class="section-kicker">Zingaristan</p>
