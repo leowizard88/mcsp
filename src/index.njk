@@ -9,6 +9,15 @@ title: MANCUSPIE
 
   .bg-score { transform: rotate(0deg) !important; }
 
+  .hero-copy h2 {
+    color: #8b0000 !important;
+    font-size: clamp(13px, 1.15vw, 19px) !important;
+    line-height: 1.05 !important;
+    letter-spacing: .18em !important;
+    margin-top: 12px !important;
+    margin-bottom: 14px !important;
+  }
+
   .hero-copy .child-title {
     display: inline-block;
     max-width: 100%;
@@ -62,7 +71,9 @@ title: MANCUSPIE
     width: 100%;
     height: auto;
     mix-blend-mode: multiply;
-    filter: contrast(1.05) saturate(.82);
+    filter: contrast(1.08) saturate(.78);
+    -webkit-mask-image: radial-gradient(ellipse 44% 58% at 52% 54%, #000 58%, rgba(0,0,0,.72) 66%, transparent 78%);
+    mask-image: radial-gradient(ellipse 44% 58% at 52% 54%, #000 58%, rgba(0,0,0,.72) 66%, transparent 78%);
   }
   .ultimi-movimenti-button:hover {
     animation: movimentiVibra .115s steps(2, end) infinite;
@@ -77,7 +88,9 @@ title: MANCUSPIE
   }
   @media(max-width:760px){
     .hero-copy .child-title{font-size:clamp(49px,13.2vw,64px);letter-spacing:-.09em;white-space:nowrap}
-    .ultimi-movimenti-button{width:215px !important;right:10px;bottom:16px;opacity:.9}
+    .hero-copy h2{font-size:11px !important;letter-spacing:.14em !important;margin-top:8px !important;margin-bottom:10px !important}
+    .ultimi-movimenti-button{width:205px !important;right:8px;bottom:82px;opacity:.92}
+    .ultimi-movimenti-button img{-webkit-mask-image:radial-gradient(ellipse 42% 57% at 52% 54%,#000 58%,rgba(0,0,0,.68) 66%,transparent 77%);mask-image:radial-gradient(ellipse 42% 57% at 52% 54%,#000 58%,rgba(0,0,0,.68) 66%,transparent 77%)}
   }
 </style>
 
