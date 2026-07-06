@@ -21,6 +21,11 @@
 }
 
 /* Articles: kill the old static right image and use a moving ornament column instead. */
+body:has(.article-page-format) {
+  --article-ornament-width: clamp(120px, 13vw, 190px);
+  --article-ornament-gap: clamp(34px, 4.2vw, 68px);
+}
+
 .single-page::after,
 .archive-page::after,
 .article-page-format::after,
@@ -35,8 +40,6 @@ body:has(.article-page-format) .article-page-format::after {
 
 .article-page-format,
 .single-page:has(.article-format-inner) {
-  --article-ornament-width: clamp(84px, 10vw, 138px);
-  --article-ornament-gap: clamp(28px, 3.8vw, 56px);
   background: #fbfaf5 !important;
   overflow-x: hidden !important;
   padding-right: calc(var(--article-ornament-width) + var(--article-ornament-gap) + 18px) !important;
@@ -44,8 +47,8 @@ body:has(.article-page-format) .article-page-format::after {
 
 .article-format-inner,
 .single-inner.article-format-inner {
-  width: min(820px, calc(100vw - var(--side, 44px) - var(--article-ornament-width, 116px) - var(--article-ornament-gap, 42px) - 96px)) !important;
-  max-width: min(820px, calc(100vw - var(--side, 44px) - var(--article-ornament-width, 116px) - var(--article-ornament-gap, 42px) - 96px)) !important;
+  width: min(820px, calc(100vw - var(--side, 44px) - var(--article-ornament-width) - var(--article-ornament-gap) - 104px)) !important;
+  max-width: min(820px, calc(100vw - var(--side, 44px) - var(--article-ornament-width) - var(--article-ornament-gap) - 104px)) !important;
   margin-left: clamp(18px, 5vw, 72px) !important;
   margin-right: auto !important;
   padding-right: 0 !important;
@@ -56,11 +59,17 @@ body:has(.article-page-format) .article-page-format::after {
   top: 0;
   right: 0;
   bottom: 0;
-  width: var(--article-ornament-width, 116px);
+  width: var(--article-ornament-width);
   z-index: 6;
   overflow: hidden;
   pointer-events: none;
-  background: #050505;
+  background: transparent;
+  opacity: 0;
+  transition: opacity .22s ease;
+}
+
+.article-ornament-column.is-ready {
+  opacity: 1;
 }
 
 .article-ornament-track {
@@ -82,6 +91,7 @@ body:has(.article-page-format) .article-page-format::after {
   padding: 0;
   border: 0;
   flex: 0 0 auto;
+  background: #050505;
 }
 
 @keyframes articleOrnamentScroll {
@@ -137,6 +147,11 @@ body:has(.article-page-format) .article-page-format::after {
 }
 
 @media (max-width: 760px) {
+  body:has(.article-page-format) {
+    --article-ornament-width: 42px;
+    --article-ornament-gap: 22px;
+  }
+
   html,
   body,
   .site-main,
@@ -145,12 +160,20 @@ body:has(.article-page-format) .article-page-format::after {
     overflow-x: hidden !important;
   }
 
+  body:has(.article-page-format) .site-main,
+  .site-main:has(.article-page-format) {
+    width: calc(100vw - var(--side, 38px) - var(--article-ornament-width) - var(--article-ornament-gap) - 12px) !important;
+    max-width: calc(100vw - var(--side, 38px) - var(--article-ornament-width) - var(--article-ornament-gap) - 12px) !important;
+    margin-left: var(--side, 38px) !important;
+    padding-right: 0 !important;
+  }
+
   .article-page-format,
   .single-page:has(.article-format-inner) {
-    --article-ornament-width: 40px;
-    --article-ornament-gap: 18px;
     padding-left: 12px !important;
-    padding-right: calc(var(--article-ornament-width) + var(--article-ornament-gap) + 18px) !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   .single-page::after,
@@ -165,10 +188,10 @@ body:has(.article-page-format) .article-page-format::after {
 
   .article-format-inner,
   .single-inner.article-format-inner {
-    width: calc(100vw - var(--side, 38px) - var(--article-ornament-width, 40px) - var(--article-ornament-gap, 18px) - 36px) !important;
-    max-width: calc(100vw - var(--side, 38px) - var(--article-ornament-width, 40px) - var(--article-ornament-gap, 18px) - 36px) !important;
+    width: 100% !important;
+    max-width: 100% !important;
     margin-left: 0 !important;
-    margin-right: auto !important;
+    margin-right: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
     padding-top: 16px !important;
@@ -182,7 +205,7 @@ body:has(.article-page-format) .article-page-format::after {
   }
 
   .article-format-body {
-    font-size: clamp(16px, 4.35vw, 19px) !important;
+    font-size: clamp(15px, 4.05vw, 18px) !important;
     line-height: 1.56 !important;
   }
 
@@ -206,23 +229,25 @@ body:has(.article-page-format) .article-page-format::after {
     overflow-wrap: normal !important;
     word-break: normal !important;
     hyphens: none !important;
-    font-size: clamp(34px, 10vw, 52px) !important;
+    font-size: clamp(30px, 9.2vw, 48px) !important;
   }
 }
 
 @media (max-width: 380px) {
-  .article-page-format,
-  .single-page:has(.article-format-inner) {
+  body:has(.article-page-format) {
     --article-ornament-width: 34px;
-    --article-ornament-gap: 14px;
-    padding-left: 10px !important;
-    padding-right: calc(var(--article-ornament-width) + var(--article-ornament-gap) + 14px) !important;
+    --article-ornament-gap: 16px;
   }
 
-  .article-format-inner,
-  .single-inner.article-format-inner {
-    width: calc(100vw - var(--side, 38px) - var(--article-ornament-width, 34px) - var(--article-ornament-gap, 14px) - 28px) !important;
-    max-width: calc(100vw - var(--side, 38px) - var(--article-ornament-width, 34px) - var(--article-ornament-gap, 14px) - 28px) !important;
+  body:has(.article-page-format) .site-main,
+  .site-main:has(.article-page-format) {
+    width: calc(100vw - var(--side, 38px) - var(--article-ornament-width) - var(--article-ornament-gap) - 10px) !important;
+    max-width: calc(100vw - var(--side, 38px) - var(--article-ornament-width) - var(--article-ornament-gap) - 10px) !important;
+  }
+
+  .article-page-format,
+  .single-page:has(.article-format-inner) {
+    padding-left: 10px !important;
   }
 }
 
