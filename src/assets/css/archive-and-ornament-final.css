@@ -1,0 +1,82 @@
+/* Final archive cleanup: desktop only. */
+@media (min-width: 761px) {
+  .archive-system-page {
+    overflow-x: hidden !important;
+  }
+
+  .archive-system-inner {
+    max-width: 1120px !important;
+  }
+
+  .archive-chronology {
+    display: grid !important;
+    gap: 0 !important;
+  }
+
+  .archive-row {
+    display: grid !important;
+    grid-template-columns: 118px minmax(0, 1fr) 170px !important;
+    gap: clamp(22px, 3vw, 48px) !important;
+    align-items: start !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    padding: 24px 0 26px !important;
+    overflow: visible !important;
+  }
+
+  .archive-row > div {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .archive-row strong {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: clamp(30px, 3.45vw, 56px) !important;
+    line-height: 1.04 !important;
+    letter-spacing: .006em !important;
+    text-transform: none !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+    hyphens: none !important;
+    transform: none !important;
+  }
+
+  .archive-row:hover strong {
+    transform: none !important;
+  }
+
+  .archive-row span {
+    max-width: 100% !important;
+    font-size: clamp(16px, 1.4vw, 22px) !important;
+    line-height: 1.18 !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .archive-row time,
+  .archive-row em,
+  .archive-row small {
+    line-height: 1.35 !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .archive-row em {
+    min-width: 0 !important;
+    max-width: 170px !important;
+  }
+}
+
+/* Faster article ornament, without touching size or layout. */
+.article-ornament-track {
+  animation-duration: 14s !important;
+}
+
+@media (max-width: 760px) {
+  .article-ornament-track {
+    animation-duration: 14s !important;
+  }
+}
