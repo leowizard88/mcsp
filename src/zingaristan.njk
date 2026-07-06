@@ -7,322 +7,167 @@ permalink: /zingaristan/
   html,
   body,
   .site-main,
-  body:has(.zingaristan-page),
-  body:has(.zingaristan-page) .site-main,
-  .site-main:has(.zingaristan-page) {
+  body:has(.zingaristan-home),
+  body:has(.zingaristan-home) .site-main,
+  .site-main:has(.zingaristan-home) {
     background: #050505 !important;
     background-image: none !important;
   }
 
-  body:has(.zingaristan-page)::before,
-  body:has(.zingaristan-page)::after,
-  .site-main:has(.zingaristan-page)::before,
-  .site-main:has(.zingaristan-page)::after,
-  .zingaristan-page::after,
-  .single-page.zingaristan-page::after {
+  body:has(.zingaristan-home)::before,
+  body:has(.zingaristan-home)::after,
+  .site-main:has(.zingaristan-home)::before,
+  .site-main:has(.zingaristan-home)::after,
+  .zingaristan-home::after {
     display: none !important;
     content: none !important;
     background: none !important;
   }
 
-  .single-page.zingaristan-page,
-  .zingaristan-page {
+  .zingaristan-home {
     min-height: 100svh !important;
     width: 100% !important;
     max-width: none !important;
     margin: 0 !important;
-    padding: clamp(28px, 5vw, 64px) clamp(18px, 4vw, 52px) !important;
+    padding: clamp(28px, 5vw, 76px) clamp(18px, 5vw, 70px) !important;
     position: relative !important;
-    display: block !important;
-    overflow: visible !important;
+    display: grid !important;
+    place-items: center !important;
+    overflow: hidden !important;
     background-color: #050505 !important;
     background-image: url('/assets/img/416d96d6-6d37-4fd4-8a09-1dacc26d68fd.jpeg') !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
-    background-attachment: fixed !important;
   }
 
-  .single-page.zingaristan-page::before {
+  .zingaristan-home::before {
     content: '' !important;
-    position: fixed !important;
+    position: absolute !important;
     inset: 0 !important;
     display: block !important;
-    background: linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.38) 50%, rgba(0,0,0,.76)) !important;
+    background: radial-gradient(circle at 50% 36%, rgba(0,0,0,.16), rgba(0,0,0,.64) 72%), linear-gradient(90deg, rgba(0,0,0,.70), rgba(0,0,0,.22), rgba(0,0,0,.72)) !important;
     pointer-events: none !important;
     z-index: 1 !important;
   }
 
-  .zingaristan-entry {
+  .zingaristan-portal {
     position: relative;
     z-index: 2;
-    max-width: 1120px;
-    margin: 0 auto;
-    background: rgba(250,248,240,.92);
-    color: #202122;
-    border: 1px solid rgba(162,169,177,.9);
-    box-shadow: 0 20px 80px rgba(0,0,0,.45);
-    padding: clamp(18px, 3vw, 38px);
+    width: min(1120px, 94vw);
+    min-height: min(720px, 82svh);
+    display: grid;
+    grid-template-rows: 1fr auto;
+    align-items: center;
+    text-align: center;
+  }
+
+  .zingaristan-title-wrap {
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding-top: clamp(20px, 7vw, 96px);
+  }
+
+  .zingaristan-title {
+    width: min(1120px, 96vw);
+    height: clamp(170px, 32vw, 360px);
+    overflow: visible;
+    filter: drop-shadow(0 10px 0 rgba(0,0,0,.38)) drop-shadow(0 0 28px rgba(255,224,0,.18));
+  }
+
+  .zingaristan-title text {
     font-family: Georgia, 'Times New Roman', serif;
+    font-size: 86px;
+    font-weight: 800;
+    letter-spacing: .055em;
+    text-transform: uppercase;
+    paint-order: stroke fill;
+    stroke: rgba(0,0,0,.55);
+    stroke-width: 2.6px;
   }
 
-  .zingaristan-wiki-head {
-    border-bottom: 1px solid #a2a9b1;
-    margin-bottom: 18px;
-    padding-bottom: 10px;
+  .zingaristan-title .z-black { fill: #050505; }
+  .zingaristan-title .z-blue { fill: #083a92; }
+  .zingaristan-title .z-green { fill: #19b73d; }
+  .zingaristan-title .z-yellow { fill: #ffd31a; }
+
+  .zingaristan-official {
+    margin: clamp(-28px, -3vw, -10px) 0 0;
+    color: #ffe066;
+    font-family: var(--font-sans);
+    font-size: clamp(15px, 2.2vw, 30px);
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    text-shadow: 0 3px 12px rgba(0,0,0,.9);
   }
 
-  .zingaristan-wiki-head h1 {
-    margin: 0 0 6px;
-    font-size: clamp(38px, 6vw, 78px);
-    line-height: .95;
-    font-weight: 400;
-    color: #202122;
-    text-transform: none;
-    letter-spacing: 0;
-    text-shadow: none;
-  }
-
-  .zingaristan-subtitle {
-    margin: 0 !important;
-    color: #54595d;
-    font-size: 14px !important;
-    font-family: sans-serif;
-  }
-
-  .zingaristan-layout {
+  .zingaristan-actions {
     display: grid;
-    grid-template-columns: 1fr 310px;
-    gap: 28px;
-    align-items: start;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(12px, 3vw, 38px);
+    align-items: end;
+    margin-top: clamp(34px, 7vw, 86px);
   }
 
-  .zingaristan-main p,
-  .zingaristan-main li {
-    font-size: 16px;
-    line-height: 1.62;
-  }
-
-  .zingaristan-main h2 {
-    margin: 34px 0 10px;
-    padding-bottom: 4px;
-    border-bottom: 1px solid #a2a9b1;
-    font-size: 26px;
-    font-weight: 400;
-    color: #202122;
-  }
-
-  .zingaristan-main h3 {
-    margin: 24px 0 8px;
-    font-size: 20px;
-    color: #202122;
-  }
-
-  .zingaristan-main a,
-  .zingaristan-toc a {
-    color: #0645ad;
-    text-decoration: none;
-  }
-
-  .zingaristan-main a:hover,
-  .zingaristan-toc a:hover {
-    text-decoration: underline;
-  }
-
-  .zingaristan-infobox {
-    border: 1px solid #a2a9b1;
-    background: #f8f9fa;
-    font-family: sans-serif;
-    font-size: 13px;
-  }
-
-  .zingaristan-infobox h2 {
-    margin: 0;
-    padding: 10px;
-    background: #eaecf0;
-    border-bottom: 1px solid #a2a9b1;
-    text-align: center;
-    font-size: 22px;
-    font-weight: 700;
-  }
-
-  .zingaristan-emblem {
-    background: #050505;
-    border-bottom: 1px solid #a2a9b1;
-  }
-
-  .zingaristan-emblem img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  .zingaristan-caption {
-    padding: 8px 10px;
-    text-align: center;
-    color: #54595d;
-    border-bottom: 1px solid #a2a9b1;
-  }
-
-  .zingaristan-infobox dl {
+  .zingaristan-button {
+    min-height: 64px;
     display: grid;
-    grid-template-columns: 43% 57%;
-    margin: 0;
+    place-items: center;
+    padding: 18px 14px;
+    border: 2px solid rgba(255,211,26,.84);
+    background: linear-gradient(180deg, rgba(5,5,5,.78), rgba(8,58,146,.54));
+    color: #ffd31a !important;
+    font-family: var(--font-sans);
+    font-size: clamp(12px, 1.5vw, 17px);
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    text-decoration: none !important;
+    box-shadow: 0 12px 32px rgba(0,0,0,.48), inset 0 0 0 1px rgba(25,183,61,.42);
   }
 
-  .zingaristan-infobox dt,
-  .zingaristan-infobox dd {
-    margin: 0;
-    padding: 8px 9px;
-    border-bottom: 1px solid #eaecf0;
+  .zingaristan-button.is-disabled {
+    opacity: .58;
+    cursor: default;
+    pointer-events: none;
+    filter: grayscale(.25);
   }
 
-  .zingaristan-infobox dt {
-    font-weight: 700;
-    background: rgba(234,236,240,.72);
+  .zingaristan-button:hover {
+    background: linear-gradient(180deg, rgba(25,183,61,.72), rgba(8,58,146,.76));
+    transform: translateY(-2px);
   }
 
-  .zingaristan-toc {
-    display: inline-block;
-    margin: 18px 0 10px;
-    padding: 12px 18px;
-    border: 1px solid #a2a9b1;
-    background: #f8f9fa;
-    font-family: sans-serif;
-    font-size: 14px;
-  }
-
-  .zingaristan-toc strong {
-    display: block;
-    text-align: center;
-    margin-bottom: 8px;
-  }
-
-  .zingaristan-toc ol {
-    margin: 0;
-    padding-left: 22px;
-  }
-
-  .zingaristan-notes,
-  .zingaristan-related {
-    font-family: sans-serif;
-    font-size: 14px;
-  }
-
-  .zingaristan-categories {
-    margin-top: 30px;
-    padding: 10px;
-    border: 1px solid #a2a9b1;
-    background: #f8f9fa;
-    font-family: sans-serif;
-    font-size: 13px;
-    color: #0645ad;
-  }
-
-  @media(max-width:860px) {
-    .single-page.zingaristan-page { padding: 18px 12px !important; background-attachment: scroll !important; }
-    .zingaristan-entry { padding: 16px; }
-    .zingaristan-layout { grid-template-columns: 1fr; }
-    .zingaristan-infobox { order: -1; }
+  @media(max-width:760px) {
+    .zingaristan-home { padding: 28px 14px !important; }
+    .zingaristan-portal { min-height: 78svh; }
+    .zingaristan-title { width: 118vw; height: 220px; }
+    .zingaristan-title text { font-size: 66px; letter-spacing: .025em; }
+    .zingaristan-actions { grid-template-columns: 1fr; gap: 14px; }
+    .zingaristan-button { min-height: 54px; }
   }
 </style>
 
-<section class="single-page zingaristan-page">
-  <article class="zingaristan-entry">
-    <header class="zingaristan-wiki-head">
-      <h1>Zingaristan</h1>
-      <p class="zingaristan-subtitle">Da Mancuspedia, enciclopedia libera immaginaria</p>
-    </header>
-
-    <div class="zingaristan-layout">
-      <main class="zingaristan-main">
-        <p><strong>Zingaristan</strong> (nome ufficiale: <em>Lega Comunista delle Popolazioni Nomadi Zingare</em>) è una entità politica fittizia, descritta come una repubblica nomade, comunista e transnazionale, nata dall'alleanza tra comunità romanì, sinti, circensi, carovanieri e gruppi proletari senza territorio stabile.</p>
-        <p>Nella mitologia politica zingaristana, lo Stato non coincide con un suolo ma con una rete di strade, accampamenti, archivi mobili, officine e assemblee. Per questo viene spesso definito uno "Stato-carovana" o una "nazione senza chiodi".</p>
-
-        <nav class="zingaristan-toc" aria-label="Indice">
-          <strong>Indice</strong>
-          <ol>
-            <li><a href="#etimologia">Etimologia</a></li>
-            <li><a href="#storia">Storia</a></li>
-            <li><a href="#governo">Governo e istituzioni</a></li>
-            <li><a href="#economia">Economia carovaniera</a></li>
-            <li><a href="#cultura">Cultura e simboli</a></li>
-            <li><a href="#relazioni">Relazioni esterne</a></li>
-            <li><a href="#note">Note</a></li>
-          </ol>
-        </nav>
-
-        <h2 id="etimologia">Etimologia</h2>
-        <p>Il termine <em>Zingaristan</em> unisce il lessema popolare "zingaro" al suffisso geografico persiano <em>-stan</em>, con il significato letterale di "terra degli zingari". Nella propaganda ufficiale il suffisso viene reinterpretato come "stare", ma non in senso sedentario: stare in movimento, stare insieme, stare fuori dai registri del padrone.</p>
-        <p>Le fonti zingaristane preferiscono spesso la formula <em>popolazioni nomadi romanì e sinti</em>; il nome storico, tuttavia, resta impiegato negli inni, nei francobolli clandestini e nelle mappe del Fronte di Liberazione Zingara.</p>
-
-        <h2 id="storia">Storia</h2>
-        <p>La tradizione colloca la nascita dello Zingaristan nel 1978, durante il cosiddetto <strong>Congresso del Carro Rosso</strong>, riunione semileggendaria tenuta in una cava abbandonata lungo una frontiera imprecisata dell'Europa meridionale. Il Congresso avrebbe proclamato la fine della "minoranza come destino amministrativo" e l'inizio della "maggioranza nomade".</p>
-        <p>Tra il 1979 e il 1986 il movimento zingaristano si diffuse attraverso radio pirata, mercati notturni, compagnie di spettacolo viaggianti e officine meccaniche collettivizzate. Il periodo viene ricordato come l'<strong>Età dei Tamburi a Benzina</strong>, per l'uso di bidoni industriali come strumenti musicali e come casse di risonanza politica.</p>
-        <p>Nel 1989 il Partito Comunista Zingaro istituì il primo <strong>Registro Mobile dei Compagni</strong>, un archivio custodito su camion, tende e quaderni cifrati. Secondo la storiografia interna, questa scelta impedì ogni piena cattura burocratica del movimento: distruggere una sede non significava distruggere lo Stato.</p>
-
-        <h2 id="governo">Governo e istituzioni</h2>
-        <p>Lo Zingaristan viene descritto come una repubblica federativa itinerante. La sua massima autorità è il <strong>Grande Congresso delle Ruote</strong>, assemblea composta da delegati di carovana, officina, banda musicale, scuola mobile e unità militare. Il Congresso non ha sede fissa: si riunisce dove convergono almeno tredici convogli riconosciuti.</p>
-        <p>L'amministrazione è divisa in <em>cerchi</em>, non in province. Ogni cerchio corrisponde a una rete di famiglie, mezzi, luoghi di sosta, laboratori e memorie comuni. La cittadinanza, detta <strong>cittadinanza di passaggio</strong>, non è concessa per nascita territoriale, ma per partecipazione alla vita collettiva.</p>
-
-        <h3>Partito Comunista Zingaro</h3>
-        <p>Il <strong>Partito Comunista Zingaro</strong> (PCZ) è il partito guida dello Zingaristan. La sua dottrina ufficiale, il <em>nomadismo dialettico</em>, sostiene che il proletariato nomade non debba conquistare una capitale, ma disinnescare il principio stesso della capitale. I suoi organi principali sono il Comitato Centrale delle Strade, la Segreteria dei Fuochi e l'Ufficio Cartografico Anti-confine.</p>
-        <p>Il PCZ usa come simbolo una ruota rossa attraversata da una stella nera. Gli iscritti sono chiamati <em>compagni di transito</em>. Il tesseramento, secondo i regolamenti interni, può avvenire su carta, stoffa, metallo inciso o memoria orale certificata da tre testimoni.</p>
-
-        <h3>Fronte di Liberazione Zingara</h3>
-        <p>Il <strong>Fronte di Liberazione Zingara</strong> (FLZ) costituisce l'organizzazione armata e difensiva dello Zingaristan. Nato come rete di autodifesa contro sgomberi, rastrellamenti e milizie private, il FLZ si struttura in colonne leggere, unità di comunicazione, reparti di recupero veicoli e brigate sanitarie.</p>
-        <p>La sua strategia è riassunta nella formula "apparire, proteggere, sparire". Più che occupare territorio, il FLZ mira a garantire corridoi di movimento, riparare mezzi, evacuare accampamenti e mantenere aperte le linee radio. La fanteria tradizionale è quasi assente; centrali sono invece meccanici, staffette, cartografi e musicisti-segnalatori.</p>
-
-        <h2 id="economia">Economia carovaniera</h2>
-        <p>L'economia zingaristana viene definita <strong>socialismo carovaniero</strong>. I mezzi di produzione fondamentali non sono fabbriche monumentali ma strumenti trasportabili: furgoni, cucine mobili, saldatrici, telai pieghevoli, antenne, generatori, teatri smontabili e archivi. La proprietà privata dei grandi mezzi è abolita, mentre gli oggetti personali e rituali restano inviolabili.</p>
-        <p>Il commercio esterno avviene attraverso baratto, riparazioni meccaniche, spettacoli, contrabbando poetico e distribuzione di manufatti. Il <em>buono comune itinerante</em>, più che una moneta stabile, funziona come promessa di reciprocità tra carovane.</p>
-
-        <h2 id="cultura">Cultura e simboli</h2>
-        <p>La cultura zingaristana mescola oralità, propaganda rivoluzionaria, musica da fiera, iconografia sovietica, estetica anime devozionale e araldica inventata. L'inno nazionale, <em>Internazionale delle Ruote</em>, alterna strofe in romanì e ritornelli corali traducibili in tutte le lingue del campo.</p>
-        <p>La bandiera più diffusa presenta bande nere, blu e verdi, cavalli rampanti, mani protese, sole giallo e foglia centrale. Secondo l'interpretazione scolastica: il nero rappresenta la notte del confine, il blu la strada, il verde l'accampamento possibile, il sole la comune futura.</p>
-
-        <h2 id="relazioni">Relazioni esterne</h2>
-        <p>Poiché non rivendica un territorio continuo, lo Zingaristan è oggetto di dispute giuridiche. Alcuni Stati lo classificano come organizzazione politica extraterritoriale, altri come confederazione culturale, altri ancora come minaccia alla sovranità sedentaria. Il PCZ respinge tutte queste definizioni e rivendica la formula "Stato in moto".</p>
-        <p>Le relazioni diplomatiche avvengono tramite ambasciate temporanee: tende, tavoli pieghevoli, vagoni, camion biblioteca. Il protocollo prevede che ogni trattato venga letto ad alta voce davanti a un fuoco o a un motore acceso.</p>
-
-        <h2 id="note">Note</h2>
-        <ol class="zingaristan-notes">
-          <li>Archivio mobile del Congresso delle Ruote, fasc. 12: <em>Sulla cittadinanza di passaggio</em>.</li>
-          <li>Comitato Centrale delle Strade, <em>Manuale breve di nomadismo dialettico</em>, edizione clandestina.</li>
-          <li>Fronte di Liberazione Zingara, <em>Quaderno operativo delle colonne leggere</em>, ciclostile senza data.</li>
-          <li>Radio Carovana Rossa, trasmissione commemorativa del Congresso del Carro Rosso.</li>
-        </ol>
-
-        <h2>Bibliografia immaginaria</h2>
-        <ul>
-          <li><em>Cronaca del Carro Rosso</em>, Comitato Centrale delle Strade, 1981.</li>
-          <li>M. Ciorban, <em>La ruota e il martello. Appunti sul nomadismo dialettico</em>, Tipografia Vagante, 1990.</li>
-          <li>L. Dundar, <em>Atlante provvisorio degli Stati senza capitale</em>, Archivio Mobile Mediterraneo, 1998.</li>
-          <li>Collettivo Radio Carovana Rossa, <em>Trasmissioni scelte 1978-1986</em>, bobine restaurate, 2004.</li>
-        </ul>
-
-        <h2>Voci correlate</h2>
-        <p class="zingaristan-related">Comunismo nomade · Popolazioni romanì · Sinti · Autogestione · Stato senza territorio · Carovana · Radio pirata · Fronte di liberazione</p>
-
-        <div class="zingaristan-categories">Categorie: Stati immaginari · Comunismo fittizio · Nomadismo politico · Mancuspedia</div>
-      </main>
-
-      <aside class="zingaristan-infobox" aria-label="Infobox Zingaristan">
-        <h2>Zingaristan</h2>
-        <div class="zingaristan-emblem"><img src="/assets/img/3B2ED715-A018-499A-BF31-8C67EAE9B292.jpeg" alt="Manifesto dello Zingaristan"></div>
-        <p class="zingaristan-caption">Emblema e manifesto popolare attribuiti al primo Congresso nomade.</p>
-        <dl>
-          <dt>Nome ufficiale</dt><dd>Lega Comunista delle Popolazioni Nomadi Zingare</dd>
-          <dt>Forma di governo</dt><dd>Repubblica federativa itinerante a partito guida</dd>
-          <dt>Partito egemone</dt><dd>Partito Comunista Zingaro (PCZ)</dd>
-          <dt>Forze armate</dt><dd>Fronte di Liberazione Zingara (FLZ)</dd>
-          <dt>Capitale</dt><dd>Nessuna capitale stabile; sede mobile del Congresso</dd>
-          <dt>Lingue</dt><dd>romanì, dialetti sinti, italiano popolare, esperanto amministrativo</dd>
-          <dt>Fondazione</dt><dd>1978, secondo la Cronaca del Carro Rosso</dd>
-          <dt>Motto</dt><dd>Nessun confine, nessun padrone</dd>
-          <dt>Valuta</dt><dd>Buono comune itinerante</dd>
-        </dl>
-      </aside>
+<section class="single-page zingaristan-home">
+  <div class="zingaristan-portal">
+    <div class="zingaristan-title-wrap">
+      <svg class="zingaristan-title" viewBox="0 0 1100 330" aria-label="Zingaristan" role="img">
+        <defs>
+          <path id="zingaristanCurve" d="M85 230 C250 65 850 65 1015 230" />
+        </defs>
+        <text>
+          <textPath href="#zingaristanCurve" startOffset="50%" text-anchor="middle">
+            <tspan class="z-black">Z</tspan><tspan class="z-blue">I</tspan><tspan class="z-green">N</tspan><tspan class="z-yellow">G</tspan><tspan class="z-black">A</tspan><tspan class="z-blue">R</tspan><tspan class="z-green">I</tspan><tspan class="z-yellow">S</tspan><tspan class="z-black">T</tspan><tspan class="z-blue">A</tspan><tspan class="z-green">N</tspan>
+          </textPath>
+        </text>
+      </svg>
+      <p class="zingaristan-official">homepage ufficiale</p>
     </div>
-  </article>
+
+    <nav class="zingaristan-actions" aria-label="Sezioni Zingaristan">
+      <span class="zingaristan-button is-disabled">Tesseramento</span>
+      <a class="zingaristan-button" href="/zingaristan/wiki/">Wiki</a>
+      <span class="zingaristan-button is-disabled">Il programma</span>
+    </nav>
+  </div>
 </section>
