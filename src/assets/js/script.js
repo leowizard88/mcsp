@@ -30,7 +30,7 @@ body .item-list{background:linear-gradient(90deg,rgba(234,215,179,.13),rgba(234,
 body .movimento-card time{background:rgba(234,215,179,.42)!important}
 body .movimento-card strong{background:rgba(234,215,179,.46)!important}
 body .movimento-card span{background:rgba(234,215,179,.36)!important}
-.chat-panel{display:grid!important;align-items:center!important;background:#ead7b3!important}.chat-panel::before{background:linear-gradient(115deg,#efdfc1 0%,#ddc595 100%)!important}.chat-board{position:relative;z-index:5;width:min(900px,88vw);margin:0 auto;border-top:1px solid rgba(31,28,24,.28);padding-top:clamp(26px,4vw,52px)}.chat-board h2{margin:0 0 22px;font-family:var(--font-serif);font-size:clamp(56px,9vw,132px);line-height:.86;font-weight:300}.chat-board p{max-width:620px;margin:0 0 24px;font-size:clamp(19px,2vw,30px);line-height:1.18}.chat-form{display:grid;grid-template-columns:minmax(120px,210px) 1fr auto;gap:10px;align-items:end}.chat-form input,.chat-form textarea{width:100%;border:1px solid rgba(31,28,24,.30);background:rgba(234,215,179,.18);color:#120d08;font:300 14px/1.2 var(--font-sans);letter-spacing:.04em;padding:13px 12px;border-radius:0;outline:none}.chat-form textarea{min-height:44px;resize:vertical}.chat-form input:focus,.chat-form textarea:focus{border-color:rgba(31,28,24,.62);background:rgba(234,215,179,.28)}.chat-form button{border:1px solid rgba(31,28,24,.42);background:rgba(31,28,24,.84);color:#ead7b3;font:300 11px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;padding:15px 16px;cursor:pointer}.chat-messages{margin-top:26px;display:grid;gap:12px}.chat-message{border-top:1px solid rgba(31,28,24,.20);padding-top:12px}.chat-message strong{display:inline-block;margin-right:10px;font:300 12px/1 var(--font-sans);letter-spacing:.14em;text-transform:uppercase}.chat-message time{font:300 10px/1 var(--font-sans);letter-spacing:.10em;opacity:.55}.chat-message p{margin:8px 0 0;font-size:clamp(19px,2vw,28px);line-height:1.18;max-width:none}.chat-note{margin-top:18px!important;font:300 11px/1.4 var(--font-sans)!important;letter-spacing:.08em;text-transform:uppercase;opacity:.62}.chat-error{color:#5a0000!important}
+.chat-panel{display:grid!important;align-items:center!important;background:#ead7b3!important}.chat-panel::before{background:linear-gradient(115deg,#efdfc1 0%,#ddc595 100%)!important}.chat-board{position:relative;z-index:5;width:min(900px,88vw);margin:0 auto;border-top:1px solid rgba(31,28,24,.28);padding-top:clamp(26px,4vw,52px)}.chat-board h2{margin:0 0 22px;font-family:var(--font-serif);font-size:clamp(56px,9vw,132px);line-height:.86;font-weight:300}.chat-board p{max-width:620px;margin:0 0 24px;font-size:clamp(19px,2vw,30px);line-height:1.18}.chat-form{display:grid;grid-template-columns:minmax(120px,210px) 1fr auto;gap:10px;align-items:end}.chat-form input,.chat-form textarea{width:100%;border:1px solid rgba(31,28,24,.30);background:rgba(234,215,179,.18);color:#120d08;font:300 14px/1.2 var(--font-sans);letter-spacing:.04em;padding:13px 12px;border-radius:0;outline:none}.chat-form textarea{min-height:44px;resize:vertical}.chat-form input:focus,.chat-form textarea:focus{border-color:rgba(31,28,24,.62);background:rgba(234,215,179,.28)}.chat-form button{border:1px solid rgba(31,28,24,.42);background:rgba(31,28,24,.84);color:#ead7b3;font:300 11px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;padding:15px 16px;cursor:pointer}.chat-form input.is-locked{opacity:.62;cursor:not-allowed}.chat-messages{margin-top:26px;display:grid;gap:12px}.chat-message{border-top:1px solid rgba(31,28,24,.20);padding-top:12px}.chat-message strong{display:inline-block;margin-right:10px;font:300 12px/1 var(--font-sans);letter-spacing:.14em;text-transform:uppercase}.chat-message time{font:300 10px/1 var(--font-sans);letter-spacing:.10em;opacity:.55}.chat-message p{margin:8px 0 0;font-size:clamp(19px,2vw,28px);line-height:1.18;max-width:none}.chat-error{color:#5a0000!important}
 @media(max-width:760px){body .site-main #home.hero-panel .bg-score{left:-28%!important;top:-8%!important;width:150%!important;height:112%!important;background-size:cover!important;background-position:left center!important;opacity:.18!important}body .site-main #home.hero-panel .hero-copy h2{margin-left:0!important;max-width:calc(100vw - 82px)!important;text-align:justify!important;text-align-last:left!important}body .site-main #home.hero-panel .ultimi-movimenti-button{margin-right:25px!important}body .site-main #home.hero-panel .drama-mobile{transform:translateX(21px)!important;transform-origin:center!important}body .noi-panel .bg-archive{inset:-8% -20% -8% -18%!important;width:auto!important;height:auto!important;background-size:cover!important;background-position:center center!important;opacity:.30!important;-webkit-mask-image:radial-gradient(ellipse at 50% 50%,#000 0 56%,rgba(0,0,0,.58) 72%,transparent 92%)!important;mask-image:radial-gradient(ellipse at 50% 50%,#000 0 56%,rgba(0,0,0,.58) 72%,transparent 92%)!important}.chat-board{width:100%}.chat-form{grid-template-columns:1fr}}
 `;
 document.head.appendChild(homeFix);
@@ -65,7 +65,6 @@ const installPublicChat = () => {
         <button type="submit">Invia</button>
       </form>
       <div class="chat-messages" data-chat-messages aria-live="polite"></div>
-      <p class="chat-note">Bacheca pubblica condivisa. Niente login: usa un nome civile o sparisci nel cestino cosmico.</p>
     </div>
     <footer class="footer"><span>© MANCUSPIE</span><span></span><span></span></footer>`;
   main.appendChild(panel);
@@ -74,7 +73,13 @@ const installPublicChat = () => {
   const nameInput = panel.querySelector('[data-chat-name]');
   const textInput = panel.querySelector('[data-chat-text]');
   const list = panel.querySelector('[data-chat-messages]');
-  nameInput.value = localStorage.getItem(nameKey) || '';
+  const savedName = localStorage.getItem(nameKey) || '';
+  if (savedName) {
+    nameInput.value = savedName;
+    nameInput.readOnly = true;
+    nameInput.classList.add('is-locked');
+    nameInput.title = 'Nickname già scelto';
+  }
 
   const render = messages => {
     if (!messages.length) {
@@ -101,10 +106,18 @@ const installPublicChat = () => {
 
   form.addEventListener('submit', async event => {
     event.preventDefault();
-    const name = nameInput.value.trim().slice(0, 24);
+    const lockedName = localStorage.getItem(nameKey);
+    const chosenName = nameInput.value.trim().slice(0, 24);
+    const name = lockedName || chosenName;
     const text = textInput.value.trim().slice(0, 260);
     if (!name || !text) return;
-    localStorage.setItem(nameKey, name);
+    if (!lockedName) {
+      localStorage.setItem(nameKey, name);
+      nameInput.value = name;
+      nameInput.readOnly = true;
+      nameInput.classList.add('is-locked');
+      nameInput.title = 'Nickname già scelto';
+    }
     form.querySelector('button').disabled = true;
     try {
       const response = await fetch(apiUrl, {
