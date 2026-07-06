@@ -13,6 +13,12 @@
       background: #050000 !important;
     }
 
+    html,
+    body {
+      max-width: 100%;
+      overflow-x: hidden !important;
+    }
+
     body:has(.single-page),
     body:has(.archive-page),
     .site-main:has(.single-page),
@@ -49,6 +55,18 @@
     .vertical-nav a:hover,
     .vertical-nav a.is-active {
       opacity: 1 !important;
+    }
+
+    @media(max-width:760px) {
+      .side-index {
+        display: none !important;
+      }
+
+      .site-main {
+        width: 100% !important;
+        margin-left: 0 !important;
+        overflow-x: hidden !important;
+      }
     }
   </style>
 </head>
