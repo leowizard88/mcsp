@@ -30,23 +30,13 @@ body .item-list{background:linear-gradient(90deg,rgba(234,215,179,.13),rgba(234,
 body .movimento-card time{background:rgba(234,215,179,.42)!important}
 body .movimento-card strong{background:rgba(234,215,179,.46)!important}
 body .movimento-card span{background:rgba(234,215,179,.36)!important}
-.zingaristan-link{display:inline-block;margin-top:16px;color:#061a46!important;text-decoration:underline!important;text-decoration-thickness:1px;text-underline-offset:3px;font:300 14px/1 var(--font-sans);letter-spacing:.09em}.chat-panel{display:grid!important;align-items:center!important;background:#ead7b3!important}.chat-panel::before{background:linear-gradient(115deg,#efdfc1 0%,#ddc595 100%)!important}.chat-board{position:relative;z-index:5;width:min(900px,88vw);margin:0 auto;border-top:1px solid rgba(31,28,24,.28);padding-top:clamp(26px,4vw,52px)}.chat-board h2{margin:0 0 22px;font-family:var(--font-serif);font-size:clamp(56px,9vw,132px);line-height:.86;font-weight:300}.chat-board p{max-width:620px;margin:0 0 24px;font-size:clamp(19px,2vw,30px);line-height:1.18}.chat-form{display:grid;grid-template-columns:minmax(120px,210px) 1fr auto;gap:10px;align-items:end}.chat-form input,.chat-form textarea{width:100%;border:1px solid rgba(31,28,24,.30);background:rgba(234,215,179,.18);color:#120d08;font:300 14px/1.2 var(--font-sans);letter-spacing:.04em;padding:13px 12px;border-radius:0;outline:none}.chat-form textarea{min-height:44px;resize:vertical}.chat-form input:focus,.chat-form textarea:focus{border-color:rgba(31,28,24,.62);background:rgba(234,215,179,.28)}.chat-form button{border:1px solid rgba(31,28,24,.42);background:rgba(31,28,24,.84);color:#ead7b3;font:300 11px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;padding:15px 16px;cursor:pointer}.chat-form input.is-locked{opacity:.62;cursor:not-allowed}.chat-messages{margin-top:26px;display:grid;gap:12px}.chat-message{border-top:1px solid rgba(31,28,24,.20);padding-top:12px}.chat-message.is-reply{border-left:3px solid rgba(31,28,24,.24);padding-left:12px}.chat-message strong{display:inline-block;margin-right:10px;font:300 12px/1 var(--font-sans);letter-spacing:.14em;text-transform:uppercase}.chat-message time{font:300 10px/1 var(--font-sans);letter-spacing:.10em;opacity:.55}.chat-message p{margin:8px 0 0;font-size:clamp(19px,2vw,28px);line-height:1.18;max-width:none}.chat-reply-toggle,.chat-reply button,.chat-branch-toggle{margin-top:10px;margin-right:8px;border:1px solid rgba(31,28,24,.42);background:rgba(31,28,24,.84);color:#ead7b3;font:300 10px/1 var(--font-sans);letter-spacing:.15em;text-transform:uppercase;padding:9px 11px;cursor:pointer}.chat-branch-toggle{background:rgba(234,215,179,.32);color:#120d08}.chat-reply{display:none;grid-template-columns:minmax(100px,180px) 1fr auto;gap:8px;align-items:end;margin-top:10px}.chat-reply.is-open{display:grid}.chat-reply input,.chat-reply textarea{width:100%;border:1px solid rgba(31,28,24,.26);background:rgba(234,215,179,.20);color:#120d08;font:300 13px/1.2 var(--font-sans);letter-spacing:.035em;padding:10px;outline:none}.chat-reply textarea{min-height:38px;resize:vertical}.chat-error{color:#5a0000!important}
+.chat-panel{display:grid!important;align-items:center!important;background:#ead7b3!important}.chat-panel::before{background:linear-gradient(115deg,#efdfc1 0%,#ddc595 100%)!important}.chat-board{position:relative;z-index:5;width:min(900px,88vw);margin:0 auto;border-top:1px solid rgba(31,28,24,.28);padding-top:clamp(26px,4vw,52px)}.chat-board h2{margin:0 0 22px;font-family:var(--font-serif);font-size:clamp(56px,9vw,132px);line-height:.86;font-weight:300}.chat-board p{max-width:620px;margin:0 0 24px;font-size:clamp(19px,2vw,30px);line-height:1.18}.chat-form{display:grid;grid-template-columns:minmax(120px,210px) 1fr auto;gap:10px;align-items:end}.chat-form input,.chat-form textarea{width:100%;border:1px solid rgba(31,28,24,.30);background:rgba(234,215,179,.18);color:#120d08;font:300 14px/1.2 var(--font-sans);letter-spacing:.04em;padding:13px 12px;border-radius:0;outline:none}.chat-form textarea{min-height:44px;resize:vertical}.chat-form input:focus,.chat-form textarea:focus{border-color:rgba(31,28,24,.62);background:rgba(234,215,179,.28)}.chat-form button{border:1px solid rgba(31,28,24,.42);background:rgba(31,28,24,.84);color:#ead7b3;font:300 11px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;padding:15px 16px;cursor:pointer}.chat-form input.is-locked{opacity:.62;cursor:not-allowed}.chat-messages{margin-top:26px;display:grid;gap:12px}.chat-message{border-top:1px solid rgba(31,28,24,.20);padding-top:12px}.chat-message.is-reply{border-left:3px solid rgba(31,28,24,.24);padding-left:12px}.chat-message strong{display:inline-block;margin-right:10px;font:300 12px/1 var(--font-sans);letter-spacing:.14em;text-transform:uppercase}.chat-message time{font:300 10px/1 var(--font-sans);letter-spacing:.10em;opacity:.55}.chat-message p{margin:8px 0 0;font-size:clamp(19px,2vw,28px);line-height:1.18;max-width:none}.chat-reply-toggle,.chat-reply button,.chat-branch-toggle{display:inline-block!important;visibility:visible!important;margin-top:10px;margin-right:8px;border:1px solid rgba(31,28,24,.42);background:rgba(31,28,24,.84);color:#ead7b3;font:300 10px/1 var(--font-sans);letter-spacing:.15em;text-transform:uppercase;padding:9px 11px;cursor:pointer}.chat-branch-toggle{background:rgba(234,215,179,.32);color:#120d08}.chat-reply{display:none;grid-template-columns:minmax(100px,180px) 1fr auto;gap:8px;align-items:end;margin-top:10px}.chat-reply.is-open{display:grid}.chat-reply input,.chat-reply textarea{width:100%;border:1px solid rgba(31,28,24,.26);background:rgba(234,215,179,.20);color:#120d08;font:300 13px/1.2 var(--font-sans);letter-spacing:.035em;padding:10px;outline:none}.chat-reply textarea{min-height:38px;resize:vertical}.chat-error{color:#5a0000!important}
 @media(max-width:760px){body .site-main #home.hero-panel .bg-score{left:-28%!important;top:-8%!important;width:150%!important;height:112%!important;background-size:cover!important;background-position:left center!important;opacity:.18!important}body .site-main #home.hero-panel .hero-copy h2{margin-left:0!important;max-width:calc(100vw - 82px)!important;text-align:justify!important;text-align-last:left!important}body .site-main #home.hero-panel .ultimi-movimenti-button{margin-right:25px!important}body .site-main #home.hero-panel .drama-mobile{transform:translateX(21px)!important;transform-origin:center!important}body .noi-panel .bg-archive{inset:-8% -20% -8% -18%!important;width:auto!important;height:auto!important;background-size:cover!important;background-position:center center!important;opacity:.30!important;-webkit-mask-image:radial-gradient(ellipse at 50% 50%,#000 0 56%,rgba(0,0,0,.58) 72%,transparent 92%)!important;mask-image:radial-gradient(ellipse at 50% 50%,#000 0 56%,rgba(0,0,0,.58) 72%,transparent 92%)!important}.chat-board{width:100%}.chat-form{grid-template-columns:1fr}.chat-reply{grid-template-columns:1fr}.chat-message.is-reply{margin-left:12px!important}}
 `;
 document.head.appendChild(homeFix);
 
-const addZingaristanLink = () => {
-  const block = document.querySelector('#progetti .section-block');
-  if (!block || block.querySelector('.zingaristan-link')) return;
-  const link = document.createElement('a');
-  link.className = 'zingaristan-link';
-  link.href = '/zingaristan/';
-  link.textContent = 'Zingaristan';
-  block.appendChild(link);
-};
-addZingaristanLink();
-
 const escapeHtml = value => String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+const selectorEscape = value => String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 const nameKey = 'mancuspiePublicName';
 const apiUrl = '/api/chat';
 
@@ -111,6 +101,7 @@ const installPublicChat = () => {
     </form>`;
 
   const renderMessage = (item, childrenByParent, depth = 0) => {
+    if (!item.id) item.id = `legacy-${item.time || ''}-${item.name || ''}-${item.text || ''}`;
     const children = childrenByParent.get(item.id) || [];
     const margin = depth ? Math.min(depth * 24, 112) : 0;
     const shouldCollapse = depth >= collapseDepth && children.length && !openBranches.has(item.id);
@@ -136,6 +127,7 @@ const installPublicChat = () => {
     }
     const childrenByParent = new Map();
     messages.forEach(item => {
+      if (!item.id) item.id = `legacy-${item.time || ''}-${item.name || ''}-${item.text || ''}`;
       const key = item.parentId || '';
       if (!childrenByParent.has(key)) childrenByParent.set(key, []);
       childrenByParent.get(key).push(item);
@@ -201,8 +193,8 @@ const installPublicChat = () => {
     const id = button.dataset.chatReplyToggle;
     if (openReplies.has(id)) openReplies.delete(id);
     else openReplies.add(id);
-    const form = panel.querySelector(`[data-chat-reply-form="${CSS.escape(id)}"]`);
-    form?.classList.toggle('is-open', openReplies.has(id));
+    const reply = panel.querySelector(`[data-chat-reply-form="${selectorEscape(id)}"]`);
+    reply?.classList.toggle('is-open', openReplies.has(id));
   });
 
   panel.addEventListener('submit', async event => {
