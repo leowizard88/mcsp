@@ -1,0 +1,42 @@
+---
+layout: base.njk
+title: Scrivi | MANCUSPIE
+permalink: /scrivi/
+---
+<section class="write-page panel">
+  <div class="write-card" data-write-root>
+    <p class="eyebrow">Redazione</p>
+    <h1>Scrivi</h1>
+    <p class="write-status">Verifica permessi...</p>
+  </div>
+</section>
+
+<style>
+  body:has(.write-page), body:has(.write-page) .site-main { background:#050000!important; }
+  .write-page{min-height:100vh;color:#ead7b3;padding:clamp(34px,6vw,86px);background:radial-gradient(circle at 18% 82%,rgba(139,0,0,.42),transparent 34%),repeating-linear-gradient(90deg,transparent 0 34px,rgba(234,215,179,.045) 34px 35px,transparent 35px 96px),#050000!important}
+  .write-card{max-width:860px;margin:0 auto;border-left:1px solid rgba(234,215,179,.35);padding-left:clamp(18px,3vw,38px)}
+  .write-card h1{margin:0 0 24px;font-family:var(--font-serif,Georgia,serif);font-size:clamp(72px,12vw,154px);line-height:.78;font-weight:300;letter-spacing:-.035em;text-transform:uppercase;color:#ead7b3}
+  .write-box{border-top:1px solid rgba(234,215,179,.38);display:grid;gap:14px;background:linear-gradient(90deg,rgba(234,215,179,.08),rgba(234,215,179,.02));padding:26px}
+  .write-status{color:#ffb19c;font:15px/1.35 var(--font-sans,system-ui,sans-serif)}
+  .write-box p{margin:0;max-width:680px;color:rgba(234,215,179,.78);font:300 clamp(20px,2.2vw,29px)/1.25 var(--font-serif,Georgia,serif)}
+  .write-box a{justify-self:start;border:1px solid rgba(234,215,179,.56);background:#ead7b3;color:#050000;padding:11px 13px;font:300 11px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.15em;text-transform:uppercase;text-decoration:none}
+</style>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-write-root]');
+  const token = localStorage.getItem('mancuspieAuthToken') || '';
+  const headers = token ? { authorization: `Bearer ${token}` } : {};
+  const esc = value => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+  const fail = message => { root.innerHTML = `<p class="eyebrow">Redazione</p><h1>Scrivi</h1><p class="write-status">${esc(message)}</p><div class="write-box"><a href="/profilo/">Torna al profilo</a></div>`; };
+  const load = async () => {
+    if (!token) { fail('Login richiesto.'); return; }
+    const response = await fetch('/api/auth', { headers, cache: 'no-store' });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !data.user) { fail('Sessione non valida.'); return; }
+    if (!data.user.isRedattore) { fail('Permesso redattore richiesto.'); return; }
+    root.innerHTML = `<p class="eyebrow">Redazione</p><h1>Scrivi</h1><div class="write-box"><p>Editor articoli in costruzione. Qui monteremo la macchina da scrittura vera.</p><a href="/profilo/">Profilo</a></div>`;
+  };
+  load().catch(error => fail(error.message || 'Errore permessi.'));
+})();
+</script>
