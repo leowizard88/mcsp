@@ -16,7 +16,20 @@ permalink: /archivio/
     overflow: hidden;
   }
 
-  .archive-system-page::before,
+  .archive-system-page::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    right: clamp(-160px, -9vw, -52px);
+    bottom: clamp(-120px, -7vw, -34px);
+    width: clamp(620px, 66vw, 1120px);
+    height: clamp(620px, 86vh, 1080px);
+    pointer-events: none;
+    background: url('/assets/img/b7db19117443e1ac718e6e183b5f7299-removebg-preview.png') right bottom/contain no-repeat;
+    opacity: 1;
+    mix-blend-mode: normal;
+  }
+
   .archive-system-page::after { display: none !important; }
 
   .archive-system-inner {
@@ -42,16 +55,12 @@ permalink: /archivio/
     font-size: clamp(70px, 12vw, 174px);
     line-height: .78;
     font-weight: 300;
-    letter-spacing: .04em;
+    letter-spacing: .045em;
     text-transform: uppercase;
     color: #090000;
-    transform: skewX(-9deg) rotate(-1deg);
+    transform: none;
     transform-origin: left bottom;
-    font-style: italic;
-  }
-
-  .archive-system-head h1::first-letter {
-    letter-spacing: -.06em;
+    font-style: normal;
   }
 
   .archive-back {
@@ -93,26 +102,25 @@ permalink: /archivio/
     font-size: clamp(34px, 5.4vw, 82px);
     line-height: .86;
     font-weight: 300;
-    letter-spacing: .015em;
+    letter-spacing: .018em;
     text-transform: uppercase;
     color: #090000;
     display: inline-block;
-    font-style: italic;
-    transform: skewX(-7deg) rotate(.35deg);
+    font-style: normal;
+    transform: none;
     transform-origin: left center;
   }
 
   .archive-row:nth-child(even) strong {
-    transform: skewX(6deg) rotate(-.5deg);
-    letter-spacing: .035em;
+    letter-spacing: .04em;
   }
 
   .archive-row:hover { background: rgba(68,0,100,.10); }
-  .archive-row:hover strong { transform: skewX(-11deg) translateX(8px); }
-  .archive-row:nth-child(even):hover strong { transform: skewX(10deg) translateX(8px); }
+  .archive-row:hover strong { transform: translateX(8px); }
 
   @media(max-width:760px){
     .archive-system-page{padding:34px 22px}
+    .archive-system-page::before{width:560px;height:560px;right:-190px;bottom:-86px;opacity:1}
     .archive-system-head{display:block}
     .archive-system-head h1{font-size:clamp(50px,16vw,82px)}
     .archive-back{display:inline-block;margin-top:22px}
