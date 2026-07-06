@@ -14,7 +14,7 @@ permalink: /profilo/
 <style>
   body:has(.profile-page),
   body:has(.profile-page) .site-main {
-    background: #050000 !important;
+    background: #8b0000 !important;
   }
 
   .profile-page {
@@ -23,9 +23,9 @@ permalink: /profilo/
     padding: clamp(34px, 6vw, 86px);
     display: block !important;
     background:
-      radial-gradient(circle at 18% 20%, rgba(234, 215, 179, .18), transparent 26%),
-      radial-gradient(circle at 78% 80%, rgba(5, 0, 0, .74), transparent 42%),
-      linear-gradient(128deg, #8b0000 0%, #4d0000 44%, #050000 100%) !important;
+      radial-gradient(circle at 14% 18%, rgba(234,215,179,.24), transparent 24%),
+      radial-gradient(circle at 84% 74%, rgba(5,0,0,.52), transparent 38%),
+      linear-gradient(118deg, #a40000 0%, #8b0000 38%, #4a0000 74%, #130000 100%) !important;
     overflow: hidden;
   }
 
@@ -35,15 +35,15 @@ permalink: /profilo/
     inset: 0;
     pointer-events: none;
     background:
-      repeating-linear-gradient(90deg, transparent 0 34px, rgba(234,215,179,.06) 34px 35px, transparent 35px 96px),
-      repeating-linear-gradient(0deg, transparent 0 44px, rgba(234,215,179,.035) 44px 45px, transparent 45px 112px);
-    opacity: .8;
+      repeating-linear-gradient(90deg, transparent 0 34px, rgba(234,215,179,.07) 34px 35px, transparent 35px 96px),
+      repeating-linear-gradient(0deg, transparent 0 44px, rgba(234,215,179,.04) 44px 45px, transparent 45px 112px);
+    opacity: .72;
   }
 
   .profile-card {
     position: relative;
     z-index: 2;
-    max-width: 940px;
+    max-width: 980px;
     margin: 0 auto;
     color: #ead7b3;
   }
@@ -54,37 +54,35 @@ permalink: /profilo/
   }
 
   .profile-card h1 {
-    margin: 0 0 clamp(24px, 4vw, 42px);
+    margin: 0 0 clamp(24px, 4vw, 44px);
     font-family: var(--font-serif, Georgia, serif);
-    font-size: clamp(78px, 13vw, 172px);
-    line-height: .76;
+    font-size: clamp(84px, 14vw, 184px);
+    line-height: .74;
     font-weight: 300;
-    letter-spacing: -.05em;
+    letter-spacing: -.055em;
     text-transform: uppercase;
     color: #ead7b3;
-    text-shadow: 0 0 28px rgba(234,215,179,.22);
+    text-shadow: 0 0 26px rgba(234,215,179,.24);
   }
 
   .profile-box {
     display: grid;
     gap: 18px;
-    max-width: 780px;
+    max-width: 820px;
     background:
-      linear-gradient(90deg, rgba(5,0,0,.40), rgba(5,0,0,.16)),
-      rgba(234,215,179,.075);
-    padding: clamp(22px, 4vw, 34px);
-    box-shadow: none !important;
+      linear-gradient(90deg, rgba(234,215,179,.13), rgba(234,215,179,.05)),
+      linear-gradient(180deg, rgba(5,0,0,.18), rgba(5,0,0,.34));
+    padding: clamp(24px, 4vw, 38px);
     border: 0 !important;
+    box-shadow: none !important;
   }
 
-  .profile-public-box {
-    max-width: 720px;
-  }
+  .profile-public-box { max-width: 740px; }
 
   .profile-username {
-    font: 300 clamp(42px, 6.5vw, 82px)/.92 var(--font-serif, Georgia, serif);
+    font: 300 clamp(44px, 6.8vw, 88px)/.9 var(--font-serif, Georgia, serif);
     margin: 0;
-    letter-spacing: -.045em;
+    letter-spacing: -.05em;
     color: #ead7b3;
   }
 
@@ -108,16 +106,14 @@ permalink: /profilo/
     box-shadow: none !important;
   }
 
-  .profile-avatar[src=""] {
-    display: none;
-  }
+  .profile-avatar[src=""] { display: none; }
 
   .profile-bio-public {
     margin: 0;
-    max-width: 680px;
+    max-width: 690px;
     white-space: pre-wrap;
     font: 300 clamp(22px,2.4vw,32px)/1.22 var(--font-serif, Georgia, serif);
-    color: rgba(234,215,179,.88);
+    color: rgba(234,215,179,.9);
   }
 
   .profile-card label {
@@ -126,7 +122,7 @@ permalink: /profilo/
     font: 300 11px/1 var(--font-sans, system-ui, sans-serif);
     letter-spacing: .16em;
     text-transform: uppercase;
-    color: rgba(234,215,179,.82);
+    color: rgba(234,215,179,.84);
   }
 
   .profile-card textarea,
@@ -135,7 +131,7 @@ permalink: /profilo/
     width: 100%;
     box-sizing: border-box;
     border: 0 !important;
-    background: rgba(5,0,0,.48);
+    background: rgba(5,0,0,.36);
     color: #ead7b3;
     padding: 14px;
     font: 16px/1.35 var(--font-sans, system-ui, sans-serif);
@@ -145,18 +141,13 @@ permalink: /profilo/
 
   .profile-card textarea:focus,
   .profile-card input[type="text"]:focus {
-    background: rgba(5,0,0,.70);
+    background: rgba(5,0,0,.58);
   }
 
   .profile-card textarea::placeholder,
-  .profile-card input::placeholder {
-    color: rgba(234,215,179,.45);
-  }
+  .profile-card input::placeholder { color: rgba(234,215,179,.48); }
 
-  .profile-card textarea {
-    min-height: 160px;
-    resize: vertical;
-  }
+  .profile-card textarea { min-height: 160px; resize: vertical; }
 
   .profile-actions {
     display: flex;
@@ -170,7 +161,7 @@ permalink: /profilo/
   .profile-login-link {
     border: 0 !important;
     background: #ead7b3;
-    color: #050000;
+    color: #250000;
     padding: 12px 14px;
     font: 300 11px/1 var(--font-sans, system-ui, sans-serif);
     letter-spacing: .15em;
@@ -182,7 +173,7 @@ permalink: /profilo/
   }
 
   .profile-actions button[data-logout] {
-    background: #050000;
+    background: #2b0000;
     color: #fbfaf5;
   }
 
@@ -202,7 +193,7 @@ permalink: /profilo/
   .sec-box p {
     margin: 0;
     max-width: 620px;
-    color: rgba(234,215,179,.70);
+    color: rgba(234,215,179,.72);
     font: 14px/1.4 var(--font-sans, system-ui, sans-serif);
   }
 
@@ -215,23 +206,14 @@ permalink: /profilo/
 
   .writer-link {
     background: #fbfaf5 !important;
-    color: #050000 !important;
+    color: #250000 !important;
   }
 
   @media(max-width:760px) {
-    .profile-page {
-      padding: 34px 20px;
-    }
-    .profile-card h1 {
-      font-size: clamp(64px, 19vw, 96px);
-    }
-    .profile-box {
-      padding: 20px;
-      box-shadow: none !important;
-    }
-    .sec-row {
-      grid-template-columns: 1fr;
-    }
+    .profile-page { padding: 34px 20px; }
+    .profile-card h1 { font-size: clamp(66px, 20vw, 104px); }
+    .profile-box { padding: 21px; box-shadow: none !important; }
+    .sec-row { grid-template-columns: 1fr; }
   }
 </style>
 
