@@ -271,25 +271,17 @@ permalink: /zingaristan/tesseramento/
     };
 
     ctx.fillStyle = '#fff';
-    rect(420, 82, 510, 84);
-    rect(244, 180, 354, 74);
-    rect(648, 572, 456, 68);
-    rect(24, 1260, 900, 430);
+rect(405, 112, 545, 74);
+rect(238, 205, 365, 64);
+rect(790, 572, 300, 68);
+rect(24, 1350, 875, 300);
 
-    text(`${nome} ${cognome}`.slice(0, 34), 424, 143, 60, 'Arial, Helvetica, sans-serif');
-    text(date, 250, 240, 57, 'Arial, Helvetica, sans-serif');
-    text(code, 668, 626, 53, 'Arial, Helvetica, sans-serif');
+text(`${nome} ${cognome}`.slice(0, 34), 420, 170, 52, 'Arial, Helvetica, sans-serif');
+text(date, 250, 258, 50, 'Arial, Helvetica, sans-serif');
+text(code, 815, 626, 48, 'Arial, Helvetica, sans-serif');
 
-    text('Note personali', 26, 1308, 48, 'Georgia, Times New Roman, serif');
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 2 * sx;
-    ctx.beginPath();
-    ctx.moveTo(26 * sx, 1330 * sy);
-    ctx.lineTo(635 * sx, 1330 * sy);
-    ctx.stroke();
-
-    const lines = wrapLines(note, 39, 8);
-    lines.forEach((line, index) => text(line, 26, 1382 + index * 43, 44, 'Georgia, Times New Roman, serif'));
+const lines = wrapLines(note, 39, 7);
+lines.forEach((line, index) => text(line, 26, 1410 + index * 43, 40, 'Georgia, Times New Roman, serif'));
 
     return canvas.toDataURL('image/png');
   };
