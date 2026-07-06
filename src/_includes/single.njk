@@ -5,7 +5,7 @@ layout: base.njk
   <div class="single-inner article-format-inner">
     <header class="article-format-head" data-article-head data-article-author="{{ author }}" data-article-path="{{ page.inputPath }}" data-article-title="{{ title }}">
       <p class="article-format-author">
-        {% if author %}{{ author }}{% endif %}{% if tipo or rubrica %} <span>({% if tipo %}{{ tipo }}{% endif %}{% if tipo and rubrica %} / {% endif %}{% if rubrica %}{{ rubrica }}{% endif %})</span>{% endif %}
+        {% if author %}<a href="/profilo/?u={{ author | urlencode }}">{{ author }}</a>{% endif %}{% if tipo or rubrica %} <span>({% if tipo %}{{ tipo }}{% endif %}{% if tipo and rubrica %} / {% endif %}{% if rubrica %}{{ rubrica }}{% endif %})</span>{% endif %}
       </p>
       <h1>{{ title }}</h1>
       {% if subtitle %}<p class="article-subtitle">{{ subtitle }}</p>{% endif %}
@@ -42,6 +42,8 @@ layout: base.njk
   .article-format-inner { max-width:880px; margin-left:clamp(22px,5vw,72px); margin-right:auto; padding-top:clamp(22px,4vw,54px); }
   .article-format-head { margin:0 0 clamp(34px,5vw,58px); }
   .article-format-author { margin:0 0 8px; color:#050505; font-family:var(--font-sans,Arial,sans-serif); font-size:clamp(18px,2.2vw,32px); line-height:1.1; letter-spacing:-.015em; font-weight:300; }
+  .article-format-author a { color:#050505; text-decoration:none; border-bottom:1px solid rgba(5,5,5,.42); }
+  .article-format-author a:hover { border-bottom-color:#8b0000; color:#8b0000; }
   .article-format-author span { font-weight:300; }
   .article-format-head h1 { display:inline-block; margin:0; padding:0 10px 8px 0; border-bottom:2px solid #050505; color:#050505; font-family:var(--font-serif,Georgia,'Times New Roman',serif); font-size:clamp(54px,8vw,98px); font-weight:300; line-height:.88; letter-spacing:-.045em; text-transform:none; }
   .article-subtitle { max-width:720px; margin:16px 0 0; color:#050505; font-family:var(--font-serif,Georgia,'Times New Roman',serif); font-size:clamp(22px,2.8vw,36px); font-weight:300; line-height:1.1; letter-spacing:-.018em; }
