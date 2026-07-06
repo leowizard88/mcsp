@@ -8,6 +8,14 @@ title: MANCUSPIE
   .hero-panel::after { display: none !important; }
   .bg-score { transform: rotate(0deg) !important; }
 
+  .hero-copy h2 {
+    font-size: clamp(12px, 1.05vw, 18px) !important;
+    line-height: 1.08 !important;
+    letter-spacing: .16em !important;
+    margin-top: 10px !important;
+    margin-bottom: 12px !important;
+  }
+
   .hero-copy .child-title {
     display: inline-block;
     max-width: 100%;
@@ -68,6 +76,7 @@ title: MANCUSPIE
   }
   @media(max-width:760px){
     .hero-copy .child-title{font-size:clamp(49px,13.2vw,64px);letter-spacing:-.09em;white-space:nowrap}
+    .hero-copy h2{font-size:10.5px !important;letter-spacing:.13em !important;margin-top:7px !important;margin-bottom:9px !important}
     .ultimi-movimenti-button{width:215px !important;right:10px;bottom:16px;opacity:.9}
   }
 </style>
