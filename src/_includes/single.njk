@@ -3,12 +3,16 @@ layout: base.njk
 ---
 <article class="single-page panel article-page-format">
   <div class="single-inner article-format-inner">
-    <header class="article-format-head">
+    <header class="article-format-head" data-article-head data-article-author="{{ author }}" data-article-path="{{ page.inputPath }}" data-article-title="{{ title }}">
       <p class="article-format-author">
         {% if author %}{{ author }}{% endif %}{% if tipo or rubrica %} <span>({% if tipo %}{{ tipo }}{% endif %}{% if tipo and rubrica %} / {% endif %}{% if rubrica %}{{ rubrica }}{% endif %})</span>{% endif %}
       </p>
       <h1>{{ title }}</h1>
       {% if subtitle %}<p class="article-subtitle">{{ subtitle }}</p>{% endif %}
+      <div class="article-owner-tools" data-inline-owner-tools hidden>
+        <button type="button" data-inline-delete-article>Elimina articolo</button>
+        <span data-inline-delete-status>Visibile solo all’autore.</span>
+      </div>
     </header>
 
     <div class="single-body article-format-body">{{ content | safe }}</div>
@@ -34,233 +38,81 @@ layout: base.njk
 </article>
 
 <style>
-  .article-page-format {
-    background: #fbfaf5 !important;
-  }
-
-  .article-format-inner {
-    max-width: 880px;
-    margin-left: clamp(22px, 5vw, 72px);
-    margin-right: auto;
-    padding-top: clamp(22px, 4vw, 54px);
-  }
-
-  .article-format-head {
-    margin: 0 0 clamp(34px, 5vw, 58px);
-  }
-
-  .article-format-author {
-    margin: 0 0 8px;
-    color: #050505;
-    font-family: var(--font-sans, Arial, sans-serif);
-    font-size: clamp(18px, 2.2vw, 32px);
-    line-height: 1.1;
-    letter-spacing: -.015em;
-    font-weight: 300;
-  }
-
-  .article-format-author span {
-    font-weight: 300;
-  }
-
-  .article-format-head h1 {
-    display: inline-block;
-    margin: 0;
-    padding: 0 10px 8px 0;
-    border-bottom: 2px solid #050505;
-    color: #050505;
-    font-family: var(--font-serif, Georgia, 'Times New Roman', serif);
-    font-size: clamp(54px, 8vw, 98px);
-    font-weight: 300;
-    line-height: .88;
-    letter-spacing: -.045em;
-    text-transform: none;
-  }
-
-  .article-subtitle {
-    max-width: 720px;
-    margin: 16px 0 0;
-    color: #050505;
-    font-family: var(--font-serif, Georgia, 'Times New Roman', serif);
-    font-size: clamp(22px, 2.8vw, 36px);
-    font-weight: 300;
-    line-height: 1.1;
-    letter-spacing: -.018em;
-  }
-
-  .article-format-body {
-    max-width: 760px;
-    color: #050505;
-    font-family: var(--font-serif, Georgia, 'Times New Roman', serif);
-    font-size: clamp(20px, 2.05vw, 27px);
-    font-weight: 300;
-    line-height: 1.48;
-    letter-spacing: -.006em;
-    text-transform: none;
-  }
-
-  .article-format-body p {
-    margin: 0 0 1.2em;
-  }
-
-  .article-format-body img,
-  .article-format-body video,
-  .article-format-body iframe {
-    max-width: 100%;
-    height: auto;
-  }
-
-  .article-comments,
-  .article-comments * { box-sizing: border-box; }
-
-  .article-comments {
-    margin-top: clamp(42px, 7vw, 86px);
-    padding-top: 24px;
-    border-top: 1px solid rgba(5,5,5,.22);
-    color: #050505;
-    font-family: var(--font-sans, system-ui, sans-serif);
-    text-transform: none;
-    letter-spacing: normal;
-  }
-
-  .comments-head h2 {
-    margin: 0 0 8px;
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: clamp(32px, 5vw, 58px);
-    line-height: .95;
-    text-transform: uppercase;
-  }
-
-  .comments-head p:not(.eyebrow) {
-    max-width: 640px;
-    margin: 0 0 18px;
-    font-size: 14px;
-    line-height: 1.45;
-  }
-
-  .comment-form {
-    display: grid;
-    gap: 10px;
-    margin: 18px 0 18px;
-  }
-
-  .comment-form input,
-  .comment-form textarea {
-    width: 100%;
-    border: 1px solid rgba(5,5,5,.3);
-    background: rgba(255,255,255,.48);
-    color: #050505;
-    padding: 12px;
-    font: 15px/1.35 var(--font-sans, system-ui, sans-serif);
-    outline: none;
-  }
-
-  .comment-form textarea {
-    min-height: 92px;
-    resize: vertical;
-  }
-
-  .comment-form button,
-  .comment-reply button,
-  .comment-reply-toggle {
-    justify-self: start;
-    border: 1px solid rgba(5,5,5,.45);
-    background: #050505;
-    color: #fbfaf5;
-    padding: 10px 14px;
-    font: 700 12px/1 var(--font-sans, system-ui, sans-serif);
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-
-  .comments-status {
-    min-height: 18px;
-    margin: 0 0 10px;
-    font-size: 13px;
-  }
-
-  .comments-list {
-    display: grid;
-    gap: 14px;
-  }
-
-  .comment-card {
-    border: 1px solid rgba(5,5,5,.18);
-    background: rgba(255,255,255,.36);
-    padding: 14px;
-  }
-
-  .comment-card.is-reply {
-    margin-left: clamp(18px, 5vw, 54px);
-    border-left: 4px solid rgba(5,5,5,.28);
-  }
-
-  .comment-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-    margin: 0 0 8px;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-  }
-
-  .comment-avatar {
-    width: 34px;
-    height: 34px;
-    object-fit: cover;
-    border: 1px solid rgba(5,5,5,.28);
-    background: rgba(5,5,5,.08);
-    box-shadow: 3px 3px 0 rgba(5,5,5,.14);
-  }
-
-  .comment-meta strong { font-size: 13px; }
-  .comment-meta time { opacity: .62; }
-  .comment-text { margin: 0 0 10px; line-height: 1.45; white-space: pre-wrap; }
-
-  .comment-reply {
-    display: none;
-    gap: 8px;
-    margin-top: 10px;
-  }
-
-  .comment-reply.is-open { display: grid; }
-  .comment-reply input,
-  .comment-reply textarea {
-    width: 100%;
-    border: 1px solid rgba(5,5,5,.24);
-    background: rgba(255,255,255,.5);
-    padding: 10px;
-    font: 14px/1.35 var(--font-sans, system-ui, sans-serif);
-  }
-
-  .comment-reply textarea { min-height: 72px; resize: vertical; }
-
-  @media(max-width:760px) {
-    .article-format-inner {
-      margin-left: 18px;
-      margin-right: 10px;
-      padding-top: 16px;
-    }
-    .article-format-author { font-size: clamp(18px, 6vw, 26px); }
-    .article-format-head h1 { font-size: clamp(50px, 16vw, 76px); letter-spacing: -.055em; }
-    .article-subtitle { font-size: clamp(22px, 7vw, 30px); }
-    .article-format-body { font-size: clamp(19px, 5.8vw, 24px); line-height: 1.52; }
-    .article-comments { margin-top: 36px; padding-top: 20px; }
-    .comments-head h2 { font-size: 30px; }
-    .comment-card { padding: 12px; }
-    .comment-card.is-reply { margin-left: 14px; }
-    .comment-avatar { width: 30px; height: 30px; }
-  }
+  .article-page-format { background:#fbfaf5!important; }
+  .article-format-inner { max-width:880px; margin-left:clamp(22px,5vw,72px); margin-right:auto; padding-top:clamp(22px,4vw,54px); }
+  .article-format-head { margin:0 0 clamp(34px,5vw,58px); }
+  .article-format-author { margin:0 0 8px; color:#050505; font-family:var(--font-sans,Arial,sans-serif); font-size:clamp(18px,2.2vw,32px); line-height:1.1; letter-spacing:-.015em; font-weight:300; }
+  .article-format-author span { font-weight:300; }
+  .article-format-head h1 { display:inline-block; margin:0; padding:0 10px 8px 0; border-bottom:2px solid #050505; color:#050505; font-family:var(--font-serif,Georgia,'Times New Roman',serif); font-size:clamp(54px,8vw,98px); font-weight:300; line-height:.88; letter-spacing:-.045em; text-transform:none; }
+  .article-subtitle { max-width:720px; margin:16px 0 0; color:#050505; font-family:var(--font-serif,Georgia,'Times New Roman',serif); font-size:clamp(22px,2.8vw,36px); font-weight:300; line-height:1.1; letter-spacing:-.018em; }
+  .article-format-body { max-width:760px; color:#050505; font-family:var(--font-serif,Georgia,'Times New Roman',serif); font-size:clamp(20px,2.05vw,27px); font-weight:300; line-height:1.48; letter-spacing:-.006em; text-transform:none; }
+  .article-format-body p { margin:0 0 1.2em; }
+  .article-format-body img,.article-format-body video,.article-format-body iframe { max-width:100%; height:auto; }
+  .article-owner-tools { margin:22px 0 0; display:flex; gap:10px; align-items:center; flex-wrap:wrap; font-family:var(--font-sans,system-ui,sans-serif); }
+  .article-owner-tools[hidden] { display:none!important; }
+  .article-owner-tools button { border:0; background:#8b0000; color:#fbfaf5; padding:11px 13px; font:700 10px/1 var(--font-sans,system-ui,sans-serif); letter-spacing:.15em; text-transform:uppercase; cursor:pointer; }
+  .article-owner-tools span { font-size:13px; color:#6b0000; }
+  .article-comments,.article-comments * { box-sizing:border-box; }
+  .article-comments { margin-top:clamp(42px,7vw,86px); padding-top:24px; border-top:1px solid rgba(5,5,5,.22); color:#050505; font-family:var(--font-sans,system-ui,sans-serif); text-transform:none; letter-spacing:normal; }
+  .comments-head h2 { margin:0 0 8px; font-family:Georgia,'Times New Roman',serif; font-size:clamp(32px,5vw,58px); line-height:.95; text-transform:uppercase; }
+  .comments-head p:not(.eyebrow) { max-width:640px; margin:0 0 18px; font-size:14px; line-height:1.45; }
+  .comment-form { display:grid; gap:10px; margin:18px 0; }
+  .comment-form input,.comment-form textarea { width:100%; border:1px solid rgba(5,5,5,.3); background:rgba(255,255,255,.48); color:#050505; padding:12px; font:15px/1.35 var(--font-sans,system-ui,sans-serif); outline:none; }
+  .comment-form textarea { min-height:92px; resize:vertical; }
+  .comment-form button,.comment-reply button,.comment-reply-toggle { justify-self:start; border:1px solid rgba(5,5,5,.45); background:#050505; color:#fbfaf5; padding:10px 14px; font:700 12px/1 var(--font-sans,system-ui,sans-serif); letter-spacing:.12em; text-transform:uppercase; cursor:pointer; }
+  .comments-status { min-height:18px; margin:0 0 10px; font-size:13px; }
+  .comments-list { display:grid; gap:14px; }
+  .comment-card { border:1px solid rgba(5,5,5,.18); background:rgba(255,255,255,.36); padding:14px; }
+  .comment-card.is-reply { margin-left:clamp(18px,5vw,54px); border-left:4px solid rgba(5,5,5,.28); }
+  .comment-meta { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+  .comment-avatar { width:34px; height:34px; object-fit:cover; border:1px solid rgba(5,5,5,.28); background:rgba(5,5,5,.08); box-shadow:3px 3px 0 rgba(5,5,5,.14); }
+  .comment-meta strong { font-size:13px; }
+  .comment-meta time { opacity:.62; }
+  .comment-text { margin:0 0 10px; line-height:1.45; white-space:pre-wrap; }
+  .comment-reply { display:none; gap:8px; margin-top:10px; }
+  .comment-reply.is-open { display:grid; }
+  .comment-reply input,.comment-reply textarea { width:100%; border:1px solid rgba(5,5,5,.24); background:rgba(255,255,255,.5); padding:10px; font:14px/1.35 var(--font-sans,system-ui,sans-serif); }
+  .comment-reply textarea { min-height:72px; resize:vertical; }
+  @media(max-width:760px){ .article-format-inner{margin-left:18px;margin-right:10px;padding-top:16px}.article-format-author{font-size:clamp(18px,6vw,26px)}.article-format-head h1{font-size:clamp(50px,16vw,76px);letter-spacing:-.055em}.article-subtitle{font-size:clamp(22px,7vw,30px)}.article-format-body{font-size:clamp(19px,5.8vw,24px);line-height:1.52}.article-comments{margin-top:36px;padding-top:20px}.comments-head h2{font-size:30px}.comment-card{padding:12px}.comment-card.is-reply{margin-left:14px}.comment-avatar{width:30px;height:30px} }
 </style>
+
+<script>
+(() => {
+  const head = document.querySelector('[data-article-head]');
+  const tools = document.querySelector('[data-inline-owner-tools]');
+  if (!head || !tools) return;
+  const token = localStorage.getItem('mancuspieAuthToken') || '';
+  const normalize = value => String(value || '').trim().toLowerCase();
+  const cleanPath = value => String(value || '').replace(/^\.\//, '');
+  const headers = token ? { authorization: `Bearer ${token}` } : {};
+  const article = { author: head.dataset.articleAuthor || '', title: head.dataset.articleTitle || 'articolo', path: cleanPath(head.dataset.articlePath || '') };
+  const status = tools.querySelector('[data-inline-delete-status]');
+  const button = tools.querySelector('[data-inline-delete-article]');
+  const init = async () => {
+    if (!token || !article.author || !article.path) return;
+    const response = await fetch('/api/auth', { headers, cache:'no-store' });
+    const data = await response.json().catch(() => ({}));
+    const user = data.user;
+    if (!response.ok || !user || !user.isRedattore || normalize(user.username) !== normalize(article.author)) return;
+    tools.hidden = false;
+  };
+  button?.addEventListener('click', async () => {
+    if (!confirm(`Eliminare davvero “${article.title}”?`)) return;
+    status.textContent = 'Eliminazione...';
+    const response = await fetch('/api/publish', { method:'POST', headers:{ 'content-type':'application/json', ...headers }, body:JSON.stringify({ action:'delete', path:article.path }) });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) { status.textContent = result.error || 'Eliminazione fallita.'; return; }
+    status.textContent = 'Eliminato. Deploy in corso.';
+    setTimeout(() => { location.href = '/archivio/'; }, 1200);
+  });
+  init().catch(() => {});
+})();
+</script>
 
 <script>
 (() => {
   const root = document.querySelector('[data-article-comments]');
   if (!root) return;
-
   const list = root.querySelector('[data-comments-list]');
   const form = root.querySelector('[data-comment-form]');
   const status = root.querySelector('[data-comments-status]');
@@ -268,114 +120,45 @@ layout: base.njk
   let comments = [];
   let isSending = false;
   const openReplies = new Set();
-
-  const esc = value => String(value || '').replace(/[&<>'"]/g, char => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-  }[char]));
-
-  const formatTime = value => {
-    try {
-      return new Intl.DateTimeFormat('it-IT', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(value));
-    } catch {
-      return '';
-    }
-  };
-
-  const renderReplyForm = id => `
-    <form class="comment-reply${openReplies.has(id) ? ' is-open' : ''}" data-reply-form="${esc(id)}">
-      <input name="name" type="text" maxlength="40" placeholder="Nome / autore" required>
-      <textarea name="text" maxlength="900" placeholder="Risposta pubblica" required></textarea>
-      <button type="submit">Rispondi</button>
-    </form>
-  `;
-
+  const esc = value => String(value || '').replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char]));
+  const formatTime = value => { try { return new Intl.DateTimeFormat('it-IT', { dateStyle:'short', timeStyle:'short' }).format(new Date(value)); } catch { return ''; } };
+  const renderReplyForm = id => `<form class="comment-reply${openReplies.has(id) ? ' is-open' : ''}" data-reply-form="${esc(id)}"><input name="name" type="text" maxlength="40" placeholder="Nome / autore" required><textarea name="text" maxlength="900" placeholder="Risposta pubblica" required></textarea><button type="submit">Rispondi</button></form>`;
   const renderCard = (comment, isReply = false) => {
     const avatar = comment.avatar ? `<img class="comment-avatar" src="${esc(comment.avatar)}" alt="">` : '';
-    return `
-      <article class="comment-card${isReply ? ' is-reply' : ''}">
-        <p class="comment-meta">${avatar}<strong>${esc(comment.name)}</strong><time>${esc(formatTime(comment.time))}</time></p>
-        <p class="comment-text">${esc(comment.text)}</p>
-        ${isReply ? '' : `<button class="comment-reply-toggle" type="button" data-reply-toggle="${esc(comment.id)}">Rispondi</button>${renderReplyForm(comment.id)}`}
-      </article>
-    `;
+    return `<article class="comment-card${isReply ? ' is-reply' : ''}"><p class="comment-meta">${avatar}<strong>${esc(comment.name)}</strong><time>${esc(formatTime(comment.time))}</time></p><p class="comment-text">${esc(comment.text)}</p>${isReply ? '' : `<button class="comment-reply-toggle" type="button" data-reply-toggle="${esc(comment.id)}">Rispondi</button>${renderReplyForm(comment.id)}`}</article>`;
   };
-
   const render = () => {
     const parents = comments.filter(comment => !comment.parentId);
     const replies = comments.filter(comment => comment.parentId);
-    if (!comments.length) {
-      list.innerHTML = '<p class="comments-status">Nessun commento ancora.</p>';
-      return;
-    }
-    list.innerHTML = parents.map(parent => {
-      const childHtml = replies.filter(reply => reply.parentId === parent.id).map(reply => renderCard(reply, true)).join('');
-      return renderCard(parent) + childHtml;
-    }).join('');
+    if (!comments.length) { list.innerHTML = '<p class="comments-status">Nessun commento ancora.</p>'; return; }
+    list.innerHTML = parents.map(parent => renderCard(parent) + replies.filter(reply => reply.parentId === parent.id).map(reply => renderCard(reply, true)).join('')).join('');
   };
-
   const load = async () => {
     try {
-      const response = await fetch(`/api/comments?path=${encodeURIComponent(path)}`, { cache: 'no-store' });
+      const response = await fetch(`/api/comments?path=${encodeURIComponent(path)}`, { cache:'no-store' });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || 'Commenti non caricati');
       comments = Array.isArray(result.comments) ? result.comments : [];
       const activeReply = document.activeElement?.closest?.('.comment-reply');
       if (!activeReply) render();
-    } catch (error) {
-      status.textContent = error.message || 'Errore commenti.';
-    }
+    } catch (error) { status.textContent = error.message || 'Errore commenti.'; }
   };
-
   const post = async data => {
     if (isSending) return;
     isSending = true;
     status.textContent = 'Pubblicazione...';
     try {
-      const response = await fetch('/api/comments', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ path, ...data })
-      });
+      const response = await fetch('/api/comments', { method:'POST', headers:{ 'content-type':'application/json' }, body:JSON.stringify({ path, ...data }) });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || 'Invio non riuscito');
       comments = Array.isArray(result.comments) ? result.comments : [];
       status.textContent = '';
       render();
-    } catch (error) {
-      status.textContent = error.message || 'Errore invio.';
-    } finally {
-      isSending = false;
-    }
+    } catch (error) { status.textContent = error.message || 'Errore invio.'; } finally { isSending = false; }
   };
-
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    const data = new FormData(form);
-    post({ name: data.get('name'), text: data.get('text') });
-    form.reset();
-  });
-
-  root.addEventListener('click', event => {
-    const button = event.target.closest('[data-reply-toggle]');
-    if (!button) return;
-    const id = button.dataset.replyToggle;
-    if (openReplies.has(id)) openReplies.delete(id);
-    else openReplies.add(id);
-    const replyForm = root.querySelector(`[data-reply-form="${CSS.escape(id)}"]`);
-    replyForm?.classList.toggle('is-open', openReplies.has(id));
-  });
-
-  root.addEventListener('submit', event => {
-    const replyForm = event.target.closest('[data-reply-form]');
-    if (!replyForm) return;
-    event.preventDefault();
-    const data = new FormData(replyForm);
-    openReplies.delete(replyForm.dataset.replyForm);
-    post({ parentId: replyForm.dataset.replyForm, name: data.get('name'), text: data.get('text') });
-    replyForm.reset();
-    replyForm.classList.remove('is-open');
-  });
-
+  form.addEventListener('submit', event => { event.preventDefault(); const data = new FormData(form); post({ name:data.get('name'), text:data.get('text') }); form.reset(); });
+  root.addEventListener('click', event => { const button = event.target.closest('[data-reply-toggle]'); if (!button) return; const id = button.dataset.replyToggle; if (openReplies.has(id)) openReplies.delete(id); else openReplies.add(id); const replyForm = root.querySelector(`[data-reply-form="${CSS.escape(id)}"]`); replyForm?.classList.toggle('is-open', openReplies.has(id)); });
+  root.addEventListener('submit', event => { const replyForm = event.target.closest('[data-reply-form]'); if (!replyForm) return; event.preventDefault(); const data = new FormData(replyForm); openReplies.delete(replyForm.dataset.replyForm); post({ parentId:replyForm.dataset.replyForm, name:data.get('name'), text:data.get('text') }); replyForm.reset(); replyForm.classList.remove('is-open'); });
   load();
   setInterval(load, 4000);
 })();
