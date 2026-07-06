@@ -14,39 +14,32 @@ title: MANCUSPIE
     letter-spacing: -.065em;
     font-weight: 300;
     margin: 0 0 22px;
-    color: transparent;
+    color: #050505;
     text-transform: uppercase;
-    background-image:
-      repeating-linear-gradient(103deg, rgba(10,9,8,.92) 0 1px, rgba(10,9,8,.58) 1px 2px, transparent 2px 5px),
-      repeating-linear-gradient(17deg, rgba(10,9,8,.44) 0 1px, transparent 1px 5px),
-      radial-gradient(circle at 23% 37%, rgba(10,9,8,.52), transparent 1.4px),
-      radial-gradient(circle at 61% 64%, rgba(10,9,8,.42), transparent 1.4px);
-    background-size: 18px 100%, 31px 100%, 13px 11px, 19px 17px;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    -webkit-text-fill-color: #050505;
     -webkit-text-stroke: 0;
-    text-shadow:
-      .10px .05px 0 rgba(10,9,8,.26),
-      -.08px .10px 0 rgba(10,9,8,.16);
-    filter: contrast(1.16) grayscale(.35);
+    text-shadow: none;
+    filter: none;
   }
 
   .child-title span {
     display: inline-block;
     transform-origin: 50% 70%;
-    opacity: .92;
+    opacity: 1;
   }
 
-  .child-title .l1 { transform: rotate(-5deg) translateY(4px); }
-  .child-title .l2 { transform: rotate(3deg) translateY(-7px); opacity:.88; }
-  .child-title .l3 { transform: scaleX(-1) rotate(-7deg) translateY(8px); margin: 0 .015em; opacity:.91; }
-  .child-title .l4 { transform: rotate(6deg) translateY(-2px); opacity:.89; }
-  .child-title .l5 { transform: rotate(-3deg) translateY(6px); opacity:.87; }
-  .child-title .l6 { transform: rotate(4deg) translateY(-5px); opacity:.93; }
-  .child-title .l7 { transform: rotate(-6deg) translateY(4px); opacity:.88; }
-  .child-title .l8 { transform: rotate(2deg) translateY(-3px); opacity:.84; }
-  .child-title .l9 { transform: rotate(-4deg) translateY(5px); opacity:.90; }
+  .child-title .l1 { transform: rotate(-5deg) translateY(4px) scaleX(.92); }
+  .child-title .l2 { transform: rotate(3deg) translateY(-7px) scaleX(.90); opacity:1; }
+  .child-title .l3 { transform: scaleX(-.92) rotate(-7deg) translateY(8px); margin: 0 .015em; opacity:1; }
+  .child-title .l4 { transform: rotate(6deg) translateY(-2px) scaleX(.90); opacity:1; }
+  .child-title .l5 { transform: rotate(-3deg) translateY(6px) scaleX(.92); opacity:1; }
+  .child-title .l6 { transform: rotate(4deg) translateY(-5px) scaleX(.90); opacity:1; }
+  .child-title .l7 { transform: rotate(-6deg) translateY(4px) scaleX(.90); opacity:1; }
+  .child-title .l8 { transform: rotate(2deg) translateY(-3px) scaleX(.82); opacity:1; }
+  .child-title .l9 { transform: rotate(-4deg) translateY(5px) scaleX(.90); opacity:1; }
 
   .ultimi-movimenti-button {
     position: absolute;
