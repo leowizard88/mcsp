@@ -61,14 +61,13 @@ title: MANCUSPIE
   </a>
 </section>
 
-<section id="call" class="panel content-panel call-panel">
+<section id="invia" class="panel content-panel call-panel">
   <div class="bg-layer bg-fog"></div>
   <article class="section-block wide">
     <p class="section-kicker">01</p>
-    <h2>{{ home.call_title }}</h2>
-    <p>{{ home.call_text }}</p>
-    <p class="meta">Scadenza: {{ home.call_deadline }}</p>
-    {% for call in collections.call | reverse %}{% if loop.index0 < 1 %}<a class="text-link" href="{{ call.url }}">Leggi il bando &rarr;</a>{% endif %}{% endfor %}
+    <h2>Invia</h2>
+    <p>Mandaci letteralmente qualsiasi cosa o facci qualsiasi richiesta, siamo un piccolo corpo da strapazzare. Se volete pubblicare articoli mandateli per email con oggetto: Proposta Articolo; se non vi rispondiamo significa che l'articolo non era affine alla rivista, se invece era affine ma scritto male vi rispondiamo con qualche consiglio :)</p>
+    <p class="meta">Email: redazione@mancuspie.com</p>
   </article>
 </section>
 
