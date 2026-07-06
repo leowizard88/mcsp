@@ -71,13 +71,13 @@
   }
 }
 
-/* Faster article ornament, without touching size or layout. */
+/* JS-driven endless ornament stream. No CSS loop reset. */
 .article-ornament-track {
-  animation-duration: 8s !important;
+  animation: none !important;
+  top: 0 !important;
+  will-change: transform !important;
 }
 
-@media (max-width: 760px) {
-  .article-ornament-track {
-    animation-duration: 8s !important;
-  }
+.article-ornament-track img {
+  display: block !important;
 }
