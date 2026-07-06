@@ -4,10 +4,12 @@ title: Archivio | MANCUSPIE
 permalink: /archivio/
 ---
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap');
+
   .archive-system-page {
     min-height: 100vh;
     background: #8b0000;
-    padding: clamp(48px, 7vw, 104px);
+    padding: clamp(42px, 6vw, 88px);
     color: #050000;
     overflow: hidden;
   }
@@ -20,7 +22,7 @@ permalink: /archivio/
   .archive-system-inner {
     position: relative;
     z-index: 4;
-    max-width: 1180px;
+    max-width: 1120px;
     margin: 0 auto;
   }
 
@@ -28,94 +30,94 @@ permalink: /archivio/
     display: flex;
     align-items: end;
     justify-content: space-between;
-    gap: clamp(24px, 5vw, 80px);
-    border-bottom: 1px solid rgba(5,0,0,.28);
-    padding-bottom: clamp(24px, 4vw, 48px);
-    margin-bottom: clamp(42px, 7vw, 96px);
+    gap: 24px;
+    border-bottom: 1px solid rgba(5,0,0,.42);
+    padding-bottom: 22px;
+    margin-bottom: clamp(28px, 4vw, 58px);
   }
 
   .archive-system-head h1 {
     margin: 0;
-    font-family: var(--font-sans);
-    font-size: clamp(54px, 8vw, 128px);
-    line-height: .92;
-    font-weight: 300;
-    letter-spacing: .24em;
+    font-family: 'Metal Mania', fantasy;
+    font-size: clamp(78px, 13vw, 194px);
+    line-height: .70;
+    font-weight: 400;
+    letter-spacing: .055em;
     text-transform: uppercase;
     color: #050000;
     -webkit-text-fill-color: #050000;
     -webkit-text-stroke: 0;
     text-shadow: none;
-    transform: none;
-    clip-path: none;
+    transform: scaleX(.22) skewX(-12deg);
+    transform-origin: left bottom;
+    clip-path: polygon(0 0,100% 0,100% 7%,87% 7%,87% 13%,100% 13%,100% 24%,72% 24%,72% 29%,100% 29%,100% 43%,92% 43%,92% 48%,100% 48%,100% 62%,77% 62%,77% 68%,100% 68%,100% 100%,0 100%,0 84%,15% 84%,15% 78%,0 78%,0 56%,8% 56%,8% 50%,0 50%,0 35%,19% 35%,19% 29%,0 29%);
   }
 
   .archive-back {
     font: 300 11px/1 var(--font-sans);
-    letter-spacing: .20em;
+    letter-spacing: .14em;
     text-transform: uppercase;
     color: #050000;
     border-bottom: 1px solid currentColor;
-    padding-bottom: 8px;
+    padding-bottom: 7px;
     white-space: nowrap;
   }
 
   .archive-chronology {
     display: grid;
-    gap: clamp(24px, 4vw, 52px);
+    gap: 0;
   }
 
   .archive-row {
     display: grid;
-    grid-template-columns: minmax(120px, 170px) 1fr minmax(120px, 190px);
-    gap: clamp(24px, 5vw, 78px);
+    grid-template-columns: minmax(110px, 160px) 1fr minmax(110px, 180px);
+    gap: clamp(18px, 3vw, 50px);
     align-items: baseline;
-    padding: 0 0 clamp(22px, 3vw, 42px);
-    border-bottom: 1px solid rgba(5,0,0,.20);
+    padding: clamp(18px, 2.5vw, 32px) 0;
+    border-bottom: 1px solid rgba(5,0,0,.34);
     color: #050000;
   }
 
   .archive-row time,
   .archive-row em {
-    font: 300 11px/1.25 var(--font-sans);
-    letter-spacing: .18em;
+    font: 300 12px/1.2 var(--font-sans);
+    letter-spacing: .12em;
     text-transform: uppercase;
-    color: rgba(5,0,0,.68);
+    color: rgba(5,0,0,.72);
     font-style: normal;
   }
 
   .archive-row strong {
-    font-family: var(--font-sans);
-    font-size: clamp(24px, 3.1vw, 48px);
-    line-height: 1.04;
-    font-weight: 300;
-    letter-spacing: .18em;
+    font-family: 'Metal Mania', fantasy;
+    font-size: clamp(40px, 5.9vw, 88px);
+    line-height: .76;
+    font-weight: 400;
+    letter-spacing: .055em;
     text-transform: uppercase;
     color: #050000;
     -webkit-text-fill-color: #050000;
     display: inline-block;
     -webkit-text-stroke: 0;
     text-shadow: none;
-    transform: none;
-    clip-path: none;
+    transform: scaleX(.20) skewX(-10deg);
+    transform-origin: left center;
+    clip-path: polygon(0 0,100% 0,100% 7%,84% 7%,84% 13%,100% 13%,100% 22%,69% 22%,69% 28%,100% 28%,100% 38%,89% 38%,89% 45%,100% 45%,100% 60%,76% 60%,76% 66%,100% 66%,100% 100%,0 100%,0 87%,11% 87%,11% 80%,0 80%,0 58%,17% 58%,17% 52%,0 52%,0 32%,9% 32%,9% 25%,0 25%);
   }
 
   .archive-row:hover {
-    background: transparent;
+    background: rgba(5,0,0,.10);
   }
 
   .archive-row:hover strong {
-    transform: translateX(8px);
-    letter-spacing: .22em;
+    transform: scaleX(.20) skewX(-10deg) translateX(8px);
+    clip-path: polygon(0 0,100% 0,100% 11%,74% 11%,74% 17%,100% 17%,100% 31%,87% 31%,87% 38%,100% 38%,100% 52%,63% 52%,63% 59%,100% 59%,100% 100%,0 100%,0 76%,18% 76%,18% 69%,0 69%,0 46%,10% 46%,10% 39%,0 39%);
   }
 
   @media(max-width:760px){
-    .archive-system-page{padding:38px 22px}
+    .archive-system-page{padding:34px 22px}
     .archive-system-head{display:block}
-    .archive-system-head h1{font-size:clamp(40px,12vw,72px);letter-spacing:.16em}
-    .archive-back{display:inline-block;margin-top:24px}
-    .archive-row{grid-template-columns:1fr;gap:10px}
-    .archive-row strong{font-size:clamp(24px,8vw,42px);letter-spacing:.12em}
+    .archive-back{display:inline-block;margin-top:20px}
+    .archive-row{grid-template-columns:1fr;gap:8px}
   }
 </style>
 
