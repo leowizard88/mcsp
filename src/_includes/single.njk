@@ -3,12 +3,18 @@ layout: base.njk
 ---
 <article class="single-page panel">
   <div class="single-inner">
-    {% if tags %}<p class="eyebrow">{{ tags }}</p>{% endif %}
+    {% if rubrica %}<p class="eyebrow">{{ rubrica }}</p>{% elseif tipo %}<p class="eyebrow">{{ tipo }}</p>{% elseif tags %}<p class="eyebrow">{{ tags }}</p>{% endif %}
     <h1>{{ title }}</h1>
-    {% if author %}<p class="meta">di {{ author }}</p>{% endif %}
-    {% if deadline %}<p class="meta">Scadenza: {{ deadline }}</p>{% endif %}
+    {% if subtitle %}<p class="article-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="article-meta-grid">
+      {% if author %}<p class="meta"><span>Nome autore</span> {{ author }}</p>{% endif %}
+      {% if tipo %}<p class="meta"><span>Tipo</span> {{ tipo }}</p>{% endif %}
+      {% if rubrica %}<p class="meta"><span>Rubrica</span> {{ rubrica }}</p>{% endif %}
+      {% if date %}<p class="meta"><span>Data</span> {{ date | dateISO }}</p>{% endif %}
+      {% if deadline %}<p class="meta"><span>Scadenza</span> {{ deadline }}</p>{% endif %}
+    </div>
     <div class="single-body">{{ content | safe }}</div>
-    <a class="text-link" href="/">← Torna alla home</a>
+    <a class="text-link" href="/archivio/">← Torna all’archivio</a>
 
     <section class="article-comments" data-article-comments data-article-path="{{ page.url }}">
       <div class="comments-head">
@@ -30,6 +36,34 @@ layout: base.njk
 </article>
 
 <style>
+  .article-subtitle {
+    max-width: 780px;
+    margin: -8px 0 22px;
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: clamp(24px, 3vw, 44px);
+    line-height: 1.05;
+    color: rgba(5,5,5,.72);
+  }
+
+  .article-meta-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px 18px;
+    margin: 0 0 28px;
+    padding: 0 0 20px;
+    border-bottom: 1px solid rgba(5,5,5,.20);
+  }
+
+  .article-meta-grid .meta {
+    margin: 0;
+  }
+
+  .article-meta-grid .meta span {
+    display: block;
+    margin-bottom: 3px;
+    opacity: .58;
+  }
+
   .article-comments,
   .article-comments * { box-sizing: border-box; }
 
@@ -147,6 +181,7 @@ layout: base.njk
   .comment-reply textarea { min-height: 72px; resize: vertical; }
 
   @media(max-width:760px) {
+    .article-subtitle { margin-top: -2px; }
     .article-comments { margin-top: 36px; padding-top: 20px; }
     .comments-head h2 { font-size: 30px; }
     .comment-card { padding: 12px; }
