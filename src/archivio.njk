@@ -16,21 +16,20 @@ permalink: /archivio/
     overflow: hidden;
   }
 
-  .archive-system-page::before {
-    content: "";
-    position: absolute;
+  .archive-system-page::before,
+  .archive-system-page::after { display: none !important; }
+
+  .archive-bg-img {
+    position: fixed;
     z-index: 1;
     right: clamp(-160px, -9vw, -52px);
     bottom: clamp(-120px, -7vw, -34px);
     width: clamp(620px, 66vw, 1120px);
-    height: clamp(620px, 86vh, 1080px);
+    max-width: none;
+    height: auto;
     pointer-events: none;
-    background: url('/assets/img/b7db19117443e1ac718e6e183b5f7299-removebg-preview.png') right bottom/contain no-repeat;
     opacity: 1;
-    mix-blend-mode: normal;
   }
-
-  .archive-system-page::after { display: none !important; }
 
   .archive-system-inner {
     position: relative;
@@ -73,10 +72,7 @@ permalink: /archivio/
     white-space: nowrap;
   }
 
-  .archive-chronology {
-    display: grid;
-    gap: clamp(18px, 3vw, 42px);
-  }
+  .archive-chronology { display: grid; gap: clamp(18px, 3vw, 42px); }
 
   .archive-row {
     display: grid;
@@ -111,16 +107,13 @@ permalink: /archivio/
     transform-origin: left center;
   }
 
-  .archive-row:nth-child(even) strong {
-    letter-spacing: .04em;
-  }
-
+  .archive-row:nth-child(even) strong { letter-spacing: .04em; }
   .archive-row:hover { background: rgba(68,0,100,.10); }
   .archive-row:hover strong { transform: translateX(8px); }
 
   @media(max-width:760px){
     .archive-system-page{padding:34px 22px}
-    .archive-system-page::before{width:560px;height:560px;right:-190px;bottom:-86px;opacity:1}
+    .archive-bg-img{width:560px;right:-190px;bottom:-86px;opacity:1}
     .archive-system-head{display:block}
     .archive-system-head h1{font-size:clamp(50px,16vw,82px)}
     .archive-back{display:inline-block;margin-top:22px}
@@ -130,6 +123,7 @@ permalink: /archivio/
 </style>
 
 <section class="archive-system-page panel">
+  <img class="archive-bg-img" src="/assets/img/b7db19117443e1ac718e6e183b5f7299-removebg-preview.png" alt="" aria-hidden="true">
   <div class="archive-system-inner">
     <header class="archive-system-head">
       <h1>Archivio</h1>
