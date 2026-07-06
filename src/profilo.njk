@@ -13,10 +13,7 @@ permalink: /profilo/
 
 <style>
   body:has(.profile-page),
-  body:has(.profile-page) .site-main {
-    background: #050000 !important;
-  }
-
+  body:has(.profile-page) .site-main { background: #050000 !important; }
   .profile-page {
     min-height: 100vh;
     color: #ead7b3;
@@ -29,137 +26,30 @@ permalink: /profilo/
       #050000 !important;
     overflow: hidden;
   }
-
-  .profile-card {
-    position: relative;
-    z-index: 2;
-    max-width: 860px;
-    margin: 0 auto;
-    color: #ead7b3;
-    border-left: 1px solid rgba(234,215,179,.35);
-    padding-left: clamp(18px, 3vw, 38px);
-  }
-
+  .profile-card { position: relative; z-index: 2; max-width: 860px; margin: 0 auto; color: #ead7b3; border-left: 1px solid rgba(234,215,179,.35); padding-left: clamp(18px, 3vw, 38px); }
   .profile-card .eyebrow { color: rgba(234,215,179,.74); }
-
-  .profile-card h1 {
-    margin: 0 0 26px;
-    font-family: var(--font-serif, Georgia, serif);
-    font-size: clamp(72px, 12vw, 154px);
-    line-height: .78;
-    font-weight: 300;
-    letter-spacing: -.035em;
-    text-transform: uppercase;
-    color: #ead7b3;
-    text-shadow: 0 0 24px rgba(234,215,179,.22);
-  }
-
-  .profile-box {
-    border-top: 1px solid rgba(234,215,179,.38);
-    display: grid;
-    gap: 17px;
-    background: linear-gradient(90deg, rgba(234,215,179,.08), rgba(234,215,179,.02));
-    padding: 26px;
-    box-shadow: none !important;
-  }
-
+  .profile-card h1 { margin: 0 0 26px; font-family: var(--font-serif, Georgia, serif); font-size: clamp(72px, 12vw, 154px); line-height: .78; font-weight: 300; letter-spacing: -.035em; text-transform: uppercase; color: #ead7b3; text-shadow: 0 0 24px rgba(234,215,179,.22); }
+  .profile-box { border-top: 1px solid rgba(234,215,179,.38); display: grid; gap: 17px; background: linear-gradient(90deg, rgba(234,215,179,.08), rgba(234,215,179,.02)); padding: 26px; box-shadow: none !important; }
   .profile-public-box { max-width: 720px; }
-
-  .profile-username {
-    font: 300 clamp(34px, 5vw, 64px)/1 var(--font-serif, Georgia, serif);
-    margin: 0;
-    letter-spacing: -.035em;
-    color: #ead7b3;
-  }
-
-  .profile-avatar {
-    width: 158px;
-    height: 158px;
-    border: 0 !important;
-    object-fit: cover;
-    background: transparent !important;
-    box-shadow: none !important;
-  }
-
+  .profile-username { font: 300 clamp(34px, 5vw, 64px)/1 var(--font-serif, Georgia, serif); margin: 0; letter-spacing: -.035em; color: #ead7b3; }
+  .profile-role { justify-self:start; margin: -8px 0 0; border:1px solid rgba(234,215,179,.34); padding:8px 10px; font:300 11px/1 var(--font-sans, system-ui, sans-serif); letter-spacing:.16em; text-transform:uppercase; color:rgba(234,215,179,.82); }
+  .profile-avatar { width: 158px; height: 158px; border: 0 !important; object-fit: cover; background: transparent !important; box-shadow: none !important; }
   .profile-avatar[src=""] { display: none; }
-
-  .profile-bio-public {
-    margin: 0;
-    max-width: 680px;
-    white-space: pre-wrap;
-    font: 300 clamp(20px,2.2vw,29px)/1.25 var(--font-serif, Georgia, serif);
-    color: rgba(234,215,179,.86);
-  }
-
-  .profile-card label {
-    display: grid;
-    gap: 8px;
-    font: 300 11px/1 var(--font-sans, system-ui, sans-serif);
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: rgba(234,215,179,.82);
-  }
-
-  .profile-card textarea,
-  .profile-card input[type="text"],
-  .profile-card input[type="file"] {
-    width: 100%;
-    box-sizing: border-box;
-    border: 1px solid rgba(234,215,179,.34);
-    background: rgba(5,0,0,.56);
-    color: #ead7b3;
-    padding: 13px;
-    font: 16px/1.35 var(--font-sans, system-ui, sans-serif);
-    outline: none;
-  }
-
-  .profile-card textarea:focus,
-  .profile-card input[type="text"]:focus {
-    border-color: rgba(234,215,179,.82);
-    background: rgba(5,0,0,.78);
-  }
-
-  .profile-card textarea::placeholder,
-  .profile-card input::placeholder { color: rgba(234,215,179,.42); }
-
+  .profile-bio-public { margin: 0; max-width: 680px; white-space: pre-wrap; font: 300 clamp(20px,2.2vw,29px)/1.25 var(--font-serif, Georgia, serif); color: rgba(234,215,179,.86); }
+  .profile-card label { display: grid; gap: 8px; font: 300 11px/1 var(--font-sans, system-ui, sans-serif); letter-spacing: .16em; text-transform: uppercase; color: rgba(234,215,179,.82); }
+  .profile-card textarea, .profile-card input[type="text"], .profile-card input[type="file"] { width: 100%; box-sizing: border-box; border: 1px solid rgba(234,215,179,.34); background: rgba(5,0,0,.56); color: #ead7b3; padding: 13px; font: 16px/1.35 var(--font-sans, system-ui, sans-serif); outline: none; }
+  .profile-card textarea:focus, .profile-card input[type="text"]:focus { border-color: rgba(234,215,179,.82); background: rgba(5,0,0,.78); }
+  .profile-card textarea::placeholder, .profile-card input::placeholder { color: rgba(234,215,179,.42); }
   .profile-card textarea { min-height: 160px; resize: vertical; }
-
-  .profile-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
-  .profile-actions button,
-  .profile-actions a,
-  .profile-login-link {
-    border: 1px solid rgba(234,215,179,.56);
-    background: #ead7b3;
-    color: #050000;
-    padding: 11px 13px;
-    font: 300 11px/1 var(--font-sans, system-ui, sans-serif);
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    box-shadow: none !important;
-  }
-
-  .profile-actions button[data-logout] {
-    background: #9b0000;
-    color: #fbfaf5;
-    border-color: rgba(255,210,190,.44);
-  }
-
-  .profile-status {
-    min-height: 18px;
-    color: #ffb19c;
-    font: 15px/1.35 var(--font-sans, system-ui, sans-serif);
-  }
-
-  @media(max-width:760px) {
-    .profile-page { padding: 34px 20px; }
-    .profile-card { padding-left: 16px; }
-    .profile-card h1 { font-size: clamp(58px, 18vw, 92px); }
-    .profile-box { padding: 20px; box-shadow: none !important; }
-  }
+  .profile-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .profile-actions button, .profile-actions a, .profile-login-link { border: 1px solid rgba(234,215,179,.56); background: #ead7b3; color: #050000; padding: 11px 13px; font: 300 11px/1 var(--font-sans, system-ui, sans-serif); letter-spacing: .15em; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: none !important; }
+  .profile-actions button[data-logout] { background: #9b0000; color: #fbfaf5; border-color: rgba(255,210,190,.44); }
+  .profile-status { min-height: 18px; color: #ffb19c; font: 15px/1.35 var(--font-sans, system-ui, sans-serif); }
+  .sec-box { border-top: 1px solid rgba(234,215,179,.22); padding-top: 16px; display: grid; gap: 10px; }
+  .sec-box p { margin: 0; max-width: 620px; color: rgba(234,215,179,.68); font: 14px/1.4 var(--font-sans, system-ui, sans-serif); }
+  .sec-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; }
+  .writer-link { background:#fbfaf5!important; color:#050000!important; }
+  @media(max-width:760px) { .profile-page { padding: 34px 20px; } .profile-card { padding-left: 16px; } .profile-card h1 { font-size: clamp(58px, 18vw, 92px); } .profile-box { padding: 20px; box-shadow: none !important; } .sec-row { grid-template-columns: 1fr; } }
 </style>
 
 <script>
@@ -170,19 +60,12 @@ permalink: /profilo/
   const esc = value => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
   const headers = () => token() ? { authorization: `Bearer ${token()}` } : {};
   const viewedUsername = new URLSearchParams(location.search).get('u') || '';
-  const fileToDataUrl = file => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
+  const fileToDataUrl = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(file); });
+
+  const roleLabel = user => user?.isRedattore ? 'redattore' : 'user';
 
   const loggedOut = message => {
-    root.innerHTML = `
-      <p class="eyebrow">Account</p>
-      <h1>Profilo</h1>
-      <p class="profile-status">${esc(message || 'Non risulti loggato su questo browser.')}</p>
-      <a class="profile-login-link" href="/">Torna alla home e accedi dall’icona</a>`;
+    root.innerHTML = `<p class="eyebrow">Account</p><h1>Profilo</h1><p class="profile-status">${esc(message || 'Non risulti loggato su questo browser.')}</p><a class="profile-login-link" href="/">Torna alla home e accedi dall’icona</a>`;
   };
 
   const renderPublicUser = user => {
@@ -191,6 +74,7 @@ permalink: /profilo/
       <h1>Profilo</h1>
       <div class="profile-box profile-public-box">
         <p class="profile-username">${esc(user.username)}</p>
+        <p class="profile-role">${esc(roleLabel(user))}</p>
         <img class="profile-avatar" src="${esc(user.avatar || '')}" alt="Foto profilo">
         <p class="profile-bio-public">${esc(user.bio || 'Nessuna descrizione pubblicata.')}</p>
         <div class="profile-actions"><a href="/">Home</a></div>
@@ -198,15 +82,20 @@ permalink: /profilo/
   };
 
   const renderOwnUser = user => {
+    const redattoreTools = user.isRedattore
+      ? `<div class="profile-actions"><a class="writer-link" href="/scrivi/">Scrivi un articolo</a></div>`
+      : `<div class="sec-box"><label>Codice SEC <div class="sec-row"><input data-sec-code type="text" maxlength="120" placeholder="codice monouso"><button type="button" data-sec-submit>Invia codice</button></div></label><p>Il codice SEC monouso abilita il permesso redattore.</p></div>`;
+
     root.innerHTML = `
       <p class="eyebrow">Account</p>
       <h1>Profilo</h1>
       <form class="profile-box" data-profile-form>
         <p class="profile-username">${esc(user.username)}</p>
+        <p class="profile-role">${esc(roleLabel(user))}</p>
         <img class="profile-avatar" data-profile-avatar src="${esc(user.avatar || '')}" alt="Foto profilo">
         <label>Foto profilo <input data-avatar-input name="avatar" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label>
         <label>Descrizione <textarea data-bio-input name="bio" maxlength="900" placeholder="scrivi una piccola bacheca personale">${esc(user.bio || '')}</textarea></label>
-        <label>SEC <input data-sec-input name="sec" type="text" maxlength="120" value="${esc(user.sec || '')}" placeholder="codice SEC"></label>
+        ${redattoreTools}
         <p class="profile-status" data-profile-status></p>
         <div class="profile-actions"><button type="submit">Salva</button><button type="button" data-logout>Logout</button><a href="/">Home</a></div>
       </form>`;
@@ -215,56 +104,44 @@ permalink: /profilo/
     const status = root.querySelector('[data-profile-status]');
     const avatarInput = root.querySelector('[data-avatar-input]');
     const bioInput = root.querySelector('[data-bio-input]');
-    const secInput = root.querySelector('[data-sec-input]');
     const avatarPreview = root.querySelector('[data-profile-avatar]');
     let avatar = user.avatar || '';
 
-    avatarInput.addEventListener('change', async () => {
-      if (!avatarInput.files || !avatarInput.files[0]) return;
-      avatar = await fileToDataUrl(avatarInput.files[0]);
-      avatarPreview.src = avatar;
-      avatarPreview.style.display = 'block';
-    });
+    avatarInput.addEventListener('change', async () => { if (!avatarInput.files || !avatarInput.files[0]) return; avatar = await fileToDataUrl(avatarInput.files[0]); avatarPreview.src = avatar; avatarPreview.style.display = 'block'; });
 
     form.addEventListener('submit', async event => {
       event.preventDefault();
       status.textContent = 'Salvataggio...';
-      const body = { action: 'update', bio: bioInput.value, sec: secInput.value, avatar };
+      const body = { action: 'update', bio: bioInput.value, avatar };
       const response = await fetch('/api/auth', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify(body) });
       const result = await response.json().catch(() => ({}));
       status.textContent = response.ok ? 'Profilo salvato.' : (result.error || 'Errore salvataggio.');
     });
 
-    root.querySelector('[data-logout]').addEventListener('click', async () => {
-      await fetch('/api/auth', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify({ action: 'logout' }) });
-      localStorage.removeItem(tokenKey);
-      localStorage.setItem('mancuspiePublicName', 'Anonimo');
-      location.href = '/';
+    const secButton = root.querySelector('[data-sec-submit]');
+    secButton?.addEventListener('click', async () => {
+      const code = root.querySelector('[data-sec-code]')?.value || '';
+      status.textContent = 'Verifica codice SEC...';
+      const response = await fetch('/api/auth', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify({ action: 'redeemsec', code }) });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) { status.textContent = result.error || 'Codice non valido.'; return; }
+      status.textContent = 'Permesso redattore attivato.';
+      setTimeout(() => renderOwnUser(result.user), 350);
     });
+
+    root.querySelector('[data-logout]').addEventListener('click', async () => { await fetch('/api/auth', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify({ action: 'logout' }) }); localStorage.removeItem(tokenKey); localStorage.setItem('mancuspiePublicName', 'Anonimo'); location.href = '/'; });
   };
 
   const load = async () => {
     const url = viewedUsername ? `/api/auth?username=${encodeURIComponent(viewedUsername)}` : '/api/auth';
-    if (!viewedUsername && !token()) {
-      loggedOut('Qui non c’è nessuna sessione salvata. Rifai il login dalla home.');
-      return;
-    }
+    if (!viewedUsername && !token()) { loggedOut('Qui non c’è nessuna sessione salvata. Rifai il login dalla home.'); return; }
     const response = await fetch(url, { headers: headers(), cache: 'no-store' });
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      root.innerHTML = `<p class="eyebrow">Account</p><h1>Profilo</h1><p class="profile-status">${esc(data.error || 'Profilo non trovato.')}</p><a class="profile-login-link" href="/">Home</a>`;
-      return;
-    }
-    if (!data.user) {
-      loggedOut('Sessione assente o scaduta. Rifai il login dalla home.');
-      return;
-    }
-    if (data.user.canEdit) renderOwnUser(data.user);
-    else renderPublicUser(data.user);
+    if (!response.ok) { root.innerHTML = `<p class="eyebrow">Account</p><h1>Profilo</h1><p class="profile-status">${esc(data.error || 'Profilo non trovato.')}</p><a class="profile-login-link" href="/">Home</a>`; return; }
+    if (!data.user) { loggedOut('Sessione assente o scaduta. Rifai il login dalla home.'); return; }
+    if (data.user.canEdit) renderOwnUser(data.user); else renderPublicUser(data.user);
   };
 
-  load().catch(error => {
-    root.innerHTML = `<p class="eyebrow">Account</p><h1>Profilo</h1><p class="profile-status">Profilo non disponibile: ${esc(error.message)}</p><a class="profile-login-link" href="/">Home</a>`;
-  });
+  load().catch(error => { root.innerHTML = `<p class="eyebrow">Account</p><h1>Profilo</h1><p class="profile-status">Profilo non disponibile: ${esc(error.message)}</p><a class="profile-login-link" href="/">Home</a>`; });
 })();
 </script>
