@@ -1,0 +1,208 @@
+---
+layout: base.njk
+title: Membri PCZ
+permalink: /zingaristan/membri/
+---
+<style>
+  html,
+  body,
+  .site-main,
+  body:has(.pcz-members-page),
+  body:has(.pcz-members-page) .site-main,
+  .site-main:has(.pcz-members-page) {
+    background: #050505 !important;
+    background-image: none !important;
+  }
+
+  body:has(.pcz-members-page)::before,
+  body:has(.pcz-members-page)::after,
+  .site-main:has(.pcz-members-page)::before,
+  .site-main:has(.pcz-members-page)::after,
+  .pcz-members-page::after {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+  }
+
+  .pcz-members-page,
+  .pcz-members-page * { box-sizing: border-box; }
+
+  .pcz-members-page {
+    min-height: 100svh !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: clamp(28px, 5vw, 72px) clamp(12px, 5vw, 70px) !important;
+    position: relative !important;
+    display: grid !important;
+    place-items: center !important;
+    overflow-x: hidden !important;
+    background: #050505 url('/assets/img/416d96d6-6d37-4fd4-8a09-1dacc26d68fd.jpeg') center center / cover no-repeat !important;
+  }
+
+  .pcz-members-page::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    display: block !important;
+    background: linear-gradient(90deg, rgba(0,0,0,.52), rgba(0,0,0,.18), rgba(0,0,0,.58)) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+  }
+
+  .pcz-members-card {
+    position: relative;
+    z-index: 2;
+    width: min(920px, 100%);
+    max-width: 100%;
+    padding: clamp(20px, 4vw, 42px);
+    background: rgba(250,248,240,.93);
+    border: 2px solid rgba(255,211,26,.78);
+    color: #050505;
+    box-shadow: 0 20px 80px rgba(0,0,0,.42);
+  }
+
+  .pcz-members-card h1 {
+    margin: 0 0 8px;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(38px, 7vw, 86px);
+    line-height: .9;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+  }
+
+  .pcz-members-card > p {
+    margin: 0 0 24px;
+    color: #083a92;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .pcz-members-status {
+    min-height: 20px;
+    margin: 0 0 12px !important;
+    color: #061a46 !important;
+    text-transform: none !important;
+    letter-spacing: .02em !important;
+    font-size: 13px !important;
+  }
+
+  .pcz-members-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-sans);
+    background: rgba(255,255,255,.46);
+  }
+
+  .pcz-members-table th,
+  .pcz-members-table td {
+    border-bottom: 1px solid rgba(5,5,5,.18);
+    padding: 12px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .pcz-members-table th {
+    color: #083a92;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .pcz-members-table td {
+    font-size: 15px;
+    line-height: 1.35;
+  }
+
+  .pcz-members-empty {
+    padding: 18px;
+    border: 1px solid rgba(5,5,5,.18);
+    background: rgba(255,255,255,.42);
+    font-family: var(--font-sans);
+  }
+
+  .pcz-members-back {
+    display: inline-block;
+    margin-top: 22px;
+    color: #083a92 !important;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    text-decoration: none !important;
+  }
+
+  @media(max-width:760px) {
+    .pcz-members-page { padding: 16px 8px !important; place-items: start center !important; }
+    .pcz-members-card { padding: 16px; }
+    .pcz-members-card h1 { font-size: clamp(34px, 12vw, 48px); }
+    .pcz-members-table th,
+    .pcz-members-table td { padding: 10px 7px; font-size: 13px; }
+    .pcz-members-table th:nth-child(3),
+    .pcz-members-table td:nth-child(3) { display: none; }
+  }
+</style>
+
+<section class="single-page pcz-members-page">
+  <article class="pcz-members-card">
+    <h1>Membri</h1>
+    <p>Partito Comunista Zingaro</p>
+    <p class="pcz-members-status" data-members-status>Caricamento membri...</p>
+    <div data-members-root></div>
+    <a class="pcz-members-back" href="/zingaristan/">← Torna a Zingaristan</a>
+  </article>
+</section>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-members-root]');
+  const status = document.querySelector('[data-members-status]');
+  if (!root || !status) return;
+
+  const esc = value => String(value || '').replace(/[&<>'"]/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+  }[char]));
+
+  const render = members => {
+    if (!members.length) {
+      root.innerHTML = '<div class="pcz-members-empty">Nessun membro registrato nella lista pubblica. I nuovi tesseramenti compariranno qui automaticamente.</div>';
+      return;
+    }
+
+    root.innerHTML = `
+      <table class="pcz-members-table">
+        <thead><tr><th>Nome</th><th>Cognome</th><th>Numero</th><th>Data tess.</th></tr></thead>
+        <tbody>
+          ${members.map(member => `
+            <tr>
+              <td>${esc(member.nome)}</td>
+              <td>${esc(member.cognome)}</td>
+              <td>${esc(member.code)}</td>
+              <td>${esc(member.date)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  };
+
+  const load = async () => {
+    try {
+      const response = await fetch('/api/membri', { cache: 'no-store' });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Lista membri non caricata');
+      const members = Array.isArray(result.members) ? result.members : [];
+      status.textContent = `${members.length} membri effettivi registrati`;
+      render(members);
+    } catch (error) {
+      status.textContent = error.message || 'Errore caricamento membri.';
+      render([]);
+    }
+  };
+
+  load();
+  setInterval(load, 8000);
+})();
+</script>
