@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="/assets/css/editor-light.css?v=20260706-1">
   <link rel="stylesheet" href="/assets/css/star-offset.css?v=20260706-4">
   <link rel="stylesheet" href="/assets/css/text-flow-fixes.css?v=20260706-13">
-  <link rel="stylesheet" href="/assets/css/archive-and-ornament-final.css?v=20260706-3">
+  <link rel="stylesheet" href="/assets/css/archive-and-ornament-final.css?v=20260706-4">
   <link rel="stylesheet" href="/assets/css/footnotes.css?v=20260706-1">
   <style>
     html,
@@ -84,22 +84,6 @@
       }
     }
   </style>
-  <script>
-    if (location.pathname.indexOf('/zingaristan/tesseramento') === 0) {
-      const nativeToDataURL = HTMLCanvasElement.prototype.toDataURL;
-      HTMLCanvasElement.prototype.toDataURL = function(type, quality) {
-        if (type === 'image/png' && this.width > 900) {
-          const small = document.createElement('canvas');
-          small.width = 900;
-          small.height = Math.round(this.height * (900 / this.width));
-          const ctx = small.getContext('2d');
-          ctx.drawImage(this, 0, 0, small.width, small.height);
-          return nativeToDataURL.call(small, 'image/png', quality);
-        }
-        return nativeToDataURL.call(this, type, quality);
-      };
-    }
-  </script>
 </head>
 <body>
   <aside class="side-index" aria-label="Indice principale">
@@ -139,24 +123,7 @@
   <script src="/assets/js/editor-type-idee.js?v=20260706-1"></script>
   <script src="/assets/js/editor-align-tools.js?v=20260706-1"></script>
   <script src="/assets/js/editor-footnotes.js?v=20260706-1"></script>
-  <script src="/assets/js/article-ornament-column.js?v=20260706-6"></script>
+  <script src="/assets/js/article-ornament-column.js?v=20260706-7"></script>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", function(user) {
-        if (!user && window.location.hash.indexOf("invite_token") !== -1) {
-          window.netlifyIdentity.open("signup");
-        }
-
-        if (!user && window.location.hash.indexOf("recovery_token") !== -1) {
-          window.location.href = "/admin/";
-        }
-      });
-
-      window.netlifyIdentity.on("login", function() {
-        window.location.href = "/admin/";
-      });
-    }
-  </script>
 </body>
 </html>
