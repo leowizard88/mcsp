@@ -1,0 +1,17 @@
+---
+permalink: /articoli.json
+eleventyExcludeFromCollections: true
+---
+[
+{% for post in collections.testi | reverse %}
+  {
+    "title": {{ post.data.title | json }},
+    "author": {{ post.data.author | json }},
+    "rubrica": {{ post.data.rubrica | json }},
+    "tipo": {{ post.data.tipo | json }},
+    "date": {{ post.data.date | dateISO | json }},
+    "url": {{ post.url | json }},
+    "sourcePath": {{ post.inputPath | json }}
+  }{% if not loop.last %},{% endif %}
+{% endfor %}
+]
