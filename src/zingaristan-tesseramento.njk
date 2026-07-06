@@ -271,17 +271,17 @@ permalink: /zingaristan/tesseramento/
     };
 
     ctx.fillStyle = '#fff';
-rect(405, 112, 545, 74);
-rect(238, 205, 365, 64);
-rect(790, 572, 300, 68);
-rect(24, 1350, 875, 300);
+    rect(298, 60, 632, 118);
+    rect(188, 170, 405, 112);
+    rect(790, 572, 300, 68);
+    rect(18, 1265, 884, 388);
 
-text(`${nome} ${cognome}`.slice(0, 34), 420, 170, 52, 'Arial, Helvetica, sans-serif');
-text(date, 250, 258, 50, 'Arial, Helvetica, sans-serif');
-text(code, 815, 626, 48, 'Arial, Helvetica, sans-serif');
+    text(`${nome} ${cognome}`.slice(0, 34), 330, 138, 50, 'Arial, Helvetica, sans-serif');
+    text(date, 228, 248, 46, 'Arial, Helvetica, sans-serif');
+    text(code, 815, 626, 48, 'Arial, Helvetica, sans-serif');
 
-const lines = wrapLines(note, 39, 7);
-lines.forEach((line, index) => text(line, 26, 1410 + index * 43, 40, 'Georgia, Times New Roman, serif'));
+    const lines = wrapLines(note, 39, 7);
+    lines.forEach((line, index) => text(line, 26, 1334 + index * 43, 39, 'Georgia, Times New Roman, serif'));
 
     return canvas.toDataURL('image/png');
   };
