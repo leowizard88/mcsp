@@ -71,13 +71,29 @@
   }
 }
 
-/* JS-driven endless ornament stream. No CSS loop reset. */
+/* JS-driven seamless ornament tape. */
 .article-ornament-track {
   animation: none !important;
   top: 0 !important;
   will-change: transform !important;
 }
 
-.article-ornament-track img {
+.article-ornament-block {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.article-ornament-track img,
+.article-ornament-block img {
   display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  flex: 0 0 auto !important;
+  vertical-align: top !important;
 }
