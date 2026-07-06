@@ -30,8 +30,8 @@ body .item-list{background:linear-gradient(90deg,rgba(234,215,179,.13),rgba(234,
 body .movimento-card time{background:rgba(234,215,179,.42)!important}
 body .movimento-card strong{background:rgba(234,215,179,.46)!important}
 body .movimento-card span{background:rgba(234,215,179,.36)!important}
-.zingaristan-link{display:inline-block;margin-top:16px;color:#061a46!important;text-decoration:underline!important;text-decoration-thickness:1px;text-underline-offset:3px;font:300 14px/1 var(--font-sans);letter-spacing:.09em}.chat-panel{display:grid!important;align-items:center!important;background:#ead7b3!important}.chat-panel::before{background:linear-gradient(115deg,#efdfc1 0%,#ddc595 100%)!important}.chat-board{position:relative;z-index:5;width:min(900px,88vw);margin:0 auto;border-top:1px solid rgba(31,28,24,.28);padding-top:clamp(26px,4vw,52px)}.chat-board h2{margin:0 0 22px;font-family:var(--font-serif);font-size:clamp(56px,9vw,132px);line-height:.86;font-weight:300}.chat-board p{max-width:620px;margin:0 0 24px;font-size:clamp(19px,2vw,30px);line-height:1.18}.chat-form{display:grid;grid-template-columns:minmax(120px,210px) 1fr auto;gap:10px;align-items:end}.chat-form input,.chat-form textarea{width:100%;border:1px solid rgba(31,28,24,.30);background:rgba(234,215,179,.18);color:#120d08;font:300 14px/1.2 var(--font-sans);letter-spacing:.04em;padding:13px 12px;border-radius:0;outline:none}.chat-form textarea{min-height:44px;resize:vertical}.chat-form input:focus,.chat-form textarea:focus{border-color:rgba(31,28,24,.62);background:rgba(234,215,179,.28)}.chat-form button{border:1px solid rgba(31,28,24,.42);background:rgba(31,28,24,.84);color:#ead7b3;font:300 11px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;padding:15px 16px;cursor:pointer}.chat-form input.is-locked{opacity:.62;cursor:not-allowed}.chat-messages{margin-top:26px;display:grid;gap:12px}.chat-message{border-top:1px solid rgba(31,28,24,.20);padding-top:12px}.chat-message.is-reply{margin-left:clamp(18px,4vw,48px);border-left:3px solid rgba(31,28,24,.24);padding-left:12px}.chat-message strong{display:inline-block;margin-right:10px;font:300 12px/1 var(--font-sans);letter-spacing:.14em;text-transform:uppercase}.chat-message time{font:300 10px/1 var(--font-sans);letter-spacing:.10em;opacity:.55}.chat-message p{margin:8px 0 0;font-size:clamp(19px,2vw,28px);line-height:1.18;max-width:none}.chat-reply-toggle,.chat-reply button{margin-top:10px;border:1px solid rgba(31,28,24,.42);background:rgba(31,28,24,.84);color:#ead7b3;font:300 10px/1 var(--font-sans);letter-spacing:.15em;text-transform:uppercase;padding:9px 11px;cursor:pointer}.chat-reply{display:none;grid-template-columns:minmax(100px,180px) 1fr auto;gap:8px;align-items:end;margin-top:10px}.chat-reply.is-open{display:grid}.chat-reply input,.chat-reply textarea{width:100%;border:1px solid rgba(31,28,24,.26);background:rgba(234,215,179,.20);color:#120d08;font:300 13px/1.2 var(--font-sans);letter-spacing:.035em;padding:10px;outline:none}.chat-reply textarea{min-height:38px;resize:vertical}.chat-error{color:#5a0000!important}
-@media(max-width:760px){body .site-main #home.hero-panel .bg-score{left:-28%!important;top:-8%!important;width:150%!important;height:112%!important;background-size:cover!important;background-position:left center!important;opacity:.18!important}body .site-main #home.hero-panel .hero-copy h2{margin-left:0!important;max-width:calc(100vw - 82px)!important;text-align:justify!important;text-align-last:left!important}body .site-main #home.hero-panel .ultimi-movimenti-button{margin-right:25px!important}body .site-main #home.hero-panel .drama-mobile{transform:translateX(21px)!important;transform-origin:center!important}body .noi-panel .bg-archive{inset:-8% -20% -8% -18%!important;width:auto!important;height:auto!important;background-size:cover!important;background-position:center center!important;opacity:.30!important;-webkit-mask-image:radial-gradient(ellipse at 50% 50%,#000 0 56%,rgba(0,0,0,.58) 72%,transparent 92%)!important;mask-image:radial-gradient(ellipse at 50% 50%,#000 0 56%,rgba(0,0,0,.58) 72%,transparent 92%)!important}.chat-board{width:100%}.chat-form{grid-template-columns:1fr}.chat-reply{grid-template-columns:1fr}.chat-message.is-reply{margin-left:14px}}
+.zingaristan-link{display:inline-block;margin-top:16px;color:#061a46!important;text-decoration:underline!important;text-decoration-thickness:1px;text-underline-offset:3px;font:300 14px/1 var(--font-sans);letter-spacing:.09em}.chat-panel{display:grid!important;align-items:center!important;background:#ead7b3!important}.chat-panel::before{background:linear-gradient(115deg,#efdfc1 0%,#ddc595 100%)!important}.chat-board{position:relative;z-index:5;width:min(900px,88vw);margin:0 auto;border-top:1px solid rgba(31,28,24,.28);padding-top:clamp(26px,4vw,52px)}.chat-board h2{margin:0 0 22px;font-family:var(--font-serif);font-size:clamp(56px,9vw,132px);line-height:.86;font-weight:300}.chat-board p{max-width:620px;margin:0 0 24px;font-size:clamp(19px,2vw,30px);line-height:1.18}.chat-form{display:grid;grid-template-columns:minmax(120px,210px) 1fr auto;gap:10px;align-items:end}.chat-form input,.chat-form textarea{width:100%;border:1px solid rgba(31,28,24,.30);background:rgba(234,215,179,.18);color:#120d08;font:300 14px/1.2 var(--font-sans);letter-spacing:.04em;padding:13px 12px;border-radius:0;outline:none}.chat-form textarea{min-height:44px;resize:vertical}.chat-form input:focus,.chat-form textarea:focus{border-color:rgba(31,28,24,.62);background:rgba(234,215,179,.28)}.chat-form button{border:1px solid rgba(31,28,24,.42);background:rgba(31,28,24,.84);color:#ead7b3;font:300 11px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;padding:15px 16px;cursor:pointer}.chat-form input.is-locked{opacity:.62;cursor:not-allowed}.chat-messages{margin-top:26px;display:grid;gap:12px}.chat-message{border-top:1px solid rgba(31,28,24,.20);padding-top:12px}.chat-message.is-reply{border-left:3px solid rgba(31,28,24,.24);padding-left:12px}.chat-message strong{display:inline-block;margin-right:10px;font:300 12px/1 var(--font-sans);letter-spacing:.14em;text-transform:uppercase}.chat-message time{font:300 10px/1 var(--font-sans);letter-spacing:.10em;opacity:.55}.chat-message p{margin:8px 0 0;font-size:clamp(19px,2vw,28px);line-height:1.18;max-width:none}.chat-reply-toggle,.chat-reply button,.chat-branch-toggle{margin-top:10px;margin-right:8px;border:1px solid rgba(31,28,24,.42);background:rgba(31,28,24,.84);color:#ead7b3;font:300 10px/1 var(--font-sans);letter-spacing:.15em;text-transform:uppercase;padding:9px 11px;cursor:pointer}.chat-branch-toggle{background:rgba(234,215,179,.32);color:#120d08}.chat-reply{display:none;grid-template-columns:minmax(100px,180px) 1fr auto;gap:8px;align-items:end;margin-top:10px}.chat-reply.is-open{display:grid}.chat-reply input,.chat-reply textarea{width:100%;border:1px solid rgba(31,28,24,.26);background:rgba(234,215,179,.20);color:#120d08;font:300 13px/1.2 var(--font-sans);letter-spacing:.035em;padding:10px;outline:none}.chat-reply textarea{min-height:38px;resize:vertical}.chat-error{color:#5a0000!important}
+@media(max-width:760px){body .site-main #home.hero-panel .bg-score{left:-28%!important;top:-8%!important;width:150%!important;height:112%!important;background-size:cover!important;background-position:left center!important;opacity:.18!important}body .site-main #home.hero-panel .hero-copy h2{margin-left:0!important;max-width:calc(100vw - 82px)!important;text-align:justify!important;text-align-last:left!important}body .site-main #home.hero-panel .ultimi-movimenti-button{margin-right:25px!important}body .site-main #home.hero-panel .drama-mobile{transform:translateX(21px)!important;transform-origin:center!important}body .noi-panel .bg-archive{inset:-8% -20% -8% -18%!important;width:auto!important;height:auto!important;background-size:cover!important;background-position:center center!important;opacity:.30!important;-webkit-mask-image:radial-gradient(ellipse at 50% 50%,#000 0 56%,rgba(0,0,0,.58) 72%,transparent 92%)!important;mask-image:radial-gradient(ellipse at 50% 50%,#000 0 56%,rgba(0,0,0,.58) 72%,transparent 92%)!important}.chat-board{width:100%}.chat-form{grid-template-columns:1fr}.chat-reply{grid-template-columns:1fr}.chat-message.is-reply{margin-left:12px!important}}
 `;
 document.head.appendChild(homeFix);
 
@@ -85,6 +85,8 @@ const installPublicChat = () => {
   const textInput = panel.querySelector('[data-chat-text]');
   const list = panel.querySelector('[data-chat-messages]');
   const openReplies = new Set();
+  const openBranches = new Set();
+  const collapseDepth = 4;
   const savedName = localStorage.getItem(nameKey) || '';
   if (savedName) {
     nameInput.value = savedName;
@@ -108,24 +110,38 @@ const installPublicChat = () => {
       <button type="submit">Rispondi</button>
     </form>`;
 
-  const renderMessage = (item, isReply = false) => `
-    <article class="chat-message${isReply ? ' is-reply' : ''}">
-      <strong>${escapeHtml(item.name)}</strong><time>${escapeHtml(formatTime(item.time))}</time>
-      <p>${escapeHtml(item.text)}</p>
-      ${isReply ? '' : `<button class="chat-reply-toggle" type="button" data-chat-reply-toggle="${escapeHtml(item.id)}">Rispondi</button>${replyForm(item.id)}`}
-    </article>`;
+  const renderMessage = (item, childrenByParent, depth = 0) => {
+    const children = childrenByParent.get(item.id) || [];
+    const margin = depth ? Math.min(depth * 24, 112) : 0;
+    const shouldCollapse = depth >= collapseDepth && children.length && !openBranches.has(item.id);
+    const childHtml = shouldCollapse ? '' : children.map(child => renderMessage(child, childrenByParent, depth + 1)).join('');
+    const branchButton = children.length && depth >= collapseDepth
+      ? `<button class="chat-branch-toggle" type="button" data-chat-branch-toggle="${escapeHtml(item.id)}">${openBranches.has(item.id) ? 'Chiudi ramo' : `Mostra ${children.length} risposte`}</button>`
+      : '';
+    return `
+      <article class="chat-message${depth ? ' is-reply' : ''}" style="${depth ? `margin-left:${margin}px` : ''}">
+        <strong>${escapeHtml(item.name)}</strong><time>${escapeHtml(formatTime(item.time))}</time>
+        <p>${escapeHtml(item.text)}</p>
+        <button class="chat-reply-toggle" type="button" data-chat-reply-toggle="${escapeHtml(item.id)}">Rispondi</button>
+        ${branchButton}
+        ${replyForm(item.id)}
+      </article>
+      ${childHtml}`;
+  };
 
   const render = messages => {
     if (!messages.length) {
       list.innerHTML = '<div class="chat-message"><p>Nessun messaggio ancora.</p></div>';
       return;
     }
-    const parents = messages.filter(item => !item.parentId).slice().reverse();
-    const replies = messages.filter(item => item.parentId);
-    list.innerHTML = parents.map(parent => {
-      const childHtml = replies.filter(reply => reply.parentId === parent.id).map(reply => renderMessage(reply, true)).join('');
-      return renderMessage(parent) + childHtml;
-    }).join('');
+    const childrenByParent = new Map();
+    messages.forEach(item => {
+      const key = item.parentId || '';
+      if (!childrenByParent.has(key)) childrenByParent.set(key, []);
+      childrenByParent.get(key).push(item);
+    });
+    const parents = (childrenByParent.get('') || []).slice().reverse();
+    list.innerHTML = parents.map(parent => renderMessage(parent, childrenByParent, 0)).join('');
   };
 
   const load = async () => {
@@ -171,6 +187,15 @@ const installPublicChat = () => {
   });
 
   panel.addEventListener('click', event => {
+    const branchButton = event.target.closest('[data-chat-branch-toggle]');
+    if (branchButton) {
+      const id = branchButton.dataset.chatBranchToggle;
+      if (openBranches.has(id)) openBranches.delete(id);
+      else openBranches.add(id);
+      load();
+      return;
+    }
+
     const button = event.target.closest('[data-chat-reply-toggle]');
     if (!button) return;
     const id = button.dataset.chatReplyToggle;
@@ -195,6 +220,7 @@ const installPublicChat = () => {
     if (!lockedName) lockName(name);
     try {
       openReplies.delete(parentId);
+      openBranches.add(parentId);
       await sendMessage({ name, text, parentId });
     } catch (error) {
       list.innerHTML = `<div class="chat-message"><p class="chat-error">Invio fallito: ${escapeHtml(error.message)}</p></div>`;
