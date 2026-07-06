@@ -1,0 +1,112 @@
+---
+layout: base.njk
+title: Archivio | MANCUSPIE
+permalink: /archivio/
+---
+<style>
+  .archive-system-page {
+    min-height: 100vh;
+    background: #fbfaf5;
+    padding: clamp(42px, 6vw, 88px);
+  }
+
+  .archive-system-page::before,
+  .archive-system-page::after {
+    display: none !important;
+  }
+
+  .archive-system-inner {
+    position: relative;
+    z-index: 4;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .archive-system-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    border-bottom: 1px solid rgba(31,28,24,.22);
+    padding-bottom: 22px;
+    margin-bottom: clamp(28px, 4vw, 58px);
+  }
+
+  .archive-system-head h1 {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(62px, 10vw, 150px);
+    line-height: .82;
+    font-weight: 300;
+  }
+
+  .archive-back {
+    font: 300 11px/1 var(--font-sans);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #9c0000;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 7px;
+    white-space: nowrap;
+  }
+
+  .archive-chronology {
+    display: grid;
+    gap: 0;
+  }
+
+  .archive-row {
+    display: grid;
+    grid-template-columns: minmax(110px, 160px) 1fr minmax(110px, 180px);
+    gap: clamp(18px, 3vw, 50px);
+    align-items: baseline;
+    padding: clamp(18px, 2.5vw, 32px) 0;
+    border-bottom: 1px solid rgba(31,28,24,.16);
+  }
+
+  .archive-row time,
+  .archive-row em {
+    font: 300 12px/1.2 var(--font-sans);
+    letter-spacing: .10em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-style: normal;
+  }
+
+  .archive-row strong {
+    font-family: var(--font-serif);
+    font-size: clamp(30px, 4vw, 62px);
+    line-height: .95;
+    font-weight: 300;
+  }
+
+  .archive-row:hover strong {
+    color: #9c0000;
+  }
+
+  @media(max-width:760px){
+    .archive-system-page{padding:34px 22px}
+    .archive-system-head{display:block}
+    .archive-back{display:inline-block;margin-top:20px}
+    .archive-row{grid-template-columns:1fr;gap:8px}
+  }
+</style>
+
+<section class="archive-system-page panel">
+  <div class="archive-system-inner">
+    <header class="archive-system-head">
+      <h1>Archivio</h1>
+      <a class="archive-back" href="/ultimi-movimenti/">ultimi movimenti</a>
+    </header>
+
+    <div class="archive-chronology" aria-label="Archivio cronologico degli articoli">
+      {% for post in collections.testi | reverse %}
+      <a class="archive-row" href="{{ post.url }}">
+        <time datetime="{{ post.data.date | dateISO }}">{{ post.data.date | dateISO }}</time>
+        <strong>{{ post.data.title }}</strong>
+        <em>{{ post.data.author }}</em>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
