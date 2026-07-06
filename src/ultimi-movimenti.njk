@@ -18,19 +18,19 @@ permalink: /ultimi-movimenti/
     overflow: hidden;
   }
 
-  .ultimi-page::before {
-    content: "";
-    position: absolute;
+  .ultimi-bg-figure {
+    position: fixed;
     z-index: 2;
-    right: clamp(-92px, -5vw, -28px);
-    bottom: clamp(-118px, -8vw, -38px);
-    width: clamp(360px, 48vw, 760px);
-    height: clamp(300px, 42vw, 660px);
+    right: 0;
+    bottom: 0;
+    width: clamp(320px, 42vw, 680px);
+    height: clamp(280px, 38vw, 610px);
     pointer-events: none;
     background: url('/assets/img/a8cc0d83120c1f4148e94b1b25b8c69c-removebg-preview.png') right bottom/contain no-repeat;
     opacity: .28;
   }
 
+  .ultimi-page::before,
   .ultimi-page::after {
     display: none !important;
   }
@@ -190,7 +190,7 @@ permalink: /ultimi-movimenti/
 
   @media(max-width:760px){
     .ultimi-page{background-position:center center, center center}
-    .ultimi-page::before{width:330px;height:280px;opacity:.20;right:-110px;bottom:-80px;background-position:right bottom}
+    .ultimi-bg-figure{width:320px;height:280px;opacity:.20;right:0;bottom:0}
     .ultimi-title{font-size:clamp(37px,11vw,64px);letter-spacing:-.02em;white-space:normal}
     .ultimi-subtitle{font-size:12px;letter-spacing:.06em}
     .movimenti-board{grid-template-columns:1fr;width:min(390px,92vw)}
@@ -200,6 +200,7 @@ permalink: /ultimi-movimenti/
 </style>
 
 <section class="ultimi-page panel">
+  <span class="ultimi-bg-figure" aria-hidden="true"></span>
   <a class="archive-star" href="/archivio/" aria-label="Vai all'archivio"></a>
 
   <header class="ultimi-header">
