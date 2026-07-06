@@ -200,11 +200,20 @@ layout: base.njk
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    align-items: baseline;
+    align-items: center;
     margin: 0 0 8px;
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: .08em;
+  }
+
+  .comment-avatar {
+    width: 34px;
+    height: 34px;
+    object-fit: cover;
+    border: 1px solid rgba(5,5,5,.28);
+    background: rgba(5,5,5,.08);
+    box-shadow: 3px 3px 0 rgba(5,5,5,.14);
   }
 
   .comment-meta strong { font-size: 13px; }
@@ -243,6 +252,7 @@ layout: base.njk
     .comments-head h2 { font-size: 30px; }
     .comment-card { padding: 12px; }
     .comment-card.is-reply { margin-left: 14px; }
+    .comment-avatar { width: 30px; height: 30px; }
   }
 </style>
 
@@ -279,13 +289,16 @@ layout: base.njk
     </form>
   `;
 
-  const renderCard = (comment, isReply = false) => `
-    <article class="comment-card${isReply ? ' is-reply' : ''}">
-      <p class="comment-meta"><strong>${esc(comment.name)}</strong><time>${esc(formatTime(comment.time))}</time></p>
-      <p class="comment-text">${esc(comment.text)}</p>
-      ${isReply ? '' : `<button class="comment-reply-toggle" type="button" data-reply-toggle="${esc(comment.id)}">Rispondi</button>${renderReplyForm(comment.id)}`}
-    </article>
-  `;
+  const renderCard = (comment, isReply = false) => {
+    const avatar = comment.avatar ? `<img class="comment-avatar" src="${esc(comment.avatar)}" alt="">` : '';
+    return `
+      <article class="comment-card${isReply ? ' is-reply' : ''}">
+        <p class="comment-meta">${avatar}<strong>${esc(comment.name)}</strong><time>${esc(formatTime(comment.time))}</time></p>
+        <p class="comment-text">${esc(comment.text)}</p>
+        ${isReply ? '' : `<button class="comment-reply-toggle" type="button" data-reply-toggle="${esc(comment.id)}">Rispondi</button>${renderReplyForm(comment.id)}`}
+      </article>
+    `;
+  };
 
   const render = () => {
     const parents = comments.filter(comment => !comment.parentId);
