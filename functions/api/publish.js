@@ -41,7 +41,7 @@ function requireRedattore(user) {
 }
 
 function safeContentPath(path) {
-  const p = clean(path);
+  const p = clean(path).replace(/^\.\//, '');
   if (!/^src\/content\/testi\/[a-zA-Z0-9._-]+\.md$/.test(p)) return '';
   return p;
 }
