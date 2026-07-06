@@ -6,22 +6,21 @@ title: MANCUSPIE
   .hero-panel::after { display: none !important; }
   .ultimi-movimenti-button {
     position: absolute;
-    right: clamp(18px, 4vw, 62px);
-    bottom: clamp(18px, 5vw, 70px);
+    right: clamp(14px, 4vw, 58px);
+    bottom: clamp(14px, 5vw, 66px);
     z-index: 9;
     display: block;
-    width: clamp(260px, 25vw, 420px) !important;
-    opacity: .96;
+    width: clamp(310px, 30vw, 510px) !important;
+    opacity: .94;
+    mix-blend-mode: multiply;
     transform-origin: 60% 72%;
-    clip-path: polygon(11% 14%, 37% 3%, 62% 8%, 84% 25%, 98% 51%, 92% 78%, 73% 98%, 44% 95%, 17% 82%, 2% 55%);
-    cursor: pointer;
   }
   .ultimi-movimenti-button img {
     display: block;
     width: 100%;
     height: auto;
     mix-blend-mode: multiply;
-    filter: contrast(1.18) saturate(.74);
+    filter: contrast(1.05) saturate(.82);
   }
   .ultimi-movimenti-button:hover {
     animation: movimentiVibra .115s steps(2, end) infinite;
@@ -35,7 +34,7 @@ title: MANCUSPIE
     100% { transform: translate(-1px, 0) rotate(-1.1deg); }
   }
   @media(max-width:760px){
-    .ultimi-movimenti-button{width:185px !important;right:12px;bottom:18px;opacity:.9}
+    .ultimi-movimenti-button{width:215px !important;right:10px;bottom:16px;opacity:.9}
   }
 </style>
 
