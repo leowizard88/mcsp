@@ -28,13 +28,18 @@ permalink: /profilo/
   const viewedUsername = new URLSearchParams(location.search).get('u') || '';
   const fileToDataUrl = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(file); });
   const roleLabel = user => user?.isRedattore ? 'redattore' : 'user';
-  const loadArticles = async () => {
+  const loadArticles = async username => {
+    try {
+      const response = await fetch(`/api/articles?author=${encodeURIComponent(username)}&v=${Date.now()}`, { cache: 'no-store' });
+      const data = await response.json().catch(() => ({}));
+      ARTICLES = response.ok && Array.isArray(data.articles) ? data.articles : [];
+      if (ARTICLES.length) return;
+    } catch { ARTICLES = []; }
     try {
       const response = await fetch(`/articoli.json?v=${Date.now()}`, { cache: 'no-store' });
       ARTICLES = response.ok ? await response.json() : [];
-      if (ARTICLES.length) return;
     } catch { ARTICLES = []; }
-    if (Array.isArray(window.MANCUSPIE_ARTICOLI)) ARTICLES = window.MANCUSPIE_ARTICOLI;
+    if (!ARTICLES.length && Array.isArray(window.MANCUSPIE_ARTICOLI)) ARTICLES = window.MANCUSPIE_ARTICOLI;
   };
   const articlesHtml = username => {
     const items = ARTICLES.filter(item => norm(item.author) === norm(username));
@@ -64,11 +69,11 @@ permalink: /profilo/
   const load = async () => {
     const url = viewedUsername ? `/api/auth?username=${encodeURIComponent(viewedUsername)}` : '/api/auth';
     if (!viewedUsername && !token()) { loggedOut('Qui non c’è nessuna sessione salvata. Rifai il login dalla home.'); return; }
-    await loadArticles();
     const response = await fetch(url, { headers: headers(), cache:'no-store' });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) { root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">${esc(data.error || 'Profilo non trovato.')}</p><div class="profile-actions"><a href="/">Home</a></div></div></div>`; return; }
     if (!data.user) { loggedOut('Sessione assente o scaduta. Rifai il login dalla home.'); return; }
+    await loadArticles(data.user.username);
     if (data.user.canEdit) renderOwnUser(data.user); else renderPublicUser(data.user);
   };
   load().catch(error => { root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">Profilo non disponibile: ${esc(error.message)}</p><div class="profile-actions"><a href="/">Home</a></div></div></div>`; });
