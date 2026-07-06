@@ -5,6 +5,19 @@
   window.MancuspieAuth = state;
   const token = () => localStorage.getItem(tokenKey) || '';
   const headers = () => token() ? { authorization: `Bearer ${token()}` } : {};
+
+  const nativeFetch = window.fetch.bind(window);
+  window.fetch = (input, init = {}) => {
+    const url = typeof input === 'string' ? input : input?.url || '';
+    const method = String(init?.method || 'GET').toUpperCase();
+    const shouldAttach = token() && method === 'POST' && (url.includes('/api/chat') || url.includes('/api/comments'));
+    if (!shouldAttach) return nativeFetch(input, init);
+    return nativeFetch(input, {
+      ...init,
+      headers: { ...(init.headers || {}), authorization: `Bearer ${token()}` }
+    });
+  };
+
   const setNames = () => {
     const name = state.user?.username || 'Anonimo';
     localStorage.setItem(nameKey, name);
@@ -49,7 +62,7 @@
   document.body.appendChild(button);
   const modal = document.createElement('div');
   modal.className = 'mc-account-modal';
-  modal.innerHTML = `<div class="mc-account-card"><button class="mc-account-close" type="button" data-close>×</button><h2>Account</h2><p class="mc-account-note">Entra con un nome tuo oppure resta nella nebbia anonima.</p><div class="mc-account-tabs"><button type="button" class="is-active" data-mode="signup">Sign up</button><button type="button" data-mode="login">Sign in</button></div><form data-form><input name="username" autocomplete="username" maxlength="24" placeholder="username" required><input name="password" autocomplete="current-password" type="password" minlength="6" placeholder="password" required><button type="submit">Entra</button></form><p class="mc-account-error" data-error></p></div>`;
+  modal.innerHTML = `<div class="mc-account-card"><button class="mc-account-close" type="button" data-close>×</button><h2>Account</h2><p class="mc-account-note">Entra con un nome tuo oppure resta nella nebbia anonima.</p><div class="mc-account-tabs"><button type="button" class="is-active" data-mode="signup">Sign up</button><button type="button" data-mode="login">Sign in</button></div><form data-form><input name="username" autocomplete="username" maxlength="24" placeholder="username" required><input name="password" autocomplete="current-password" type="password" minlength="4" placeholder="password" required><button type="submit">Entra</button></form><p class="mc-account-error" data-error></p></div>`;
   document.body.appendChild(modal);
   let mode = 'signup';
   const render = () => {
