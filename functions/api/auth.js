@@ -8,6 +8,7 @@ const ROLE_REDACTORE = 'redattore';
 // Codici SEC monouso validi, salvati come SHA-256 del codice normalizzato.
 // Quando serve un nuovo codice, va aggiunto qui il suo hash.
 const SEC_CODE_HASHES = new Set([
+  'c914c0f9c5005e79ebd0a169f0e235b09b2f6da1d1db655bda4d6ef446d12be2'
 ]);
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: HEADERS });
