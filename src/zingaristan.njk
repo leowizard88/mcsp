@@ -6,35 +6,61 @@ permalink: /zingaristan/
 <style>
   html,
   body,
-  .site-main {
+  .site-main,
+  body:has(.zingaristan-page),
+  body:has(.zingaristan-page) .site-main,
+  .site-main:has(.zingaristan-page) {
     background: #050505 !important;
+    background-image: none !important;
   }
 
+  body:has(.zingaristan-page)::before,
+  body:has(.zingaristan-page)::after,
+  .site-main:has(.zingaristan-page)::before,
+  .site-main:has(.zingaristan-page)::after,
+  .zingaristan-page::after,
+  .single-page.zingaristan-page::after {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+  }
+
+  .single-page.zingaristan-page,
   .zingaristan-page {
-    min-height: 100svh;
-    position: relative;
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    background: #050505 url('/assets/img/zingaristan-bg.svg') center center / cover no-repeat !important;
+    min-height: 100svh !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+    display: grid !important;
+    place-items: center !important;
+    overflow: hidden !important;
+    background-color: #050505 !important;
+    background-image: url('/assets/img/zingaristan-bg.svg') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
   }
 
-  .zingaristan-page::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,.18);
-    pointer-events: none;
+  .single-page.zingaristan-page::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    display: block !important;
+    background: rgba(0,0,0,.14) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
   }
 
   .zingaristan-page .single-article {
-    position: relative;
-    z-index: 2;
+    position: relative !important;
+    z-index: 2 !important;
     background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;
-    color: #f3ead9;
-    text-align: center;
+    color: #f3ead9 !important;
+    text-align: center !important;
     mix-blend-mode: screen;
   }
 
@@ -46,7 +72,7 @@ permalink: /zingaristan/
   }
 
   .zingaristan-page .section-kicker {
-    color: #f3ead9;
+    color: #f3ead9 !important;
     opacity: .82;
   }
 </style>
