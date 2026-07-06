@@ -19,24 +19,24 @@ analisi ci rende solo molto settari. Ci chiediamo come allevare queste mancuspie
 dove gridare, chi sente la difficoltà e la pressione di continuare ad ogni costo, chi ha paura di
 tornare indietro, di cogliere silenziosamente il respiro delle cose, di capire la vertigine che lo assale;
 questo sangue che viene versato ogni giorno deve essere raccolto, parlato. Il chiasso costante del
-mondo ci intorpidisce e va a finire nell’educazione, nelle pareti delle nostre stanze, nei reel, nelle
-storie, nella noia e nell’ansia. Educarsi, insomma, diventa sempre più difficile e si può fare sempre
-meno affidamento sull’insegnamento scolastico.
+mondo ci intorpidisce e va a finire nell’educazione, nelle pareti delle nostre stanze, nell'ammuffire, nelle
+solitudini, nella noia e nell’ansia. Educarsi, insomma, diventa sempre più difficile e si può fare sempre
+meno affidamento sull’insegnamento classico.
 Dobbiamo tornare allora sul dorso del mondo, della scrittura, dell’espressione. Dobbiamo tornare a
 cavallo. Gauchos senza fretta, ma con il palmo sempre sull’impugnatura. Possiamo disperderci, ma
 ci rincontreremo sempre. Questa è la terza via non facile (tra puro impulso incontrollato e pose
 moderate, circoscritte e normative), costeggiata da fatica, forse anche disperata, ma che dà corpo al
-movimento: costruire riviste, scrivere poesie, avvertirsi e avvertire, decostruire il panorama che ci
+movimento: costruire riviste, scrivere poesie, avvertirsi e avvertire, distruggere il panorama che ci
 vincola, fondare una logica della sensazione, studiare la psicogeografia dei nostri dintorni, il ritmo
-urbano, l’architettura che ci vive e che viviamo; bisogna insomma poter dire di morire per qualcosa,
+urbano, l’architettura che ci vive e che viviamo, ammassare cose e collezionare conchiglie; bisogna insomma poter dire di morire per qualcosa,
 nel deserto che siamo.</p>
 
-<p style="text-align:justify">Bisogna coltivare l’attenzione. Non solo decostruire ciò che ci viene venduto, ma decostruire la
+<p style="text-align:justify">Bisogna coltivare l’attenzione. Non solo riconcretizzare ciò che ci viene venduto, ma sventrare la
 propriocezione e il sentimento. Fondare un nuovo politico, meno polemico, meno rappresentativo,
 meno furibondo, meno duro. Diventare mandriani dello statico, grandi conoscitori delle zone grige,
-della pianura atonale. Capire che siamo uno spettro della mancanza, che non sappiamo cosa ci
+della pianura atonale. Capire che siamo uno spettro della mancanza, che non sappiamo ancora cosa ci
 manchi, che l’ironia non ci salverà dalle maglie dell’insicurezza ontologica, ma che la
-carnevalizzazione può produrre una festa ben più forte. Bisogna continuare a ripetere, ad andare,
+carnevalizzazione può produrre una festa ben più forte, che la produzione può insediarsi in zone molto efficaci. Bisogna continuare a ripetere, ad andare,
 che sia avanti o indietro o in qualunque direzione.</p>
 
 <p style="text-align:justify">Allora rispondete all’appello che vi chiede di diventare nuovi gauchos, sorridendo maldestramente
