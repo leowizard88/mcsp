@@ -335,7 +335,7 @@ permalink: /zingaristan/tesseramento/
       payload.cardPng = await makeCardPng(payload);
       setStatus('Invio domanda...', '');
 
-      const response = await fetch('/api/tesseramento', {
+      const response = await fetch('/api/tessera', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(payload)
