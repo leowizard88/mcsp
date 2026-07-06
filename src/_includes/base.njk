@@ -75,6 +75,22 @@
       }
     }
   </style>
+  <script>
+    if (location.pathname.indexOf('/zingaristan/tesseramento') === 0) {
+      const nativeToDataURL = HTMLCanvasElement.prototype.toDataURL;
+      HTMLCanvasElement.prototype.toDataURL = function(type, quality) {
+        if (type === 'image/png' && this.width > 900) {
+          const small = document.createElement('canvas');
+          small.width = 900;
+          small.height = Math.round(this.height * (900 / this.width));
+          const ctx = small.getContext('2d');
+          ctx.drawImage(this, 0, 0, small.width, small.height);
+          return nativeToDataURL.call(small, 'image/png', quality);
+        }
+        return nativeToDataURL.call(this, type, quality);
+      };
+    }
+  </script>
 </head>
 <body>
   <aside class="side-index" aria-label="Indice principale">
