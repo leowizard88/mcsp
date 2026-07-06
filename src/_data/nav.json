@@ -1,7 +1,7 @@
 [
   { "label": "Latest drama", "url": "/ultimi-movimenti/" },
   { "label": "Call", "url": "/#call" },
-  { "label": "Testi in<br>primo piano", "url": "/#testi" },
+  { "label": "Testi in primo piano", "url": "/#testi" },
   { "label": "Manifesti", "url": "/#note" },
   { "label": "Noi", "url": "/#noi" },
   { "label": "Altri progetti", "url": "/#progetti" }
