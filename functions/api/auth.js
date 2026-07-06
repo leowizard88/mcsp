@@ -2,10 +2,18 @@ const HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-cont
 const SESSION_TTL = 60 * 60 * 24 * 90;
 const SIGNUP_TTL = 60 * 20;
 const MAX_AVATAR = 420000;
+const ROLE_USER = 'user';
+const ROLE_REDACTORE = 'redattore';
+
+// Codici SEC monouso validi, salvati come SHA-256 del codice normalizzato.
+// Quando serve un nuovo codice, va aggiunto qui il suo hash.
+const SEC_CODE_HASHES = new Set([
+]);
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: HEADERS });
 const clean = value => String(value || '').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim();
 const usernameKey = value => clean(value).toLowerCase();
+const normalizeSecCode = value => clean(value).toUpperCase().replace(/[^A-Z0-9]/g, '');
 const validUsername = value => /^[a-zA-Z0-9_]{3,24}$/.test(value);
 const validPassword = value => String(value || '').length >= 4 && String(value || '').length <= 120;
 const enc = new TextEncoder();
@@ -17,8 +25,9 @@ const randomHex = bytes => {
 };
 const hash = async value => bytesToHex(await crypto.subtle.digest('SHA-256', enc.encode(value)));
 const passHash = (password, salt) => hash(`${salt}:${password}`);
-const ownUser = user => user ? ({ id: user.id, username: user.username, bio: user.bio || '', avatar: user.avatar || '', sec: user.sec || '', createdAt: user.createdAt, canEdit: true }) : null;
-const publicUser = user => user ? ({ id: user.id, username: user.username, bio: user.bio || '', avatar: user.avatar || '', createdAt: user.createdAt, canEdit: false }) : null;
+const roleOf = user => user?.role === ROLE_REDACTORE ? ROLE_REDACTORE : ROLE_USER;
+const ownUser = user => user ? ({ id: user.id, username: user.username, role: roleOf(user), isRedattore: roleOf(user) === ROLE_REDACTORE, bio: user.bio || '', avatar: user.avatar || '', sec: user.sec || '', createdAt: user.createdAt, canEdit: true }) : null;
+const publicUser = user => user ? ({ id: user.id, username: user.username, role: roleOf(user), isRedattore: roleOf(user) === ROLE_REDACTORE, bio: user.bio || '', avatar: user.avatar || '', createdAt: user.createdAt, canEdit: false }) : null;
 const originKey = async request => {
   const raw = clean(request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || '');
   if (!raw) return '';
@@ -47,6 +56,20 @@ const saveSession = async (env, userId) => {
   const token = randomHex(32);
   await env.CHAT_MESSAGES.put(`auth:session:${token}`, JSON.stringify({ userId, time: new Date().toISOString() }), { expirationTtl: SESSION_TTL });
   return token;
+};
+const redeemSecCode = async (env, rawCode, user) => {
+  const normalized = normalizeSecCode(rawCode);
+  if (!normalized || normalized.length < 8) return { ok: false, error: 'Codice SEC non valido' };
+  const codeHash = await hash(normalized);
+  if (!SEC_CODE_HASHES.has(codeHash)) return { ok: false, error: 'Codice SEC non valido' };
+  const usedKey = `auth:sec-used:${codeHash}`;
+  if (await env.CHAT_MESSAGES.get(usedKey)) return { ok: false, error: 'Codice SEC già usato' };
+  user.role = ROLE_REDACTORE;
+  user.sec = 'REDAZIONE';
+  user.redattoreAt = new Date().toISOString();
+  await env.CHAT_MESSAGES.put(`auth:user:${user.id}`, JSON.stringify(user));
+  await env.CHAT_MESSAGES.put(usedKey, JSON.stringify({ userId: user.id, username: user.username, time: user.redattoreAt }));
+  return { ok: true, user };
 };
 
 export async function onRequestGet({ request, env }) {
@@ -79,7 +102,7 @@ export async function onRequestPost({ request, env }) {
     if (signupKey && await env.CHAT_MESSAGES.get(signupKey)) return json({ error: 'Troppi account creati da questa rete. Riprova tra poco.' }, 429);
     const id = crypto.randomUUID();
     const salt = randomHex(16);
-    const user = { id, username, usernameKey: key, salt, passwordHash: await passHash(password, salt), bio: '', avatar: '', sec: '', createdAt: new Date().toISOString() };
+    const user = { id, username, usernameKey: key, role: ROLE_USER, salt, passwordHash: await passHash(password, salt), bio: '', avatar: '', sec: '', createdAt: new Date().toISOString() };
     await env.CHAT_MESSAGES.put(`auth:user:${id}`, JSON.stringify(user));
     await env.CHAT_MESSAGES.put(`auth:username:${key}`, id);
     if (signupKey) await env.CHAT_MESSAGES.put(signupKey, id, { expirationTtl: SIGNUP_TTL });
@@ -94,6 +117,10 @@ export async function onRequestPost({ request, env }) {
     if (!id) return json({ error: 'Credenziali non valide' }, 401);
     const user = await env.CHAT_MESSAGES.get(`auth:user:${id}`, 'json');
     if (!user || await passHash(password, user.salt) !== user.passwordHash) return json({ error: 'Credenziali non valide' }, 401);
+    if (!user.role) {
+      user.role = ROLE_USER;
+      await env.CHAT_MESSAGES.put(`auth:user:${user.id}`, JSON.stringify(user));
+    }
     const token = await saveSession(env, id);
     return json({ token, user: ownUser(user) });
   }
@@ -108,8 +135,8 @@ export async function onRequestPost({ request, env }) {
     const token = bearer(request) || clean(data.token);
     const user = await getUserByToken(env, token);
     if (!user) return json({ error: 'Login richiesto' }, 401);
+    user.role = roleOf(user);
     user.bio = clean(data.bio).slice(0, 900);
-    user.sec = clean(data.sec).slice(0, 120);
     const avatar = String(data.avatar || '');
     if (avatar) {
       if (!/^data:image\/(png|jpeg|jpg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(avatar) || avatar.length > MAX_AVATAR) return json({ error: 'Immagine profilo non valida o troppo pesante' }, 400);
@@ -118,6 +145,16 @@ export async function onRequestPost({ request, env }) {
     if (data.avatar === '') user.avatar = '';
     await env.CHAT_MESSAGES.put(`auth:user:${user.id}`, JSON.stringify(user));
     return json({ user: ownUser(user) });
+  }
+
+  if (action === 'redeemsec') {
+    const token = bearer(request) || clean(data.token);
+    const user = await getUserByToken(env, token);
+    if (!user) return json({ error: 'Login richiesto' }, 401);
+    if (roleOf(user) === ROLE_REDACTORE) return json({ user: ownUser(user), ok: true });
+    const result = await redeemSecCode(env, data.code, user);
+    if (!result.ok) return json({ error: result.error }, 400);
+    return json({ user: ownUser(result.user), ok: true });
   }
 
   return json({ error: 'Azione non valida' }, 400);
