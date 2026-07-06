@@ -20,57 +20,28 @@ permalink: /scrivi/
 (() => {
   const root = document.querySelector('[data-write-root]');
   const token = localStorage.getItem('mancuspieAuthToken') || '';
+  const editPath = new URLSearchParams(location.search).get('edit') || '';
   const headers = () => token ? { authorization: `Bearer ${token}` } : {};
   const esc = value => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
   const fail = message => { root.innerHTML = `<p class="write-kicker">Redazione</p><h1>Scrivi</h1><p class="write-status">${esc(message)}</p><div class="write-card"><div class="write-actions"><a href="/profilo/">Torna al profilo</a></div></div>`; };
-
-  const wrapSelection = (textarea, before, after = '') => {
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selected = textarea.value.slice(start, end) || 'testo';
-    textarea.setRangeText(`${before}${selected}${after}`, start, end, 'select');
-    textarea.focus();
-    updatePreview();
-  };
-  const insertText = (textarea, text) => {
-    textarea.setRangeText(text, textarea.selectionStart, textarea.selectionEnd, 'end');
-    textarea.focus();
-    updatePreview();
-  };
-  const fileToBase64 = file => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-  const inlineMarkdown = value => esc(value)
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2">')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-  const renderMarkdown = md => md.split(/\n{2,}/).map(block => {
-    const b = block.trim();
-    if (!b) return '';
-    if (b.startsWith('### ')) return `<h3>${inlineMarkdown(b.slice(4))}</h3>`;
-    if (b.startsWith('## ')) return `<h2>${inlineMarkdown(b.slice(3))}</h2>`;
-    if (b.startsWith('# ')) return `<h1>${inlineMarkdown(b.slice(2))}</h1>`;
-    if (b.startsWith('> ')) return `<blockquote>${inlineMarkdown(b.replace(/^> /gm, ''))}</blockquote>`;
-    if (/^- /m.test(b)) return `<ul>${b.split('\n').filter(Boolean).map(line => `<li>${inlineMarkdown(line.replace(/^- /, ''))}</li>`).join('')}</ul>`;
-    return `<p>${inlineMarkdown(b).replace(/\n/g, '<br>')}</p>`;
-  }).join('');
+  const wrapSelection = (textarea, before, after = '') => { const start = textarea.selectionStart; const end = textarea.selectionEnd; const selected = textarea.value.slice(start, end) || 'testo'; textarea.setRangeText(`${before}${selected}${after}`, start, end, 'select'); textarea.focus(); updatePreview(); };
+  const insertText = (textarea, text) => { textarea.setRangeText(text, textarea.selectionStart, textarea.selectionEnd, 'end'); textarea.focus(); updatePreview(); };
+  const fileToBase64 = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(String(reader.result).split(',')[1] || ''); reader.onerror = reject; reader.readAsDataURL(file); });
+  const inlineMarkdown = value => esc(value).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*]+)\*/g, '<em>$1</em>').replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2">').replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+  const renderMarkdown = md => md.split(/\n{2,}/).map(block => { const b = block.trim(); if (!b) return ''; if (b.startsWith('### ')) return `<h3>${inlineMarkdown(b.slice(4))}</h3>`; if (b.startsWith('## ')) return `<h2>${inlineMarkdown(b.slice(3))}</h2>`; if (b.startsWith('# ')) return `<h1>${inlineMarkdown(b.slice(2))}</h1>`; if (b.startsWith('> ')) return `<blockquote>${inlineMarkdown(b.replace(/^> /gm, ''))}</blockquote>`; if (/^- /m.test(b)) return `<ul>${b.split('\n').filter(Boolean).map(line => `<li>${inlineMarkdown(line.replace(/^- /, ''))}</li>`).join('')}</ul>`; return `<p>${inlineMarkdown(b).replace(/\n/g, '<br>')}</p>`; }).join('');
   let updatePreview = () => {};
 
   const buildEditor = user => {
+    const modeLabel = editPath ? 'Modifica articolo' : 'Scrivi';
     root.innerHTML = `
-      <p class="write-kicker">Redazione / ${esc(user.username)}</p>
-      <h1>Scrivi</h1>
+      <p class="write-kicker">Redazione / ${esc(user.username)}${editPath ? ' / modifica' : ''}</p>
+      <h1>${modeLabel}</h1>
       <div class="write-shell">
         <form class="write-card" data-editor-form>
           <div class="write-grid">
             <label class="write-field is-wide">Titolo <input data-title maxlength="160" required placeholder="titolo articolo"></label>
             <label class="write-field is-wide">Sottotitolo <input data-subtitle maxlength="220" placeholder="sottotitolo opzionale"></label>
-            <label class="write-field">Tipo <select data-tipo required><option value="saggio">saggio</option><option value="racconto">racconto</option><option value="romanzo">romanzo</option><option value="visivo">visivo</option><option value="marginalia">marginalia</option><option value="impressioni">impressioni</option><option value="notizie">notizie</option><option value="manifesto">manifesto</option></select></label>
+            <label class="write-field">Tipo <select data-tipo required><option value="saggio">saggio</option><option value="racconto">racconto</option><option value="romanzo">romanzo</option><option value="visivo">visivo</option><option value="marginalia">marginalia</option><option value="impressioni">impressioni</option><option value="notizie">notizie</option><option value="manifesto">manifesto</option><option value="idee">idee</option></select></label>
             <label class="write-field">Rubrica <input data-rubrica maxlength="80" required placeholder="rubrica"></label>
             <label class="write-field is-wide">Corpo del testo
               <div class="write-toolbar" data-toolbar>
@@ -81,79 +52,54 @@ permalink: /scrivi/
             </label>
           </div>
           <p class="write-status" data-status></p>
-          <div class="write-actions"><button type="submit">Pubblica</button><a href="/profilo/">Profilo</a></div>
+          <div class="write-actions"><button type="submit">${editPath ? 'Salva modifiche' : 'Pubblica'}</button><a href="/profilo/">Profilo</a></div>
         </form>
-        <aside class="write-side">
-          <h2>Anteprima</h2>
-          <p>L’anteprima è indicativa. La resa finale passa dal template articoli di Mancuspie.</p>
-          <div class="write-preview" data-preview><p>Comincia a scrivere.</p></div>
-          <div class="write-help"><span>Ctrl/Cmd+B: bold</span><span>Ctrl/Cmd+I: italic</span><span>Il nome autore sarà il tuo username: ${esc(user.username)}</span></div>
-        </aside>
+        <aside class="write-side"><h2>Anteprima</h2><p>${editPath ? 'Stai modificando un articolo già pubblicato.' : 'L’anteprima è indicativa. La resa finale passa dal template articoli di Mancuspie.'}</p><div class="write-preview" data-preview><p>Comincia a scrivere.</p></div><div class="write-help"><span>Ctrl/Cmd+B: bold</span><span>Ctrl/Cmd+I: italic</span><span>Il nome autore sarà il tuo username: ${esc(user.username)}</span></div></aside>
       </div>`;
-
     const form = root.querySelector('[data-editor-form]');
+    const title = root.querySelector('[data-title]');
+    const subtitle = root.querySelector('[data-subtitle]');
+    const tipo = root.querySelector('[data-tipo]');
+    const rubrica = root.querySelector('[data-rubrica]');
     const body = root.querySelector('[data-body]');
     const preview = root.querySelector('[data-preview]');
     const status = root.querySelector('[data-status]');
     updatePreview = () => { preview.innerHTML = renderMarkdown(body.value || ''); };
     body.addEventListener('input', updatePreview);
-    body.addEventListener('keydown', event => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'b') { event.preventDefault(); wrapSelection(body, '**', '**'); }
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'i') { event.preventDefault(); wrapSelection(body, '*', '*'); }
-    });
-    root.querySelector('[data-toolbar]').addEventListener('click', event => {
-      const button = event.target.closest('[data-cmd]');
-      if (!button) return;
-      const cmd = button.dataset.cmd;
-      if (cmd === 'h2') insertText(body, '\n\n## Titolo sezione\n');
-      if (cmd === 'h3') insertText(body, '\n\n### Sottosezione\n');
-      if (cmd === 'bold') wrapSelection(body, '**', '**');
-      if (cmd === 'italic') wrapSelection(body, '*', '*');
-      if (cmd === 'quote') insertText(body, '\n\n> Citazione\n');
-      if (cmd === 'list') insertText(body, '\n\n- elemento\n- elemento\n');
-      if (cmd === 'code') wrapSelection(body, '`', '`');
-      if (cmd === 'link') insertText(body, '[testo link](https://)');
-      if (cmd === 'wordlink') {
-        const url = prompt('URL del link');
-        if (url) wrapSelection(body, '[', `](${url})`);
-      }
-    });
-    root.querySelector('[data-upload]').addEventListener('change', async event => {
-      const file = event.target.files?.[0];
-      if (!file) return;
-      status.textContent = 'Caricamento file...';
-      try {
-        const content = await fileToBase64(file);
-        const response = await fetch('/api/publish', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify({ action: 'upload', filename: file.name, mime: file.type, content }) });
-        const result = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(result.error || 'Upload fallito');
-        insertText(body, `\n\n${result.markdown}\n\n`);
-        status.textContent = 'File inserito.';
-      } catch (error) { status.textContent = error.message; }
-      event.target.value = '';
-    });
+    body.addEventListener('keydown', event => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'b') { event.preventDefault(); wrapSelection(body, '**', '**'); } if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'i') { event.preventDefault(); wrapSelection(body, '*', '*'); } });
+    root.querySelector('[data-toolbar]').addEventListener('click', event => { const button = event.target.closest('[data-cmd]'); if (!button) return; const cmd = button.dataset.cmd; if (cmd === 'h2') insertText(body, '\n\n## Titolo sezione\n'); if (cmd === 'h3') insertText(body, '\n\n### Sottosezione\n'); if (cmd === 'bold') wrapSelection(body, '**', '**'); if (cmd === 'italic') wrapSelection(body, '*', '*'); if (cmd === 'quote') insertText(body, '\n\n> Citazione\n'); if (cmd === 'list') insertText(body, '\n\n- elemento\n- elemento\n'); if (cmd === 'code') wrapSelection(body, '`', '`'); if (cmd === 'link') insertText(body, '[testo link](https://)'); if (cmd === 'wordlink') { const url = prompt('URL del link'); if (url) wrapSelection(body, '[', `](${url})`); } });
+    root.querySelector('[data-upload]').addEventListener('change', async event => { const file = event.target.files?.[0]; if (!file) return; status.textContent = 'Caricamento file...'; try { const content = await fileToBase64(file); const response = await fetch('/api/publish', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify({ action: 'upload', filename: file.name, mime: file.type, content }) }); const result = await response.json().catch(() => ({})); if (!response.ok) throw new Error(result.error || 'Upload fallito'); insertText(body, `\n\n${result.markdown}\n\n`); status.textContent = 'File inserito.'; } catch (error) { status.textContent = error.message; } event.target.value = ''; });
+
+    const loadArticle = async () => {
+      if (!editPath) return;
+      status.textContent = 'Caricamento articolo...';
+      const response = await fetch(`/api/publish?path=${encodeURIComponent(editPath)}`, { headers: headers(), cache: 'no-store' });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Caricamento articolo fallito');
+      const article = result.article || {};
+      title.value = article.title || '';
+      subtitle.value = article.subtitle || '';
+      tipo.value = article.tipo || 'saggio';
+      rubrica.value = article.rubrica || '';
+      body.value = article.body || '';
+      status.textContent = 'Articolo caricato.';
+      updatePreview();
+    };
     form.addEventListener('submit', async event => {
       event.preventDefault();
-      status.textContent = 'Pubblicazione...';
-      const payload = { action: 'publish', title: root.querySelector('[data-title]').value, subtitle: root.querySelector('[data-subtitle]').value, tipo: root.querySelector('[data-tipo]').value, rubrica: root.querySelector('[data-rubrica]').value, body: body.value };
+      status.textContent = editPath ? 'Salvataggio modifiche...' : 'Pubblicazione...';
+      const payload = { action: editPath ? 'edit' : 'publish', path: editPath, title: title.value, subtitle: subtitle.value, tipo: tipo.value, rubrica: rubrica.value, body: body.value };
       try {
         const response = await fetch('/api/publish', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify(payload) });
         const result = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(result.error || 'Pubblicazione fallita');
-        status.textContent = 'Pubblicato. Deploy in corso, attendi qualche secondo.';
+        if (!response.ok) throw new Error(result.error || (editPath ? 'Modifica fallita' : 'Pubblicazione fallita'));
+        status.textContent = editPath ? 'Modifiche salvate. Deploy in corso.' : 'Pubblicato. Deploy in corso, attendi qualche secondo.';
         setTimeout(() => { location.href = '/archivio/'; }, 1400);
       } catch (error) { status.textContent = error.message; }
     });
+    loadArticle().catch(error => { status.textContent = error.message; });
   };
-
-  const load = async () => {
-    if (!token) { fail('Login richiesto.'); return; }
-    const response = await fetch('/api/auth', { headers: headers(), cache: 'no-store' });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok || !data.user) { fail('Sessione non valida.'); return; }
-    if (!data.user.isRedattore) { fail('Permesso redattore richiesto.'); return; }
-    buildEditor(data.user);
-  };
+  const load = async () => { if (!token) { fail('Login richiesto.'); return; } const response = await fetch('/api/auth', { headers: headers(), cache: 'no-store' }); const data = await response.json().catch(() => ({})); if (!response.ok || !data.user) { fail('Sessione non valida.'); return; } if (!data.user.isRedattore) { fail('Permesso redattore richiesto.'); return; } buildEditor(data.user); };
   load().catch(error => fail(error.message || 'Errore permessi.'));
 })();
 </script>
