@@ -3,12 +3,92 @@ layout: base.njk
 title: Ultimi movimenti | MANCUSPIE
 permalink: /ultimi-movimenti/
 ---
-<section class="single-page panel">
-  <article class="single-inner">
-    <p class="section-kicker">MANCUSPIE</p>
-    <h1>ULTIMI MOVIMENTI</h1>
-    <div class="single-body">
-      <p>Qui appariranno gli ultimi movimenti.</p>
-    </div>
-  </article>
+<style>
+  .ultimi-page {
+    min-height: 100vh;
+    background:
+      linear-gradient(rgba(0,0,0,.08), rgba(0,0,0,.18)),
+      url('/assets/img/638cde03da9ac7f50e8586e7e2491440.jpg') center/cover no-repeat;
+    display: block;
+    padding: clamp(34px, 5vw, 70px) clamp(20px, 4vw, 56px);
+  }
+
+  .ultimi-page::before,
+  .ultimi-page::after {
+    display: none !important;
+  }
+
+  .ultimi-header {
+    position: relative;
+    z-index: 4;
+    width: 100%;
+    text-align: center;
+    padding-top: clamp(8px, 2vw, 28px);
+  }
+
+  .ultimi-title {
+    display: inline;
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(54px, 8vw, 132px);
+    line-height: .88;
+    font-weight: 300;
+    letter-spacing: .01em;
+    white-space: nowrap;
+    color: #111;
+    background: rgba(255,255,255,.88);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    padding: .02em .16em .08em;
+    text-shadow: 0 1px 0 rgba(255,255,255,.55);
+  }
+
+  .ultimi-subtitle {
+    width: fit-content;
+    max-width: min(92vw, 980px);
+    margin: clamp(18px, 2.6vw, 32px) auto 0;
+    font-family: var(--font-sans);
+    font-size: clamp(14px, 1.45vw, 24px);
+    line-height: 1.25;
+    font-weight: 300;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #fff;
+    background: rgba(0,0,0,.82);
+    padding: .45em .8em .5em;
+  }
+
+  .ultimi-body {
+    position: relative;
+    z-index: 4;
+    max-width: 820px;
+    margin: clamp(70px, 13vh, 150px) auto 0;
+    text-align: center;
+    font-size: 22px;
+    line-height: 1.45;
+  }
+
+  .ultimi-body p {
+    display: inline;
+    background: rgba(255,255,255,.84);
+    padding: .1em .28em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  @media(max-width:760px){
+    .ultimi-title{font-size:clamp(37px,11vw,64px);letter-spacing:-.02em;white-space:normal}
+    .ultimi-subtitle{font-size:12px;letter-spacing:.06em}
+  }
+</style>
+
+<section class="ultimi-page panel">
+  <header class="ultimi-header">
+    <h1 class="ultimi-title">ULTIMI MOVIMENTI</h1>
+    <p class="ultimi-subtitle">gli ultimi prodotti freschi 1''000%</p>
+  </header>
+
+  <div class="ultimi-body">
+    <p>Qui appariranno gli ultimi movimenti.</p>
+  </div>
 </section>
