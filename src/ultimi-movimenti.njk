@@ -6,11 +6,13 @@ permalink: /ultimi-movimenti/
 <style>
   .ultimi-page {
     min-height: 100vh;
-    background:
+    min-height: 100svh;
+    background-image:
       linear-gradient(rgba(0,0,0,.04), rgba(0,0,0,.10)),
-      image-set(
-        url('/assets/img/638cde03da9ac7f50e8586e7e2491440.jpg') 1x
-      ) center center / cover no-repeat;
+      url('/assets/img/638cde03da9ac7f50e8586e7e2491440.jpg');
+    background-size: cover, cover;
+    background-position: center center, center center;
+    background-repeat: no-repeat, no-repeat;
     display: block;
     padding: clamp(34px, 5vw, 70px) clamp(20px, 4vw, 56px);
   }
@@ -61,7 +63,7 @@ permalink: /ultimi-movimenti/
   }
 
   @media(max-width:760px){
-    .ultimi-page{background-position:center center}
+    .ultimi-page{background-position:center center, center center}
     .ultimi-title{font-size:clamp(37px,11vw,64px);letter-spacing:-.02em;white-space:normal}
     .ultimi-subtitle{font-size:12px;letter-spacing:.06em}
   }
