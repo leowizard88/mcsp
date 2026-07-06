@@ -5,6 +5,13 @@
     const image = new Image();
     image.onload = () => resolve(src);
     image.onerror = () => resolve('');
+    image.src = `${src}?v=20260706`;
+  });
+  const preload = src => new Promise(resolve => {
+    if (!src) { resolve(false); return; }
+    const image = new Image();
+    image.onload = () => resolve(true);
+    image.onerror = () => resolve(false);
     image.src = src;
   });
   const findImage = async name => {
@@ -16,9 +23,9 @@
   };
   const pattern = (m2, m1) => {
     const rows = [];
-    for (let i = 0; i < 18; i += 1) {
+    for (let i = 0; i < 26; i += 1) {
       rows.push(m2);
-      if (m1 && [3, 8, 14].includes(i)) rows.push(m1);
+      if (m1 && [4, 11, 19, 24].includes(i)) rows.push(m1);
     }
     return rows;
   };
@@ -27,6 +34,8 @@
     const m2 = await findImage('m2');
     if (!m2) return;
     const m1 = await findImage('m1');
+    await preload(m2);
+    if (m1) await preload(m1);
     const column = document.createElement('aside');
     column.className = 'article-ornament-column';
     column.dataset.articleOrnamentColumn = '1';
@@ -38,6 +47,7 @@
     track.innerHTML = doubled.map((src, index) => `<img src="${src}" alt="" loading="eager" decoding="async" data-ornament-index="${index}">`).join('');
     column.appendChild(track);
     document.body.appendChild(column);
+    requestAnimationFrame(() => column.classList.add('is-ready'));
   };
   build().catch(() => {});
 })();
