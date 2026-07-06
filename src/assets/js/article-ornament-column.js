@@ -21,13 +21,56 @@
     }
     return '';
   };
-  const makeSequence = (m2, m1) => {
-    const rows = [];
-    for (let i = 0; i < 34; i += 1) {
-      rows.push(m2);
-      if (m1 && [5, 13, 22, 30].includes(i)) rows.push(m1);
+  const chooseImage = (m2, m1) => {
+    if (!m1) return m2;
+    return Math.random() < 0.18 ? m1 : m2;
+  };
+  const makeTile = src => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = '';
+    img.loading = 'eager';
+    img.decoding = 'async';
+    img.draggable = false;
+    return img;
+  };
+  const fillTrack = (track, column, m2, m1) => {
+    track.innerHTML = '';
+    const minHeight = Math.max(window.innerHeight * 2.6, column.clientHeight * 2.6, 1600);
+    let safety = 0;
+    while (track.scrollHeight < minHeight && safety < 90) {
+      const src = safety === 2 || safety === 9 || safety === 17 ? (m1 || m2) : chooseImage(m2, m1);
+      track.appendChild(makeTile(src));
+      safety += 1;
     }
-    return rows;
+  };
+  const animate = (track, column, m2, m1) => {
+    let offset = 0;
+    let last = performance.now();
+    const speed = 260;
+    const step = now => {
+      const delta = Math.min(48, now - last);
+      last = now;
+      offset += (speed * delta) / 1000;
+
+      let first = track.firstElementChild;
+      let guard = 0;
+      while (first && offset >= first.offsetHeight && guard < 12) {
+        offset -= first.offsetHeight;
+        first.remove();
+        track.appendChild(makeTile(chooseImage(m2, m1)));
+        first = track.firstElementChild;
+        guard += 1;
+      }
+
+      if (track.scrollHeight < Math.max(window.innerHeight * 2.4, column.clientHeight * 2.4, 1400)) {
+        track.appendChild(makeTile(chooseImage(m2, m1)));
+      }
+
+      track.style.transform = `translate3d(0, ${offset}px, 0)`;
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   };
   const build = async () => {
     if (!isArticle() || document.querySelector('[data-article-ornament-column]')) return;
@@ -45,13 +88,15 @@
 
     const track = document.createElement('div');
     track.className = 'article-ornament-track';
-    const sequence = makeSequence(m2, m1Ready ? m1 : '');
-    const triple = sequence.concat(sequence, sequence);
-    track.innerHTML = triple.map((src, index) => `<img src="${src}" alt="" loading="eager" decoding="async" data-ornament-index="${index}">`).join('');
-
     column.appendChild(track);
     document.body.appendChild(column);
-    requestAnimationFrame(() => column.classList.add('is-ready'));
+
+    const realM1 = m1Ready ? m1 : '';
+    fillTrack(track, column, m2, realM1);
+    column.classList.add('is-ready');
+    animate(track, column, m2, realM1);
+
+    window.addEventListener('resize', () => fillTrack(track, column, m2, realM1), { passive: true });
   };
 
   const start = () => build().catch(() => {});
