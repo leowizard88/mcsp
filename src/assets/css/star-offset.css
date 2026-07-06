@@ -1,0 +1,11 @@
+.archive-star {
+  right: 190px !important;
+  top: 42px !important;
+}
+
+@media(max-width:760px) {
+  .archive-star {
+    right: 84px !important;
+    top: 22px !important;
+  }
+}
