@@ -21,10 +21,6 @@
     }
     return '';
   };
-  const chooseImage = (m2, m1) => {
-    if (!m1) return m2;
-    return Math.random() < 0.18 ? m1 : m2;
-  };
   const makeTile = src => {
     const img = document.createElement('img');
     img.src = src;
@@ -34,40 +30,56 @@
     img.draggable = false;
     return img;
   };
-  const fillTrack = (track, column, m2, m1) => {
-    track.innerHTML = '';
-    const minHeight = Math.max(window.innerHeight * 2.6, column.clientHeight * 2.6, 1600);
-    let safety = 0;
-    while (track.scrollHeight < minHeight && safety < 90) {
-      const src = safety === 2 || safety === 9 || safety === 17 ? (m1 || m2) : chooseImage(m2, m1);
-      track.appendChild(makeTile(src));
-      safety += 1;
+  const makeSequence = (m2, m1) => {
+    const rows = [];
+    for (let i = 0; i < 32; i += 1) {
+      rows.push(m2);
+      if (m1 && [3, 9, 16, 23, 29].includes(i)) rows.push(m1);
     }
+    return rows;
   };
-  const animate = (track, column, m2, m1) => {
+  const waitForImages = track => Promise.all([...track.images].map(img => {
+    if (img.complete && img.naturalWidth) return Promise.resolve(true);
+    return new Promise(resolve => {
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+    });
+  }));
+  const buildTrack = async (track, column, m2, m1) => {
+    track.innerHTML = '';
+    const sequence = makeSequence(m2, m1);
+    const block = document.createElement('div');
+    block.className = 'article-ornament-block';
+    sequence.forEach(src => block.appendChild(makeTile(src)));
+    track.appendChild(block);
+    await waitForImages(block);
+
+    const minBlockHeight = Math.max(window.innerHeight * 1.5, column.clientHeight * 1.5, 1200);
+    let guard = 0;
+    while (block.offsetHeight < minBlockHeight && guard < 8) {
+      sequence.forEach(src => block.appendChild(makeTile(src)));
+      await waitForImages(block);
+      guard += 1;
+    }
+
+    const cloneA = block.cloneNode(true);
+    const cloneB = block.cloneNode(true);
+    track.appendChild(cloneA);
+    track.appendChild(cloneB);
+    return block.offsetHeight;
+  };
+  const animate = (track, getBlockHeight) => {
     let offset = 0;
     let last = performance.now();
-    const speed = 260;
+    const speed = 145;
     const step = now => {
       const delta = Math.min(48, now - last);
       last = now;
-      offset += (speed * delta) / 1000;
-
-      let first = track.firstElementChild;
-      let guard = 0;
-      while (first && offset >= first.offsetHeight && guard < 12) {
-        offset -= first.offsetHeight;
-        first.remove();
-        track.appendChild(makeTile(chooseImage(m2, m1)));
-        first = track.firstElementChild;
-        guard += 1;
+      const blockHeight = getBlockHeight();
+      if (blockHeight > 0) {
+        offset = (offset + (speed * delta) / 1000) % blockHeight;
+        track.style.transform = `translate3d(0, ${-blockHeight + offset}px, 0)`;
       }
-
-      if (track.scrollHeight < Math.max(window.innerHeight * 2.4, column.clientHeight * 2.4, 1400)) {
-        track.appendChild(makeTile(chooseImage(m2, m1)));
-      }
-
-      track.style.transform = `translate3d(0, ${offset}px, 0)`;
       requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
@@ -91,12 +103,17 @@
     column.appendChild(track);
     document.body.appendChild(column);
 
-    const realM1 = m1Ready ? m1 : '';
-    fillTrack(track, column, m2, realM1);
+    let blockHeight = await buildTrack(track, column, m2, m1Ready ? m1 : '');
     column.classList.add('is-ready');
-    animate(track, column, m2, realM1);
+    animate(track, () => blockHeight);
 
-    window.addEventListener('resize', () => fillTrack(track, column, m2, realM1), { passive: true });
+    let resizing = 0;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizing);
+      resizing = setTimeout(async () => {
+        blockHeight = await buildTrack(track, column, m2, m1Ready ? m1 : '');
+      }, 220);
+    }, { passive: true });
   };
 
   const start = () => build().catch(() => {});
