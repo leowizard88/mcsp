@@ -15,7 +15,7 @@ queste sofferenze, ma è anche lontano da una disciplina silenziosa di cura, è 
 oppure al credo sfrenato in una posa intellettuale che ci dà parvenza di salvezza, ma che in ultima
 analisi ci rende solo molto settari. Ci chiediamo come allevare queste mancuspie.
 
-La ferita che avvertono giovani reclusi, esclusi, chi immagazzina idee e progetti ma senza un campo
+<p style="text-align:justify">La ferita che avvertono giovani reclusi, esclusi, chi immagazzina idee e progetti ma senza un campo
 dove gridare, chi sente la difficoltà e la pressione di continuare ad ogni costo, chi ha paura di
 tornare indietro, di cogliere silenziosamente il respiro delle cose, di capire la vertigine che lo assale;
 questo sangue che viene versato ogni giorno deve essere raccolto, parlato. Il chiasso costante del
@@ -29,18 +29,18 @@ moderate, circoscritte e normative), costeggiata da fatica, forse anche disperat
 movimento: costruire riviste, scrivere poesie, avvertirsi e avvertire, decostruire il panorama che ci
 vincola, fondare una logica della sensazione, studiare la psicogeografia dei nostri dintorni, il ritmo
 urbano, l’architettura che ci vive e che viviamo; bisogna insomma poter dire di morire per qualcosa,
-nel deserto che siamo.
+nel deserto che siamo.</p>
 
-Bisogna coltivare l’attenzione. Non solo decostruire ciò che ci viene venduto, ma decostruire la
-propiocezione e il sentimento. Fondare un nuovo politico, meno polemico, meno rappresentativo,
+<p style="text-align:justify">Bisogna coltivare l’attenzione. Non solo decostruire ciò che ci viene venduto, ma decostruire la
+propriocezione e il sentimento. Fondare un nuovo politico, meno polemico, meno rappresentativo,
 meno furibondo, meno duro. Diventare mandriani dello statico, grandi conoscitori delle zone grige,
 della pianura atonale. Capire che siamo uno spettro della mancanza, che non sappiamo cosa ci
 manchi, che l’ironia non ci salverà dalle maglie dell’insicurezza ontologica, ma che la
 carnevalizzazione può produrre una festa ben più forte. Bisogna continuare a ripetere, ad andare,
-che sia avanti o indietro o in qualunque direzione.
+che sia avanti o indietro o in qualunque direzione.</p>
 
-Allora rispondete all’appello che vi chiede di diventare nuovi gauchos, sorridendo maldestramente
-alla nostra malattia grottesca, curando le nostre mancuspie.</p>
+<p style="text-align:justify">Allora rispondete all’appello che vi chiede di diventare nuovi gauchos, sorridendo maldestramente
+alla nostra malattia grottesca, curando le nostre mancuspie.</p></p>
 
 
 
