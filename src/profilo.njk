@@ -18,11 +18,7 @@ permalink: /profilo/
 
 <script>
 (() => {
-  const ARTICLES = [
-    {% for post in collections.testi | reverse %}
-    { title: {{ post.data.title | json }}, author: {{ post.data.author | json }}, rubrica: {{ post.data.rubrica | json }}, tipo: {{ post.data.tipo | json }}, date: {{ post.data.date | dateISO | json }}, url: {{ post.url | json }} }{% if not loop.last %},{% endif %}
-    {% endfor %}
-  ];
+  let ARTICLES = [];
   const root = document.querySelector('[data-profile-root]');
   const tokenKey = 'mancuspieAuthToken';
   const token = () => localStorage.getItem(tokenKey) || '';
@@ -32,6 +28,13 @@ permalink: /profilo/
   const viewedUsername = new URLSearchParams(location.search).get('u') || '';
   const fileToDataUrl = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(file); });
   const roleLabel = user => user?.isRedattore ? 'redattore' : 'user';
+  const loadArticles = async () => {
+    if (Array.isArray(window.MANCUSPIE_ARTICOLI)) { ARTICLES = window.MANCUSPIE_ARTICOLI; return; }
+    try {
+      const response = await fetch('/articoli.json', { cache: 'no-store' });
+      ARTICLES = response.ok ? await response.json() : [];
+    } catch { ARTICLES = []; }
+  };
   const articlesHtml = username => {
     const items = ARTICLES.filter(item => norm(item.author) === norm(username));
     const list = items.map(item => `<li><a href="${esc(item.url)}"><strong>${esc(item.title)}</strong><span>${esc(item.tipo || '')}${item.rubrica ? ' / ' + esc(item.rubrica) : ''}${item.date ? ' / ' + esc(item.date) : ''}</span></a></li>`).join('');
@@ -65,6 +68,7 @@ permalink: /profilo/
   const load = async () => {
     const url = viewedUsername ? `/api/auth?username=${encodeURIComponent(viewedUsername)}` : '/api/auth';
     if (!viewedUsername && !token()) { loggedOut('Qui non c’è nessuna sessione salvata. Rifai il login dalla home.'); return; }
+    await loadArticles();
     const response = await fetch(url, { headers: headers(), cache:'no-store' });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) { root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">${esc(data.error || 'Profilo non trovato.')}</p><div class="profile-actions"><a href="/">Home</a></div></div></div>`; return; }
