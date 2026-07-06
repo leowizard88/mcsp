@@ -1,4 +1,10 @@
+const markdownIt = require('markdown-it');
+const markdownItFootnote = require('markdown-it-footnote');
+
 module.exports = function(eleventyConfig) {
+  const markdown = markdownIt({ html: true, breaks: false, linkify: true }).use(markdownItFootnote);
+
+  eleventyConfig.setLibrary('md', markdown);
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
   eleventyConfig.addPassthroughCopy({ "src/admin": "admin" });
   eleventyConfig.addFilter("limit", (arr, n) => (arr || []).slice(0, n));
