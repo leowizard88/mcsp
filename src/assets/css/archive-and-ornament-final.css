@@ -71,9 +71,8 @@
   }
 }
 
-/* JS-driven seamless ornament tape. */
+/* CSS-driven seamless ornament tape. */
 .article-ornament-track {
-  animation: none !important;
   top: 0 !important;
   will-change: transform !important;
 }
@@ -96,4 +95,9 @@
   border: 0 !important;
   flex: 0 0 auto !important;
   vertical-align: top !important;
+}
+
+@keyframes articleOrnamentTape {
+  from { transform: translate3d(0, calc(-1 * var(--ornament-block-height, 1000px)), 0); }
+  to { transform: translate3d(0, 0, 0); }
 }
