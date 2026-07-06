@@ -12,6 +12,19 @@ const clean = value => String(value || '')
   .trim();
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: HEADERS });
+const bearer = request => {
+  const auth = request.headers.get('authorization') || '';
+  if (auth.toLowerCase().startsWith('bearer ')) return auth.slice(7).trim();
+  return request.headers.get('x-mancuspie-token') || '';
+};
+const nameFromSession = async (env, request) => {
+  const token = bearer(request);
+  if (!env.CHAT_MESSAGES || !token) return 'Anonimo';
+  const session = await env.CHAT_MESSAGES.get(`auth:session:${token}`, 'json').catch(() => null);
+  if (!session?.userId) return 'Anonimo';
+  const user = await env.CHAT_MESSAGES.get(`auth:user:${session.userId}`, 'json').catch(() => null);
+  return clean(user?.username).slice(0, 24) || 'Anonimo';
+};
 
 async function readMessages(env) {
   if (!env.CHAT_MESSAGES) return [];
@@ -46,11 +59,11 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'JSON non valido' }, 400);
   }
 
-  const name = clean(data.name).slice(0, 24);
+  const name = await nameFromSession(env, request);
   const text = clean(data.text).slice(0, 260);
   const parentId = clean(data.parentId).slice(0, 80) || null;
 
-  if (!name || !text) return json({ error: 'Nickname e messaggio richiesti' }, 400);
+  if (!text) return json({ error: 'Messaggio richiesto' }, 400);
 
   const messages = await readMessages(env);
   if (parentId && !messages.some(message => message.id === parentId)) {
