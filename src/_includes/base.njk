@@ -10,16 +10,24 @@
     html,
     body,
     .site-main {
-      background: #ead7b3 !important;
+      background: #050000 !important;
     }
 
-    .site-main > .panel:not(.archive-system-page):not(.ultimi-page) {
-      background: #ead7b3 !important;
+    body:has(.single-page),
+    body:has(.archive-page),
+    .site-main:has(.single-page),
+    .site-main:has(.archive-page) {
+      background: #fbfaf5 !important;
     }
 
-    .site-main > .panel:not(.archive-system-page):not(.ultimi-page)::before {
-      display: block !important;
-      background: linear-gradient(115deg, #efdfc1 0%, #ddc595 100%) !important;
+    body:has(.archive-system-page),
+    .site-main:has(.archive-system-page) {
+      background: #8b0000 !important;
+    }
+
+    body:has(.ultimi-page),
+    .site-main:has(.ultimi-page) {
+      background: #050000 !important;
     }
 
     .side-index {
@@ -51,7 +59,7 @@
         <ellipse cx="12" cy="13" rx="6" ry="3" />
         <ellipse cx="12" cy="27" rx="7" ry="3.2" />
         <ellipse cx="12" cy="42" rx="6.4" ry="3" />
-        <ellipse cx="12" cy="57" rx="7.2" ry="3.3" />
+        <ellipse cx="12" cy="57" rx="7" ry="3.3" />
         <ellipse cx="12" cy="72" rx="6.2" ry="3" />
         <ellipse cx="12" cy="87" rx="7" ry="3.2" />
         <ellipse cx="12" cy="103" rx="5.8" ry="2.8" />
