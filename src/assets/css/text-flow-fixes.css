@@ -108,7 +108,7 @@ body:has(.article-page-format) .article-page-format::after {
   .single-page,
   .article-page-format {
     padding-left: 14px !important;
-    padding-right: 14px !important;
+    padding-right: 26px !important;
   }
 
   .single-page::after,
@@ -123,10 +123,10 @@ body:has(.article-page-format) .article-page-format::after {
 
   .article-format-inner,
   .single-inner.article-format-inner {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: calc(100% - 12px) !important;
+    max-width: calc(100% - 12px) !important;
     margin-left: 0 !important;
-    margin-right: 0 !important;
+    margin-right: 12px !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
     padding-top: 16px !important;
