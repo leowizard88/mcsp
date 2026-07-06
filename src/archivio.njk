@@ -45,7 +45,7 @@ permalink: /archivio/
     gap: clamp(24px, 5vw, 90px);
     border-bottom: 1px solid rgba(9,0,0,.34);
     padding-bottom: clamp(22px, 3.5vw, 44px);
-    margin-bottom: clamp(38px, 6vw, 82px);
+    margin-bottom: clamp(28px, 5vw, 58px);
   }
 
   .archive-system-head h1 {
@@ -57,9 +57,6 @@ permalink: /archivio/
     letter-spacing: .045em;
     text-transform: uppercase;
     color: #090000;
-    transform: none;
-    transform-origin: left bottom;
-    font-style: normal;
   }
 
   .archive-back {
@@ -72,11 +69,55 @@ permalink: /archivio/
     white-space: nowrap;
   }
 
+  .archive-controls {
+    display: grid;
+    gap: 16px;
+    margin: 0 0 clamp(30px, 5vw, 62px);
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(9,0,0,.28);
+  }
+
+  .archive-modes,
+  .archive-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .archive-filter {
+    border: 1px solid rgba(9,0,0,.46);
+    background: rgba(139,0,0,.08);
+    color: #090000;
+    padding: 11px 13px;
+    font: 300 11px/1 var(--font-sans);
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .archive-filter.is-active {
+    background: #090000;
+    color: #8b0000;
+  }
+
+  .archive-filter:disabled {
+    opacity: .42;
+    cursor: default;
+  }
+
+  .archive-status {
+    margin: 0;
+    font: 300 12px/1.35 var(--font-sans);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgba(9,0,0,.68);
+  }
+
   .archive-chronology { display: grid; gap: clamp(18px, 3vw, 42px); }
 
   .archive-row {
     display: grid;
-    grid-template-columns: minmax(112px, 160px) 1fr minmax(108px, 170px);
+    grid-template-columns: minmax(112px, 160px) 1fr minmax(108px, 190px);
     gap: clamp(20px, 4vw, 72px);
     align-items: baseline;
     padding: 0 0 clamp(20px, 2.8vw, 38px);
@@ -85,7 +126,8 @@ permalink: /archivio/
   }
 
   .archive-row time,
-  .archive-row em {
+  .archive-row em,
+  .archive-row small {
     font: 300 11px/1.25 var(--font-sans);
     letter-spacing: .15em;
     text-transform: uppercase;
@@ -102,14 +144,19 @@ permalink: /archivio/
     text-transform: uppercase;
     color: #090000;
     display: inline-block;
-    font-style: normal;
-    transform: none;
-    transform-origin: left center;
   }
 
-  .archive-row:nth-child(even) strong { letter-spacing: .04em; }
+  .archive-row span {
+    display: block;
+    margin-top: 8px;
+    max-width: 760px;
+    font: 300 clamp(17px, 2vw, 27px)/1.1 var(--font-serif);
+    color: rgba(9,0,0,.72);
+  }
+
   .archive-row:hover { background: rgba(68,0,100,.10); }
   .archive-row:hover strong { transform: translateX(8px); }
+  .archive-empty { font: 300 24px/1.1 var(--font-serif); }
 
   @media(max-width:760px){
     .archive-system-page{padding:34px 22px}
@@ -130,14 +177,104 @@ permalink: /archivio/
       <a class="archive-back" href="/ultimi-movimenti/">ultimi movimenti</a>
     </header>
 
-    <div class="archive-chronology" aria-label="Archivio cronologico degli articoli">
-      {% for post in collections.testi | reverse %}
-      <a class="archive-row" href="{{ post.url }}">
-        <time datetime="{{ post.data.date | dateISO }}">{{ post.data.date | dateISO }}</time>
-        <strong>{{ post.data.title }}</strong>
-        <em>{{ post.data.author }}</em>
-      </a>
-      {% endfor %}
+    <div class="archive-controls" data-archive-controls>
+      <div class="archive-modes" aria-label="Ordini di ricerca archivio">
+        <button class="archive-filter is-active" type="button" data-mode="cronologico">Cronologico</button>
+        <button class="archive-filter" type="button" data-mode="autore">Autore</button>
+        <button class="archive-filter" type="button" data-mode="tipo">Tipologico</button>
+        <button class="archive-filter" type="button" data-mode="rubrica">Rubricologico</button>
+      </div>
+      <div class="archive-values" data-archive-values></div>
+      <p class="archive-status" data-archive-status></p>
     </div>
+
+    <div class="archive-chronology" data-archive-list aria-label="Archivio cronologico degli articoli"></div>
   </div>
 </section>
+
+<script>
+(() => {
+  const posts = [
+    {% for post in collections.testi | reverse %}
+    {
+      title: {{ post.data.title | json | safe }},
+      subtitle: {{ post.data.subtitle | json | safe }},
+      author: {{ post.data.author | json | safe }},
+      tipo: {{ post.data.tipo | json | safe }},
+      rubrica: {{ post.data.rubrica | json | safe }},
+      date: {{ (post.data.date | dateISO) | json | safe }},
+      url: {{ post.url | json | safe }}
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ];
+
+  const list = document.querySelector('[data-archive-list]');
+  const values = document.querySelector('[data-archive-values]');
+  const status = document.querySelector('[data-archive-status]');
+  const modeButtons = [...document.querySelectorAll('[data-mode]')];
+  let mode = 'cronologico';
+  let selected = '';
+
+  const esc = value => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+  const label = value => value || 'senza voce';
+  const chronological = items => [...items].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  const unique = field => [...new Set(posts.map(post => post[field]).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'it'));
+
+  const renderList = items => {
+    if (!items.length) {
+      list.innerHTML = '<p class="archive-empty">Nessun articolo in archivio.</p>';
+      return;
+    }
+    list.innerHTML = chronological(items).map(post => `
+      <a class="archive-row" href="${esc(post.url)}">
+        <time datetime="${esc(post.date)}">${esc(post.date)}</time>
+        <div><strong>${esc(post.title)}</strong>${post.subtitle ? `<span>${esc(post.subtitle)}</span>` : ''}</div>
+        <em>${esc(post.author)}${post.tipo ? `<br><small>${esc(post.tipo)}</small>` : ''}${post.rubrica ? `<br><small>${esc(post.rubrica)}</small>` : ''}</em>
+      </a>
+    `).join('');
+  };
+
+  const renderValues = () => {
+    values.innerHTML = '';
+    selected = '';
+    if (mode === 'cronologico') return;
+
+    const field = mode === 'autore' ? 'author' : mode;
+    const items = unique(field);
+    values.innerHTML = items.map(item => `<button class="archive-filter" type="button" data-value="${esc(item)}">${esc(item)}</button>`).join('');
+    if (!items.length) values.innerHTML = '<button class="archive-filter" type="button" disabled>Nessuna voce</button>';
+  };
+
+  const render = () => {
+    modeButtons.forEach(button => button.classList.toggle('is-active', button.dataset.mode === mode));
+    document.querySelectorAll('[data-value]').forEach(button => button.classList.toggle('is-active', button.dataset.value === selected));
+
+    let items = posts;
+    let labelText = 'Cronologico, più nuovo in alto';
+    if (mode !== 'cronologico') {
+      const field = mode === 'autore' ? 'author' : mode;
+      items = selected ? posts.filter(post => post[field] === selected) : [];
+      labelText = selected ? `${mode}: ${selected}` : `Seleziona ${mode === 'autore' ? 'un autore' : mode === 'tipo' ? 'un tipo' : 'una rubrica'}`;
+    }
+
+    status.textContent = `${labelText} · ${items.length} articol${items.length === 1 ? 'o' : 'i'}`;
+    renderList(items);
+  };
+
+  modeButtons.forEach(button => button.addEventListener('click', () => {
+    mode = button.dataset.mode;
+    renderValues();
+    render();
+  }));
+
+  values.addEventListener('click', event => {
+    const button = event.target.closest('[data-value]');
+    if (!button) return;
+    selected = button.dataset.value;
+    render();
+  });
+
+  renderValues();
+  render();
+})();
+</script>
