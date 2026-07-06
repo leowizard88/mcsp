@@ -71,12 +71,13 @@ permalink: /zingaristan/tesseramento/
     max-width: 100%;
     color: #050505;
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: clamp(32px, 5.6vw, 56px);
-    line-height: .96;
+    font-size: clamp(30px, 5.2vw, 52px);
+    line-height: .98;
     text-transform: uppercase;
-    letter-spacing: .01em;
-    white-space: normal;
-    overflow-wrap: anywhere;
+    letter-spacing: 0;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: keep-all;
   }
 
   .pcz-form-card p {
@@ -178,7 +179,7 @@ permalink: /zingaristan/tesseramento/
   @media(max-width:760px) {
     .pcz-tesseramento { padding: 14px 8px !important; place-items: start center !important; }
     .pcz-form-card { width: 100%; max-width: 100%; padding: 14px; }
-    .pcz-form-card h1 { font-size: clamp(28px, 9vw, 36px); line-height: 1; letter-spacing: 0; }
+    .pcz-form-card h1 { font-size: clamp(23px, 7.1vw, 30px); line-height: 1; letter-spacing: 0; white-space: nowrap; }
     .pcz-form-card p { font-size: 12px; letter-spacing: .06em; margin-bottom: 18px; }
     .pcz-choice-row { gap: 14px; }
   }
