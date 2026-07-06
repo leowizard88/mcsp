@@ -165,6 +165,7 @@ layout: base.njk
   const path = root.dataset.articlePath || location.pathname;
   let comments = [];
   let isSending = false;
+  const openReplies = new Set();
 
   const esc = value => String(value || '').replace(/[&<>'"]/g, char => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
@@ -179,7 +180,7 @@ layout: base.njk
   };
 
   const renderReplyForm = id => `
-    <form class="comment-reply" data-reply-form="${esc(id)}">
+    <form class="comment-reply${openReplies.has(id) ? ' is-open' : ''}" data-reply-form="${esc(id)}">
       <input name="name" type="text" maxlength="40" placeholder="Nome / autore" required>
       <textarea name="text" maxlength="900" placeholder="Risposta pubblica" required></textarea>
       <button type="submit">Rispondi</button>
@@ -213,7 +214,8 @@ layout: base.njk
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || 'Commenti non caricati');
       comments = Array.isArray(result.comments) ? result.comments : [];
-      render();
+      const activeReply = document.activeElement?.closest?.('.comment-reply');
+      if (!activeReply) render();
     } catch (error) {
       status.textContent = error.message || 'Errore commenti.';
     }
@@ -251,8 +253,11 @@ layout: base.njk
   root.addEventListener('click', event => {
     const button = event.target.closest('[data-reply-toggle]');
     if (!button) return;
-    const replyForm = root.querySelector(`[data-reply-form="${CSS.escape(button.dataset.replyToggle)}"]`);
-    replyForm?.classList.toggle('is-open');
+    const id = button.dataset.replyToggle;
+    if (openReplies.has(id)) openReplies.delete(id);
+    else openReplies.add(id);
+    const replyForm = root.querySelector(`[data-reply-form="${CSS.escape(id)}"]`);
+    replyForm?.classList.toggle('is-open', openReplies.has(id));
   });
 
   root.addEventListener('submit', event => {
@@ -260,6 +265,7 @@ layout: base.njk
     if (!replyForm) return;
     event.preventDefault();
     const data = new FormData(replyForm);
+    openReplies.delete(replyForm.dataset.replyForm);
     post({ parentId: replyForm.dataset.replyForm, name: data.get('name'), text: data.get('text') });
     replyForm.reset();
     replyForm.classList.remove('is-open');
