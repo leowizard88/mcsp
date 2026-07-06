@@ -23,10 +23,25 @@ permalink: /profilo/
     padding: clamp(34px, 6vw, 86px);
     display: block !important;
     background:
-      radial-gradient(circle at 82% 18%, rgba(234, 215, 179, .12), transparent 28%),
+      radial-gradient(circle at 82% 18%, rgba(234, 215, 179, .20), transparent 28%),
+      radial-gradient(circle at 18% 82%, rgba(139, 0, 0, .42), transparent 34%),
       repeating-linear-gradient(90deg, transparent 0 34px, rgba(234,215,179,.045) 34px 35px, transparent 35px 96px),
       #050000 !important;
     overflow: hidden;
+  }
+
+  .profile-page::before {
+    content: "";
+    position: fixed;
+    right: -90px;
+    top: 70px;
+    width: clamp(260px, 32vw, 520px);
+    height: clamp(260px, 32vw, 520px);
+    background: url('/assets/img/ICON.png') center/contain no-repeat;
+    opacity: .16;
+    filter: drop-shadow(0 0 34px rgba(234,215,179,.42));
+    pointer-events: none;
+    mix-blend-mode: screen;
   }
 
   .profile-card {
@@ -50,7 +65,7 @@ permalink: /profilo/
     letter-spacing: -.035em;
     text-transform: uppercase;
     color: #ead7b3;
-    text-shadow: 0 0 24px rgba(234,215,179,.18);
+    text-shadow: 0 0 24px rgba(234,215,179,.22);
   }
 
   .profile-box {
@@ -59,11 +74,10 @@ permalink: /profilo/
     gap: 17px;
     background: linear-gradient(90deg, rgba(234,215,179,.08), rgba(234,215,179,.02));
     padding: 26px;
+    box-shadow: none !important;
   }
 
-  .profile-public-box {
-    max-width: 720px;
-  }
+  .profile-public-box { max-width: 720px; }
 
   .profile-username {
     font: 300 clamp(34px, 5vw, 64px)/1 var(--font-serif, Georgia, serif);
@@ -75,9 +89,10 @@ permalink: /profilo/
   .profile-avatar {
     width: 158px;
     height: 158px;
-    border: 1px solid rgba(234,215,179,.56);
+    border: 0 !important;
     object-fit: cover;
-    background: rgba(234,215,179,.09);
+    background: transparent !important;
+    box-shadow: none !important;
   }
 
   .profile-avatar[src=""] { display: none; }
@@ -138,6 +153,7 @@ permalink: /profilo/
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
+    box-shadow: none !important;
   }
 
   .profile-actions button[data-logout] {
@@ -154,9 +170,10 @@ permalink: /profilo/
 
   @media(max-width:760px) {
     .profile-page { padding: 34px 20px; }
+    .profile-page::before { right: -120px; top: 90px; width: 320px; height: 320px; }
     .profile-card { padding-left: 16px; }
     .profile-card h1 { font-size: clamp(58px, 18vw, 92px); }
-    .profile-box { padding: 20px; }
+    .profile-box { padding: 20px; box-shadow: none !important; }
   }
 </style>
 
