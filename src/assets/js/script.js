@@ -7,3 +7,11 @@ const mark = () => {
   links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href').endsWith('#'+current.id)));
 };
 addEventListener('scroll', mark, {passive:true}); mark();
+
+const homeFix = document.createElement('style');
+homeFix.textContent = `
+body .site-main #home.hero-panel .bg-daisies{display:none!important;opacity:0!important}
+body .site-main #home.hero-panel .hero-copy h2{margin-left:0!important;max-width:min(640px,58vw)!important;text-align:justify!important;text-align-last:left!important}
+@media(max-width:760px){body .site-main #home.hero-panel .hero-copy h2{margin-left:0!important;max-width:calc(100vw - 82px)!important;text-align:justify!important;text-align-last:left!important}}
+`;
+document.head.appendChild(homeFix);
