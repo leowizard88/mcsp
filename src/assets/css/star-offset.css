@@ -1,12 +1,12 @@
 .archive-star {
-  right: clamp(230px, 19vw, 310px) !important;
+  right: clamp(150px, 13vw, 210px) !important;
   top: 30px !important;
   z-index: 10050 !important;
 }
 
 @media(max-width:760px) {
   .archive-star {
-    right: 116px !important;
+    right: 92px !important;
     top: 22px !important;
     z-index: 10050 !important;
   }
