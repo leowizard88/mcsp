@@ -46,6 +46,10 @@
       stroke: #fff !important;
     }
 
+    .vertical-nav {
+      flex-direction: row-reverse !important;
+    }
+
     .vertical-nav a {
       color: #fff !important;
       opacity: .84 !important;
@@ -59,12 +63,14 @@
 
     @media(max-width:760px) {
       .side-index {
-        display: none !important;
+        display: flex !important;
+        width: var(--side) !important;
       }
 
       .site-main {
-        width: 100% !important;
-        margin-left: 0 !important;
+        width: calc(100vw - var(--side)) !important;
+        max-width: calc(100vw - var(--side)) !important;
+        margin-left: var(--side) !important;
         overflow-x: hidden !important;
       }
     }
