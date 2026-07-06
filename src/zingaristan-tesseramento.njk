@@ -165,6 +165,8 @@ permalink: /zingaristan/tesseramento/
     box-shadow: 0 0 24px rgba(255,211,26,.95), 0 0 50px rgba(25,183,61,.55);
   }
 
+  .pcz-submit.is-loading { cursor: wait; opacity: .72; }
+
   .pcz-status {
     min-height: 18px;
     margin-top: 8px !important;
@@ -173,6 +175,9 @@ permalink: /zingaristan/tesseramento/
     letter-spacing: .02em !important;
     font-size: 13px !important;
   }
+
+  .pcz-status.is-error { color: #8b0000 !important; }
+  .pcz-status.is-ok { color: #0b6b24 !important; }
 
   @media(max-width:760px) {
     .pcz-tesseramento { padding: 18px 10px !important; }
@@ -231,6 +236,12 @@ permalink: /zingaristan/tesseramento/
   const status = form.querySelector('[data-pcz-status]');
   const fields = [...form.querySelectorAll('input[type="text"], input[type="email"], textarea')];
 
+  const setStatus = (message, type) => {
+    status.textContent = message;
+    status.classList.toggle('is-error', type === 'error');
+    status.classList.toggle('is-ok', type === 'ok');
+  };
+
   const isReady = () => {
     const filled = fields.every(field => field.value.trim().length > 0);
     const yes = form.querySelector('input[name="consenso"][value="si"]')?.checked;
@@ -247,9 +258,10 @@ permalink: /zingaristan/tesseramento/
   form.addEventListener('input', sync);
   form.addEventListener('change', sync);
 
-  form.addEventListener('submit', event => {
+  form.addEventListener('submit', async event => {
     event.preventDefault();
-    if (!isReady()) return;
+    if (!isReady() || submit.classList.contains('is-loading')) return;
+
     const data = new FormData(form);
     const payload = {
       nome: data.get('nome'),
@@ -258,8 +270,29 @@ permalink: /zingaristan/tesseramento/
       note: data.get('note'),
       consenso: data.get('consenso')
     };
-    window.localStorage.setItem('pczTesseramentoProvvisorio', JSON.stringify(payload));
-    status.textContent = 'Domanda registrata. Il sistema tessera arriverà nella fase successiva.';
+
+    submit.disabled = true;
+    submit.classList.add('is-loading');
+    setStatus('Invio domanda...', '');
+
+    try {
+      const response = await fetch('/api/tesseramento', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Invio non riuscito');
+
+      window.localStorage.setItem('pczTesseramentoProvvisorio', JSON.stringify(payload));
+      setStatus('Domanda inviata. Controlla la tua email.', 'ok');
+      form.reset();
+    } catch (error) {
+      setStatus(error.message || 'Errore durante invio domanda.', 'error');
+    } finally {
+      submit.classList.remove('is-loading');
+      sync();
+    }
   });
 
   sync();
