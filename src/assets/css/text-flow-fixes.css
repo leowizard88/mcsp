@@ -1,10 +1,10 @@
-/* Editor preview: prevent long text/URLs from escaping the preview box without splitting normal words. */
+/* Editor preview: long URLs can wrap, normal words must not be sliced. */
 .write-preview,
 .write-preview * {
   box-sizing: border-box !important;
   max-width: 100% !important;
-  overflow-wrap: normal !important;
   word-break: normal !important;
+  overflow-wrap: normal !important;
   hyphens: none !important;
 }
 
@@ -17,36 +17,27 @@
 .write-preview pre {
   overflow-wrap: break-word !important;
   word-break: normal !important;
-}
-
-.write-preview p,
-.write-preview li,
-.write-preview blockquote,
-.write-preview h1,
-.write-preview h2,
-.write-preview h3 {
-  max-width: 100% !important;
-}
-
-.write-preview pre,
-.write-preview code {
   white-space: pre-wrap !important;
 }
 
-/* Published article: remove the right image column and make the page a single clean reading column. */
+/* Articles: remove the right-side image column completely. */
 .single-page::after,
+.archive-page::after,
 .article-page-format::after,
 body:has(.article-page-format) .single-page::after,
 body:has(.article-page-format) .article-page-format::after {
   display: none !important;
   content: none !important;
-  background: none !important;
   width: 0 !important;
+  background: none !important;
+  opacity: 0 !important;
 }
 
-.article-page-format {
+.article-page-format,
+.single-page:has(.article-format-inner) {
   background: #fbfaf5 !important;
   overflow-x: hidden !important;
+  padding-right: 0 !important;
 }
 
 .article-format-inner,
@@ -58,24 +49,18 @@ body:has(.article-page-format) .article-page-format::after {
   padding-right: 0 !important;
 }
 
-body:has(.article-page-format) .bg-layer,
-body:has(.single-page) .bg-layer,
-body:has(.article-page-format) .bg-figure,
-body:has(.single-page) .bg-figure,
-body:has(.article-page-format)::before,
-body:has(.article-page-format)::after {
-  display: none !important;
-}
-
-.article-format-body,
 .article-format-head,
+.article-format-body,
 .article-comments {
+  width: 100% !important;
   max-width: 100% !important;
+  min-width: 0 !important;
   overflow-wrap: normal !important;
   word-break: normal !important;
   hyphens: none !important;
 }
 
+.article-format-body,
 .article-format-body p,
 .article-format-body li,
 .article-format-body blockquote,
@@ -84,8 +69,9 @@ body:has(.article-page-format)::after {
 .article-format-body h3,
 .article-format-body h4,
 .article-format-body h5,
-.article-format-body h6 {
-  max-width: 100% !important;
+.article-format-body h6,
+.article-format-head h1,
+.article-subtitle {
   overflow-wrap: normal !important;
   word-break: normal !important;
   hyphens: none !important;
@@ -110,52 +96,52 @@ body:has(.article-page-format)::after {
   height: auto !important;
 }
 
-@media (max-width: 1180px) {
-  .article-format-inner,
-  .single-inner.article-format-inner {
-    width: min(760px, calc(100vw - var(--side, 44px) - 42px)) !important;
-    max-width: min(760px, calc(100vw - var(--side, 44px) - 42px)) !important;
-  }
-}
-
 @media (max-width: 760px) {
-  body:has(.article-page-format),
-  body:has(.single-page),
-  body:has(.article-page-format) .site-main,
-  body:has(.single-page) .site-main {
+  html,
+  body,
+  .site-main,
+  .single-page,
+  .article-page-format {
     overflow-x: hidden !important;
   }
 
+  .single-page,
+  .article-page-format {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
   .single-page::after,
-  .article-page-format::after,
-  .archive-page::after {
+  .archive-page::after,
+  .article-page-format::after {
     display: none !important;
     content: none !important;
     width: 0 !important;
     background: none !important;
+    opacity: 0 !important;
   }
 
   .article-format-inner,
   .single-inner.article-format-inner {
-    width: calc(100vw - var(--side, 38px) - 24px) !important;
-    max-width: calc(100vw - var(--side, 38px) - 24px) !important;
-    margin-left: 12px !important;
-    margin-right: 12px !important;
-    padding-top: 16px !important;
-    padding-right: 0 !important;
-  }
-
-  .article-format-head,
-  .article-format-body,
-  .article-comments {
     width: 100% !important;
     max-width: 100% !important;
-    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-top: 16px !important;
+  }
+
+  .article-format-body,
+  .article-comments,
+  .article-format-head {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   .article-format-body {
-    font-size: clamp(17px, 5vw, 21px) !important;
-    line-height: 1.54 !important;
+    font-size: clamp(18px, 5vw, 21px) !important;
+    line-height: 1.56 !important;
   }
 
   .article-format-body p,
@@ -178,6 +164,6 @@ body:has(.article-page-format)::after {
     overflow-wrap: normal !important;
     word-break: normal !important;
     hyphens: none !important;
-    font-size: clamp(44px, 14vw, 68px) !important;
+    font-size: clamp(42px, 13vw, 66px) !important;
   }
 }
