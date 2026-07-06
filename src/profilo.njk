@@ -12,372 +12,65 @@ permalink: /profilo/
 </section>
 
 <style>
-  body:has(.profile-page),
-  body:has(.profile-page) .site-main {
-    background: #6f0000 !important;
-  }
-
-  .profile-page {
-    min-height: 100vh;
-    color: #f0dcc0;
-    padding: clamp(28px, 5.8vw, 78px);
-    display: block !important;
-    background:
-      radial-gradient(circle at 12% 16%, rgba(240, 220, 192, .25), transparent 22%),
-      radial-gradient(circle at 82% 78%, rgba(20, 0, 0, .62), transparent 42%),
-      linear-gradient(132deg, #b00000 0%, #860000 38%, #4b0000 72%, #120000 100%) !important;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .profile-page::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background:
-      repeating-linear-gradient(90deg, transparent 0 46px, rgba(240,220,192,.055) 46px 47px, transparent 47px 118px),
-      repeating-linear-gradient(0deg, transparent 0 58px, rgba(240,220,192,.035) 58px 59px, transparent 59px 140px);
-    opacity: .72;
-  }
-
-  .profile-shell {
-    position: relative;
-    z-index: 2;
-    width: min(1080px, 100%);
-    margin: 0 auto;
-  }
-
-  .profile-kicker,
-  .profile-card-kicker {
-    margin: 0 0 10px;
-    color: rgba(240,220,192,.72);
-    font: 300 11px/1 var(--font-sans, system-ui, sans-serif);
-    letter-spacing: .22em;
-    text-transform: uppercase;
-  }
-
-  .profile-shell > h1 {
-    margin: 0 0 clamp(24px, 4vw, 44px);
-    color: #f0dcc0;
-    font-family: var(--font-serif, Georgia, serif);
-    font-size: clamp(82px, 14.5vw, 188px);
-    line-height: .72;
-    font-weight: 300;
-    letter-spacing: -.06em;
-    text-transform: uppercase;
-    text-shadow: 0 0 32px rgba(240,220,192,.22);
-  }
-
-  .profile-card {
-    display: grid;
-    grid-template-columns: minmax(170px, 240px) minmax(0, 1fr);
-    gap: clamp(22px, 4vw, 46px);
-    align-items: start;
-    max-width: 980px;
-    padding: clamp(22px, 4.2vw, 44px);
-    background:
-      linear-gradient(110deg, rgba(255,236,204,.13), rgba(255,236,204,.035)),
-      rgba(40, 0, 0, .28);
-    border: 0 !important;
-    box-shadow: none !important;
-    backdrop-filter: blur(1px);
-  }
-
-  .profile-left {
-    display: grid;
-    gap: 14px;
-    align-content: start;
-  }
-
-  .profile-avatar {
-    display: block;
-    width: min(220px, 100%);
-    aspect-ratio: 1 / 1;
-    height: auto;
-    object-fit: cover;
-    border: 0 !important;
-    box-shadow: none !important;
-    background: rgba(20,0,0,.22) !important;
-  }
-
-  .profile-avatar[src=""] {
-    display: none;
-  }
-
-  .profile-role {
-    justify-self: start;
-    margin: 0;
-    padding: 8px 10px;
-    color: #2a0000;
-    background: rgba(240,220,192,.88);
-    border: 0 !important;
-    font: 700 10px/1 var(--font-sans, system-ui, sans-serif);
-    letter-spacing: .18em;
-    text-transform: uppercase;
-  }
-
-  .profile-right {
-    min-width: 0;
-    display: grid;
-    gap: 18px;
-  }
-
-  .profile-username {
-    margin: 0;
-    color: #f0dcc0;
-    font: 300 clamp(48px, 7.8vw, 104px)/.86 var(--font-serif, Georgia, serif);
-    letter-spacing: -.055em;
-    word-break: break-word;
-  }
-
-  .profile-bio-public {
-    margin: 0;
-    max-width: 720px;
-    white-space: pre-wrap;
-    color: rgba(240,220,192,.9);
-    font: 300 clamp(22px, 2.4vw, 34px)/1.2 var(--font-serif, Georgia, serif);
-  }
-
-  .profile-form {
-    display: contents;
-  }
-
-  .profile-fields {
-    display: grid;
-    gap: 14px;
-  }
-
-  .profile-field {
-    display: grid;
-    gap: 7px;
-    color: rgba(240,220,192,.82);
-    font: 300 11px/1 var(--font-sans, system-ui, sans-serif);
-    letter-spacing: .16em;
-    text-transform: uppercase;
-  }
-
-  .profile-field textarea,
-  .profile-field input[type="text"],
-  .profile-field input[type="file"] {
-    width: 100%;
-    box-sizing: border-box;
-    border: 0 !important;
-    background: rgba(30, 0, 0, .50);
-    color: #f0dcc0;
-    padding: 14px;
-    font: 16px/1.35 var(--font-sans, system-ui, sans-serif);
-    outline: none;
-    box-shadow: none !important;
-  }
-
-  .profile-field textarea:focus,
-  .profile-field input[type="text"]:focus {
-    background: rgba(20,0,0,.68);
-  }
-
-  .profile-field textarea::placeholder,
-  .profile-field input::placeholder {
-    color: rgba(240,220,192,.42);
-  }
-
-  .profile-field textarea {
-    min-height: 178px;
-    resize: vertical;
-  }
-
-  .profile-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .profile-actions button,
-  .profile-actions a,
-  .profile-login-link {
-    border: 0 !important;
-    background: #f0dcc0;
-    color: #260000;
-    padding: 12px 14px;
-    font: 700 10px/1 var(--font-sans, system-ui, sans-serif);
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    box-shadow: none !important;
-  }
-
-  .profile-actions button[data-logout] {
-    background: rgba(20,0,0,.88);
-    color: #f0dcc0;
-  }
-
-  .profile-status {
-    min-height: 18px;
-    margin: 0;
-    color: #ffd0bd;
-    font: 15px/1.35 var(--font-sans, system-ui, sans-serif);
-  }
-
-  .sec-box {
-    display: grid;
-    gap: 9px;
-    padding: 14px 0 0;
-    border: 0 !important;
-  }
-
-  .sec-box p {
-    margin: 0;
-    max-width: 620px;
-    color: rgba(240,220,192,.68);
-    font: 14px/1.4 var(--font-sans, system-ui, sans-serif);
-  }
-
-  .sec-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 10px;
-    align-items: end;
-  }
-
-  .writer-link {
-    background: #fff2d9 !important;
-    color: #250000 !important;
-  }
-
-  @media(max-width:760px) {
-    .profile-page { padding: 34px 18px; }
-    .profile-shell > h1 { font-size: clamp(66px, 20vw, 104px); }
-    .profile-card { grid-template-columns: 1fr; padding: 22px; }
-    .profile-avatar { width: 138px; }
-    .sec-row { grid-template-columns: 1fr; }
-  }
+  body:has(.profile-page), body:has(.profile-page) .site-main { background:#6f0000!important; }
+  .profile-page{min-height:100vh;color:#f0dcc0;padding:clamp(28px,5.8vw,78px);display:block!important;background:radial-gradient(circle at 12% 16%,rgba(240,220,192,.25),transparent 22%),radial-gradient(circle at 82% 78%,rgba(20,0,0,.62),transparent 42%),linear-gradient(132deg,#b00000 0%,#860000 38%,#4b0000 72%,#120000 100%)!important;overflow:hidden;position:relative}.profile-page::before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,transparent 0 46px,rgba(240,220,192,.055) 46px 47px,transparent 47px 118px),repeating-linear-gradient(0deg,transparent 0 58px,rgba(240,220,192,.035) 58px 59px,transparent 59px 140px);opacity:.72}.profile-shell{position:relative;z-index:2;width:min(1080px,100%);margin:0 auto}.profile-kicker,.profile-card-kicker{margin:0 0 10px;color:rgba(240,220,192,.72);font:300 11px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.22em;text-transform:uppercase}.profile-shell>h1{margin:0 0 clamp(24px,4vw,44px);color:#f0dcc0;font-family:var(--font-serif,Georgia,serif);font-size:clamp(82px,14.5vw,188px);line-height:.72;font-weight:300;letter-spacing:-.06em;text-transform:uppercase;text-shadow:0 0 32px rgba(240,220,192,.22)}.profile-card{display:grid;grid-template-columns:minmax(170px,240px) minmax(0,1fr);gap:clamp(22px,4vw,46px);align-items:start;max-width:980px;padding:clamp(22px,4.2vw,44px);background:linear-gradient(110deg,rgba(255,236,204,.13),rgba(255,236,204,.035)),rgba(40,0,0,.28);border:0!important;box-shadow:none!important;backdrop-filter:blur(1px)}.profile-left{display:grid;gap:14px;align-content:start}.profile-avatar{display:block;width:min(220px,100%);aspect-ratio:1/1;height:auto;object-fit:cover;border:0!important;box-shadow:none!important;background:rgba(20,0,0,.22)!important}.profile-avatar[src=""]{display:none}.profile-role{justify-self:start;margin:0;padding:8px 10px;color:#2a0000;background:rgba(240,220,192,.88);border:0!important;font:700 10px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.18em;text-transform:uppercase}.profile-right{min-width:0;display:grid;gap:18px}.profile-username{margin:0;color:#f0dcc0;font:300 clamp(48px,7.8vw,104px)/.86 var(--font-serif,Georgia,serif);letter-spacing:-.055em;word-break:break-word}.profile-bio-public{margin:0;max-width:720px;white-space:pre-wrap;color:rgba(240,220,192,.9);font:300 clamp(22px,2.4vw,34px)/1.2 var(--font-serif,Georgia,serif)}.profile-form{display:contents}.profile-fields{display:grid;gap:14px}.profile-field{display:grid;gap:7px;color:rgba(240,220,192,.82);font:300 11px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.16em;text-transform:uppercase}.profile-field textarea,.profile-field input[type="text"],.profile-field input[type="file"]{width:100%;box-sizing:border-box;border:0!important;background:rgba(30,0,0,.50);color:#f0dcc0;padding:14px;font:16px/1.35 var(--font-sans,system-ui,sans-serif);outline:none;box-shadow:none!important}.profile-field textarea:focus,.profile-field input[type="text"]:focus{background:rgba(20,0,0,.68)}.profile-field textarea::placeholder,.profile-field input::placeholder{color:rgba(240,220,192,.42)}.profile-field textarea{min-height:178px;resize:vertical}.profile-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.profile-actions button,.profile-actions a,.profile-login-link{border:0!important;background:#f0dcc0;color:#260000;padding:12px 14px;font:700 10px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.15em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block;box-shadow:none!important}.profile-actions button[data-logout]{background:rgba(20,0,0,.88);color:#f0dcc0}.profile-status{min-height:18px;margin:0;color:#ffd0bd;font:15px/1.35 var(--font-sans,system-ui,sans-serif)}.sec-box{display:grid;gap:9px;padding:14px 0 0;border:0!important}.sec-box p{margin:0;max-width:620px;color:rgba(240,220,192,.68);font:14px/1.4 var(--font-sans,system-ui,sans-serif)}.sec-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}.writer-link{background:#fff2d9!important;color:#250000!important}.profile-articles{grid-column:1/-1;margin-top:20px;padding-top:20px;border-top:1px solid rgba(240,220,192,.2)}.profile-articles h2{margin:0 0 14px;color:#f0dcc0;font:300 clamp(30px,4.2vw,54px)/.95 var(--font-serif,Georgia,serif);letter-spacing:-.04em}.profile-articles-list{display:grid;gap:10px;margin:0;padding:0;list-style:none}.profile-articles-list a{display:grid;gap:4px;text-decoration:none;color:#f0dcc0;background:rgba(30,0,0,.32);padding:13px}.profile-articles-list strong{font:300 24px/1.05 var(--font-serif,Georgia,serif)}.profile-articles-list span{font:300 10px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.13em;text-transform:uppercase;color:rgba(240,220,192,.65)}@media(max-width:760px){.profile-page{padding:34px 18px}.profile-shell>h1{font-size:clamp(66px,20vw,104px)}.profile-card{grid-template-columns:1fr;padding:22px}.profile-avatar{width:138px}.sec-row{grid-template-columns:1fr}}
 </style>
 
 <script>
 (() => {
+  const ARTICLES = [
+    {% for post in collections.testi | reverse %}
+    { title: {{ post.data.title | json }}, author: {{ post.data.author | json }}, rubrica: {{ post.data.rubrica | json }}, tipo: {{ post.data.tipo | json }}, date: {{ post.data.date | dateISO | json }}, url: {{ post.url | json }} }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ];
   const root = document.querySelector('[data-profile-root]');
   const tokenKey = 'mancuspieAuthToken';
   const token = () => localStorage.getItem(tokenKey) || '';
   const esc = value => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+  const norm = value => String(value || '').trim().toLowerCase();
   const headers = () => token() ? { authorization: `Bearer ${token()}` } : {};
   const viewedUsername = new URLSearchParams(location.search).get('u') || '';
   const fileToDataUrl = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(file); });
   const roleLabel = user => user?.isRedattore ? 'redattore' : 'user';
+  const articlesHtml = username => {
+    const items = ARTICLES.filter(item => norm(item.author) === norm(username));
+    const list = items.map(item => `<li><a href="${esc(item.url)}"><strong>${esc(item.title)}</strong><span>${esc(item.tipo || '')}${item.rubrica ? ' / ' + esc(item.rubrica) : ''}${item.date ? ' / ' + esc(item.date) : ''}</span></a></li>`).join('');
+    return `<section class="profile-articles"><h2>Articoli scritti:</h2>${items.length ? `<ul class="profile-articles-list">${list}</ul>` : '<p class="profile-status">Nessun articolo pubblicato.</p>'}</section>`;
+  };
 
   const loggedOut = message => {
-    root.innerHTML = `
-      <p class="profile-kicker">Account</p>
-      <h1>Profilo</h1>
-      <div class="profile-card">
-        <div class="profile-right">
-          <p class="profile-status">${esc(message || 'Non risulti loggato su questo browser.')}</p>
-          <div class="profile-actions"><a class="profile-login-link" href="/">Torna alla home e accedi dall’icona</a></div>
-        </div>
-      </div>`;
+    root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">${esc(message || 'Non risulti loggato su questo browser.')}</p><div class="profile-actions"><a class="profile-login-link" href="/">Torna alla home e accedi dall’icona</a></div></div></div>`;
   };
 
   const renderPublicUser = user => {
-    root.innerHTML = `
-      <p class="profile-kicker">Profilo pubblico</p>
-      <h1>Profilo</h1>
-      <div class="profile-card profile-public-card">
-        <div class="profile-left">
-          <img class="profile-avatar" src="${esc(user.avatar || '')}" alt="Foto profilo">
-          <p class="profile-role">${esc(roleLabel(user))}</p>
-        </div>
-        <div class="profile-right">
-          <p class="profile-username">${esc(user.username)}</p>
-          <p class="profile-bio-public">${esc(user.bio || 'Nessuna descrizione pubblicata.')}</p>
-          <div class="profile-actions"><a href="/">Home</a></div>
-        </div>
-      </div>`;
+    root.innerHTML = `<p class="profile-kicker">Profilo pubblico</p><h1>Profilo</h1><div class="profile-card profile-public-card"><div class="profile-left"><img class="profile-avatar" src="${esc(user.avatar || '')}" alt="Foto profilo"><p class="profile-role">${esc(roleLabel(user))}</p></div><div class="profile-right"><p class="profile-username">${esc(user.username)}</p><p class="profile-bio-public">${esc(user.bio || 'Nessuna descrizione pubblicata.')}</p><div class="profile-actions"><a href="/">Home</a></div></div>${articlesHtml(user.username)}</div>`;
   };
 
   const renderOwnUser = user => {
-    const redattoreTools = user.isRedattore
-      ? `<div class="profile-actions"><a class="writer-link" href="/scrivi/">Scrivi un articolo</a></div>`
-      : `<div class="sec-box"><label class="profile-field">Codice SEC <div class="sec-row"><input data-sec-code type="text" maxlength="120" placeholder="codice monouso"><button type="button" data-sec-submit>Invia codice</button></div></label><p>Il codice SEC monouso abilita il permesso redattore.</p></div>`;
-
-    root.innerHTML = `
-      <p class="profile-kicker">Account</p>
-      <h1>Profilo</h1>
-      <form class="profile-card profile-form" data-profile-form>
-        <div class="profile-left">
-          <img class="profile-avatar" data-profile-avatar src="${esc(user.avatar || '')}" alt="Foto profilo">
-          <label class="profile-field">Foto profilo <input data-avatar-input name="avatar" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label>
-          <p class="profile-role">${esc(roleLabel(user))}</p>
-        </div>
-        <div class="profile-right">
-          <p class="profile-username">${esc(user.username)}</p>
-          <div class="profile-fields">
-            <label class="profile-field">Descrizione <textarea data-bio-input name="bio" maxlength="900" placeholder="scrivi una piccola bacheca personale">${esc(user.bio || '')}</textarea></label>
-            ${redattoreTools}
-          </div>
-          <p class="profile-status" data-profile-status></p>
-          <div class="profile-actions"><button type="submit">Salva</button><button type="button" data-logout>Logout</button><a href="/">Home</a></div>
-        </div>
-      </form>`;
-
+    const redattoreTools = user.isRedattore ? `<div class="profile-actions"><a class="writer-link" href="/scrivi/">Scrivi un articolo</a></div>` : `<div class="sec-box"><label class="profile-field">Codice SEC <div class="sec-row"><input data-sec-code type="text" maxlength="120" placeholder="codice monouso"><button type="button" data-sec-submit>Invia codice</button></div></label><p>Il codice SEC monouso abilita il permesso redattore.</p></div>`;
+    root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><form class="profile-card profile-form" data-profile-form><div class="profile-left"><img class="profile-avatar" data-profile-avatar src="${esc(user.avatar || '')}" alt="Foto profilo"><label class="profile-field">Foto profilo <input data-avatar-input name="avatar" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label><p class="profile-role">${esc(roleLabel(user))}</p></div><div class="profile-right"><p class="profile-username">${esc(user.username)}</p><div class="profile-fields"><label class="profile-field">Descrizione <textarea data-bio-input name="bio" maxlength="900" placeholder="scrivi una piccola bacheca personale">${esc(user.bio || '')}</textarea></label>${redattoreTools}</div><p class="profile-status" data-profile-status></p><div class="profile-actions"><button type="submit">Salva</button><button type="button" data-logout>Logout</button><a href="/">Home</a></div></div>${articlesHtml(user.username)}</form>`;
     const form = root.querySelector('[data-profile-form]');
     const status = root.querySelector('[data-profile-status]');
     const avatarInput = root.querySelector('[data-avatar-input]');
     const bioInput = root.querySelector('[data-bio-input]');
     const avatarPreview = root.querySelector('[data-profile-avatar]');
     let avatar = user.avatar || '';
-
-    avatarInput.addEventListener('change', async () => {
-      if (!avatarInput.files || !avatarInput.files[0]) return;
-      avatar = await fileToDataUrl(avatarInput.files[0]);
-      avatarPreview.src = avatar;
-      avatarPreview.style.display = 'block';
-    });
-
-    form.addEventListener('submit', async event => {
-      event.preventDefault();
-      status.textContent = 'Salvataggio...';
-      const body = { action: 'update', bio: bioInput.value, avatar };
-      const response = await fetch('/api/auth', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify(body) });
-      const result = await response.json().catch(() => ({}));
-      status.textContent = response.ok ? 'Profilo salvato.' : (result.error || 'Errore salvataggio.');
-    });
-
+    avatarInput.addEventListener('change', async () => { if (!avatarInput.files || !avatarInput.files[0]) return; avatar = await fileToDataUrl(avatarInput.files[0]); avatarPreview.src = avatar; avatarPreview.style.display = 'block'; });
+    form.addEventListener('submit', async event => { event.preventDefault(); status.textContent = 'Salvataggio...'; const body = { action:'update', bio:bioInput.value, avatar }; const response = await fetch('/api/auth', { method:'POST', headers:{ 'content-type':'application/json', ...headers() }, body:JSON.stringify(body) }); const result = await response.json().catch(() => ({})); status.textContent = response.ok ? 'Profilo salvato.' : (result.error || 'Errore salvataggio.'); });
     const secButton = root.querySelector('[data-sec-submit]');
-    secButton?.addEventListener('click', async () => {
-      const code = root.querySelector('[data-sec-code]')?.value || '';
-      status.textContent = 'Verifica codice SEC...';
-      const response = await fetch('/api/auth', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify({ action: 'redeemsec', code }) });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok) { status.textContent = result.error || 'Codice non valido.'; return; }
-      status.textContent = 'Permesso redattore attivato.';
-      setTimeout(() => renderOwnUser(result.user), 350);
-    });
-
-    root.querySelector('[data-logout]').addEventListener('click', async () => {
-      await fetch('/api/auth', { method: 'POST', headers: { 'content-type': 'application/json', ...headers() }, body: JSON.stringify({ action: 'logout' }) });
-      localStorage.removeItem(tokenKey);
-      localStorage.setItem('mancuspiePublicName', 'Anonimo');
-      location.href = '/';
-    });
+    secButton?.addEventListener('click', async () => { const code = root.querySelector('[data-sec-code]')?.value || ''; status.textContent = 'Verifica codice SEC...'; const response = await fetch('/api/auth', { method:'POST', headers:{ 'content-type':'application/json', ...headers() }, body:JSON.stringify({ action:'redeemsec', code }) }); const result = await response.json().catch(() => ({})); if (!response.ok) { status.textContent = result.error || 'Codice non valido.'; return; } status.textContent = 'Permesso redattore attivato.'; setTimeout(() => renderOwnUser(result.user), 350); });
+    root.querySelector('[data-logout]').addEventListener('click', async () => { await fetch('/api/auth', { method:'POST', headers:{ 'content-type':'application/json', ...headers() }, body:JSON.stringify({ action:'logout' }) }); localStorage.removeItem(tokenKey); localStorage.setItem('mancuspiePublicName', 'Anonimo'); location.href = '/'; });
   };
 
   const load = async () => {
     const url = viewedUsername ? `/api/auth?username=${encodeURIComponent(viewedUsername)}` : '/api/auth';
     if (!viewedUsername && !token()) { loggedOut('Qui non c’è nessuna sessione salvata. Rifai il login dalla home.'); return; }
-    const response = await fetch(url, { headers: headers(), cache: 'no-store' });
+    const response = await fetch(url, { headers: headers(), cache:'no-store' });
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">${esc(data.error || 'Profilo non trovato.')}</p><div class="profile-actions"><a href="/">Home</a></div></div></div>`;
-      return;
-    }
+    if (!response.ok) { root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">${esc(data.error || 'Profilo non trovato.')}</p><div class="profile-actions"><a href="/">Home</a></div></div></div>`; return; }
     if (!data.user) { loggedOut('Sessione assente o scaduta. Rifai il login dalla home.'); return; }
     if (data.user.canEdit) renderOwnUser(data.user); else renderPublicUser(data.user);
   };
-
-  load().catch(error => {
-    root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">Profilo non disponibile: ${esc(error.message)}</p><div class="profile-actions"><a href="/">Home</a></div></div></div>`;
-  });
+  load().catch(error => { root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">Profilo non disponibile: ${esc(error.message)}</p><div class="profile-actions"><a href="/">Home</a></div></div></div>`; });
 })();
 </script>
