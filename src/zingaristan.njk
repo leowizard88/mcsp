@@ -105,8 +105,8 @@ permalink: /zingaristan/
 
   .zingaristan-actions {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(12px, 3vw, 38px);
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(10px, 2vw, 26px);
     align-items: end;
     margin-top: clamp(34px, 7vw, 86px);
   }
@@ -120,8 +120,8 @@ permalink: /zingaristan/
     background: linear-gradient(180deg, rgba(5,5,5,.42), rgba(8,58,146,.30));
     color: #ffd31a !important;
     font-family: var(--font-sans);
-    font-size: clamp(12px, 1.5vw, 17px);
-    letter-spacing: .15em;
+    font-size: clamp(11px, 1.2vw, 16px);
+    letter-spacing: .13em;
     text-transform: uppercase;
     text-decoration: none !important;
     box-shadow: 0 4px 10px rgba(0,0,0,.18), inset 0 0 0 1px rgba(25,183,61,.30);
@@ -137,6 +137,10 @@ permalink: /zingaristan/
   .zingaristan-button:hover {
     background: linear-gradient(180deg, rgba(25,183,61,.72), rgba(8,58,146,.76));
     transform: translateY(-2px);
+  }
+
+  @media(max-width:900px) and (min-width:761px) {
+    .zingaristan-actions { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media(max-width:760px) {
@@ -190,6 +194,7 @@ permalink: /zingaristan/
       <a class="zingaristan-button" href="/zingaristan/tesseramento/">Tesseramento</a>
       <a class="zingaristan-button" href="/zingaristan/wiki/">Wiki</a>
       <span class="zingaristan-button is-disabled">Il programma</span>
+      <a class="zingaristan-button" href="/zingaristan/membri/">Membri</a>
     </nav>
   </div>
 </section>
