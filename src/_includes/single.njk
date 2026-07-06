@@ -9,5 +9,263 @@ layout: base.njk
     {% if deadline %}<p class="meta">Scadenza: {{ deadline }}</p>{% endif %}
     <div class="single-body">{{ content | safe }}</div>
     <a class="text-link" href="/">← Torna alla home</a>
+
+    <section class="article-comments" data-article-comments data-article-path="{{ page.url }}">
+      <div class="comments-head">
+        <p class="eyebrow">Commenti pubblici</p>
+        <h2>Discussione</h2>
+        <p>Scrivi sotto l’articolo. Le risposte appaiono pubblicamente e si aggiornano in tempo reale.</p>
+      </div>
+
+      <form class="comment-form" data-comment-form>
+        <input name="name" type="text" maxlength="40" placeholder="Nome" required>
+        <textarea name="text" maxlength="900" placeholder="Commento" required></textarea>
+        <button type="submit">Pubblica</button>
+      </form>
+
+      <p class="comments-status" data-comments-status></p>
+      <div class="comments-list" data-comments-list></div>
+    </section>
   </div>
 </article>
+
+<style>
+  .article-comments,
+  .article-comments * { box-sizing: border-box; }
+
+  .article-comments {
+    margin-top: clamp(42px, 7vw, 86px);
+    padding-top: 24px;
+    border-top: 1px solid rgba(5,5,5,.22);
+    color: #050505;
+  }
+
+  .comments-head h2 {
+    margin: 0 0 8px;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(32px, 5vw, 58px);
+    line-height: .95;
+    text-transform: uppercase;
+  }
+
+  .comments-head p:not(.eyebrow) {
+    max-width: 640px;
+    margin: 0 0 18px;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .comment-form {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0 18px;
+  }
+
+  .comment-form input,
+  .comment-form textarea {
+    width: 100%;
+    border: 1px solid rgba(5,5,5,.3);
+    background: rgba(255,255,255,.48);
+    color: #050505;
+    padding: 12px;
+    font: 15px/1.35 var(--font-sans, system-ui, sans-serif);
+    outline: none;
+  }
+
+  .comment-form textarea {
+    min-height: 92px;
+    resize: vertical;
+  }
+
+  .comment-form button,
+  .comment-reply button,
+  .comment-reply-toggle {
+    justify-self: start;
+    border: 1px solid rgba(5,5,5,.45);
+    background: #050505;
+    color: #fbfaf5;
+    padding: 10px 14px;
+    font: 700 12px/1 var(--font-sans, system-ui, sans-serif);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .comments-status {
+    min-height: 18px;
+    margin: 0 0 10px;
+    font-size: 13px;
+  }
+
+  .comments-list {
+    display: grid;
+    gap: 14px;
+  }
+
+  .comment-card {
+    border: 1px solid rgba(5,5,5,.18);
+    background: rgba(255,255,255,.36);
+    padding: 14px;
+  }
+
+  .comment-card.is-reply {
+    margin-left: clamp(18px, 5vw, 54px);
+    border-left: 4px solid rgba(5,5,5,.28);
+  }
+
+  .comment-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: baseline;
+    margin: 0 0 8px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+
+  .comment-meta strong { font-size: 13px; }
+  .comment-meta time { opacity: .62; }
+  .comment-text { margin: 0 0 10px; line-height: 1.45; white-space: pre-wrap; }
+
+  .comment-reply {
+    display: none;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .comment-reply.is-open { display: grid; }
+  .comment-reply input,
+  .comment-reply textarea {
+    width: 100%;
+    border: 1px solid rgba(5,5,5,.24);
+    background: rgba(255,255,255,.5);
+    padding: 10px;
+    font: 14px/1.35 var(--font-sans, system-ui, sans-serif);
+  }
+
+  .comment-reply textarea { min-height: 72px; resize: vertical; }
+
+  @media(max-width:760px) {
+    .article-comments { margin-top: 36px; padding-top: 20px; }
+    .comments-head h2 { font-size: 30px; }
+    .comment-card { padding: 12px; }
+    .comment-card.is-reply { margin-left: 14px; }
+  }
+</style>
+
+<script>
+(() => {
+  const root = document.querySelector('[data-article-comments]');
+  if (!root) return;
+
+  const list = root.querySelector('[data-comments-list]');
+  const form = root.querySelector('[data-comment-form]');
+  const status = root.querySelector('[data-comments-status]');
+  const path = root.dataset.articlePath || location.pathname;
+  let comments = [];
+  let isSending = false;
+
+  const esc = value => String(value || '').replace(/[&<>'"]/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+  }[char]));
+
+  const formatTime = value => {
+    try {
+      return new Intl.DateTimeFormat('it-IT', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(value));
+    } catch {
+      return '';
+    }
+  };
+
+  const renderReplyForm = id => `
+    <form class="comment-reply" data-reply-form="${esc(id)}">
+      <input name="name" type="text" maxlength="40" placeholder="Nome / autore" required>
+      <textarea name="text" maxlength="900" placeholder="Risposta pubblica" required></textarea>
+      <button type="submit">Rispondi</button>
+    </form>
+  `;
+
+  const renderCard = (comment, isReply = false) => `
+    <article class="comment-card${isReply ? ' is-reply' : ''}">
+      <p class="comment-meta"><strong>${esc(comment.name)}</strong><time>${esc(formatTime(comment.time))}</time></p>
+      <p class="comment-text">${esc(comment.text)}</p>
+      ${isReply ? '' : `<button class="comment-reply-toggle" type="button" data-reply-toggle="${esc(comment.id)}">Rispondi</button>${renderReplyForm(comment.id)}`}
+    </article>
+  `;
+
+  const render = () => {
+    const parents = comments.filter(comment => !comment.parentId);
+    const replies = comments.filter(comment => comment.parentId);
+    if (!comments.length) {
+      list.innerHTML = '<p class="comments-status">Nessun commento ancora.</p>';
+      return;
+    }
+    list.innerHTML = parents.map(parent => {
+      const childHtml = replies.filter(reply => reply.parentId === parent.id).map(reply => renderCard(reply, true)).join('');
+      return renderCard(parent) + childHtml;
+    }).join('');
+  };
+
+  const load = async () => {
+    try {
+      const response = await fetch(`/api/comments?path=${encodeURIComponent(path)}`, { cache: 'no-store' });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Commenti non caricati');
+      comments = Array.isArray(result.comments) ? result.comments : [];
+      render();
+    } catch (error) {
+      status.textContent = error.message || 'Errore commenti.';
+    }
+  };
+
+  const post = async data => {
+    if (isSending) return;
+    isSending = true;
+    status.textContent = 'Pubblicazione...';
+    try {
+      const response = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ path, ...data })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Invio non riuscito');
+      comments = Array.isArray(result.comments) ? result.comments : [];
+      status.textContent = '';
+      render();
+    } catch (error) {
+      status.textContent = error.message || 'Errore invio.';
+    } finally {
+      isSending = false;
+    }
+  };
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const data = new FormData(form);
+    post({ name: data.get('name'), text: data.get('text') });
+    form.reset();
+  });
+
+  root.addEventListener('click', event => {
+    const button = event.target.closest('[data-reply-toggle]');
+    if (!button) return;
+    const replyForm = root.querySelector(`[data-reply-form="${CSS.escape(button.dataset.replyToggle)}"]`);
+    replyForm?.classList.toggle('is-open');
+  });
+
+  root.addEventListener('submit', event => {
+    const replyForm = event.target.closest('[data-reply-form]');
+    if (!replyForm) return;
+    event.preventDefault();
+    const data = new FormData(replyForm);
+    post({ parentId: replyForm.dataset.replyForm, name: data.get('name'), text: data.get('text') });
+    replyForm.reset();
+    replyForm.classList.remove('is-open');
+  });
+
+  load();
+  setInterval(load, 4000);
+})();
+</script>
