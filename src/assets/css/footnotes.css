@@ -1,0 +1,31 @@
+.article-format-body .footnotes {
+  margin-top: 2.8em;
+  padding-top: 1em;
+  border-top: 1px solid rgba(5,5,5,.22);
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: .58em;
+  line-height: 1.45;
+  color: rgba(5,5,5,.76);
+}
+
+.article-format-body .footnotes ol {
+  padding-left: 1.4em;
+  margin: 0;
+}
+
+.article-format-body .footnotes li {
+  margin: 0 0 .65em;
+}
+
+.article-format-body .footnote-ref,
+.article-format-body .footnote-backref {
+  color: #8b0000;
+  text-decoration: none;
+}
+
+.article-format-body .footnote-ref sup {
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: .55em;
+  line-height: 1;
+  vertical-align: super;
+}
