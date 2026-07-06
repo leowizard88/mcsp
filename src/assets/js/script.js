@@ -1,10 +1,17 @@
 document.documentElement.classList.add('js');
 const links = document.querySelectorAll('.vertical-nav a');
-const sections = [...links].map(a => document.querySelector(a.getAttribute('href').replace('/',''))).filter(Boolean);
+const sectionPairs = [...links]
+  .map(a => {
+    const hash = new URL(a.getAttribute('href'), location.origin).hash;
+    return hash ? [a, document.querySelector(hash)] : [a, null];
+  })
+  .filter(([, section]) => section);
+const sections = sectionPairs.map(([, section]) => section);
 const mark = () => {
+  if (!sections.length) return;
   let current = sections[0];
   for (const s of sections) if (s.getBoundingClientRect().top < innerHeight * .45) current = s;
-  links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href').endsWith('#'+current.id)));
+  links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href').endsWith('#' + current.id)));
 };
 addEventListener('scroll', mark, {passive:true}); mark();
 
