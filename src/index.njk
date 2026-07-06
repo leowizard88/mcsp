@@ -174,13 +174,7 @@ title: MANCUSPIE
   <article class="section-block list-block">
     <p class="section-kicker">02</p>
     <h2>Testi in primo piano</h2>
-    <div class="item-list">
-      {% for post in collections.testi | reverse %}
-      {% if loop.index0 < 4 %}
-      <a class="item" href="{{ post.url }}"><span>{{ post.data.title }}</span><em>{{ post.data.author }}</em></a>
-      {% endif %}
-      {% endfor %}
-    </div>
+    <div class="item-list"></div>
   </article>
 </section>
 
@@ -189,13 +183,7 @@ title: MANCUSPIE
   <article class="section-block list-block offset-right">
     <p class="section-kicker">03</p>
     <h2>Manifesti</h2>
-    <div class="item-list">
-      {% for post in collections.note | reverse %}
-      {% if loop.index0 < 4 %}
-      <a class="item" href="{{ post.url }}"><span>{{ post.data.title }}</span><em>{{ post.data.author }}</em></a>
-      {% endif %}
-      {% endfor %}
-    </div>
+    <div class="item-list"></div>
   </article>
 </section>
 
@@ -215,11 +203,7 @@ title: MANCUSPIE
     <p class="section-kicker">05</p>
     <h2>Altri progetti</h2>
     <div class="item-list">
-      {% for project in collections.progetti | reverse %}
-      {% if loop.index0 < 4 %}
-      <a class="item" href="{{ project.url }}"><span>{{ project.data.title }}</span><em>{{ project.data.excerpt }}</em></a>
-      {% endif %}
-      {% endfor %}
+      <a class="item" href="/zingaristan/"><span>Zingaristan</span><em>Homepage ufficiale</em></a>
     </div>
   </article>
   <footer class="footer"><span>© MANCUSPIE</span><span>{{ site.email }}</span><span>{{ home.newsletter_text }}</span></footer>
