@@ -30,20 +30,6 @@ permalink: /profilo/
     overflow: hidden;
   }
 
-  .profile-page::before {
-    content: "";
-    position: fixed;
-    right: -90px;
-    top: 70px;
-    width: clamp(260px, 32vw, 520px);
-    height: clamp(260px, 32vw, 520px);
-    background: url('/assets/img/ICON.png') center/contain no-repeat;
-    opacity: .16;
-    filter: drop-shadow(0 0 34px rgba(234,215,179,.42));
-    pointer-events: none;
-    mix-blend-mode: screen;
-  }
-
   .profile-card {
     position: relative;
     z-index: 2;
@@ -170,7 +156,6 @@ permalink: /profilo/
 
   @media(max-width:760px) {
     .profile-page { padding: 34px 20px; }
-    .profile-page::before { right: -120px; top: 90px; width: 320px; height: 320px; }
     .profile-card { padding-left: 16px; }
     .profile-card h1 { font-size: clamp(58px, 18vw, 92px); }
     .profile-box { padding: 20px; box-shadow: none !important; }
