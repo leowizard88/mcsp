@@ -23,25 +23,10 @@ permalink: /profilo/
     padding: clamp(34px, 6vw, 86px);
     display: block !important;
     background:
-      radial-gradient(circle at 82% 18%, rgba(234, 215, 179, .20), transparent 28%),
-      radial-gradient(circle at 18% 82%, rgba(139, 0, 0, .42), transparent 34%),
+      radial-gradient(circle at 82% 18%, rgba(234, 215, 179, .12), transparent 28%),
       repeating-linear-gradient(90deg, transparent 0 34px, rgba(234,215,179,.045) 34px 35px, transparent 35px 96px),
       #050000 !important;
     overflow: hidden;
-  }
-
-  .profile-page::before {
-    content: "";
-    position: fixed;
-    right: -90px;
-    top: 70px;
-    width: clamp(260px, 32vw, 520px);
-    height: clamp(260px, 32vw, 520px);
-    background: url('/assets/img/ICON.png') center/contain no-repeat;
-    opacity: .16;
-    filter: drop-shadow(0 0 34px rgba(234,215,179,.42));
-    pointer-events: none;
-    mix-blend-mode: screen;
   }
 
   .profile-card {
@@ -54,9 +39,7 @@ permalink: /profilo/
     padding-left: clamp(18px, 3vw, 38px);
   }
 
-  .profile-card .eyebrow {
-    color: rgba(234,215,179,.74);
-  }
+  .profile-card .eyebrow { color: rgba(234,215,179,.74); }
 
   .profile-card h1 {
     margin: 0 0 26px;
@@ -67,17 +50,19 @@ permalink: /profilo/
     letter-spacing: -.035em;
     text-transform: uppercase;
     color: #ead7b3;
-    text-shadow: 0 0 24px rgba(234,215,179,.22);
+    text-shadow: 0 0 24px rgba(234,215,179,.18);
   }
 
   .profile-box {
     border-top: 1px solid rgba(234,215,179,.38);
-    padding-top: 26px;
     display: grid;
     gap: 17px;
     background: linear-gradient(90deg, rgba(234,215,179,.08), rgba(234,215,179,.02));
     padding: 26px;
-    box-shadow: 12px 12px 0 rgba(139,0,0,.62);
+  }
+
+  .profile-public-box {
+    max-width: 720px;
   }
 
   .profile-username {
@@ -93,11 +78,16 @@ permalink: /profilo/
     border: 1px solid rgba(234,215,179,.56);
     object-fit: cover;
     background: rgba(234,215,179,.09);
-    box-shadow: 6px 6px 0 rgba(139,0,0,.62);
   }
 
-  .profile-avatar[src=""] {
-    display: none;
+  .profile-avatar[src=""] { display: none; }
+
+  .profile-bio-public {
+    margin: 0;
+    max-width: 680px;
+    white-space: pre-wrap;
+    font: 300 clamp(20px,2.2vw,29px)/1.25 var(--font-serif, Georgia, serif);
+    color: rgba(234,215,179,.86);
   }
 
   .profile-card label {
@@ -129,20 +119,11 @@ permalink: /profilo/
   }
 
   .profile-card textarea::placeholder,
-  .profile-card input::placeholder {
-    color: rgba(234,215,179,.42);
-  }
+  .profile-card input::placeholder { color: rgba(234,215,179,.42); }
 
-  .profile-card textarea {
-    min-height: 160px;
-    resize: vertical;
-  }
+  .profile-card textarea { min-height: 160px; resize: vertical; }
 
-  .profile-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
+  .profile-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
   .profile-actions button,
   .profile-actions a,
@@ -157,7 +138,6 @@ permalink: /profilo/
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    box-shadow: 4px 4px 0 rgba(139,0,0,.70);
   }
 
   .profile-actions button[data-logout] {
@@ -174,10 +154,9 @@ permalink: /profilo/
 
   @media(max-width:760px) {
     .profile-page { padding: 34px 20px; }
-    .profile-page::before { right: -120px; top: 90px; width: 320px; height: 320px; }
     .profile-card { padding-left: 16px; }
     .profile-card h1 { font-size: clamp(58px, 18vw, 92px); }
-    .profile-box { padding: 20px; box-shadow: 7px 7px 0 rgba(139,0,0,.62); }
+    .profile-box { padding: 20px; }
   }
 </style>
 
@@ -188,6 +167,7 @@ permalink: /profilo/
   const token = () => localStorage.getItem(tokenKey) || '';
   const esc = value => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
   const headers = () => token() ? { authorization: `Bearer ${token()}` } : {};
+  const viewedUsername = new URLSearchParams(location.search).get('u') || '';
   const fileToDataUrl = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
@@ -203,7 +183,19 @@ permalink: /profilo/
       <a class="profile-login-link" href="/">Torna alla home e accedi dall’icona</a>`;
   };
 
-  const renderUser = user => {
+  const renderPublicUser = user => {
+    root.innerHTML = `
+      <p class="eyebrow">Profilo pubblico</p>
+      <h1>Profilo</h1>
+      <div class="profile-box profile-public-box">
+        <p class="profile-username">${esc(user.username)}</p>
+        <img class="profile-avatar" src="${esc(user.avatar || '')}" alt="Foto profilo">
+        <p class="profile-bio-public">${esc(user.bio || 'Nessuna descrizione pubblicata.')}</p>
+        <div class="profile-actions"><a href="/">Home</a></div>
+      </div>`;
+  };
+
+  const renderOwnUser = user => {
     root.innerHTML = `
       <p class="eyebrow">Account</p>
       <h1>Profilo</h1>
@@ -250,21 +242,23 @@ permalink: /profilo/
   };
 
   const load = async () => {
-    if (!token()) {
+    const url = viewedUsername ? `/api/auth?username=${encodeURIComponent(viewedUsername)}` : '/api/auth';
+    if (!viewedUsername && !token()) {
       loggedOut('Qui non c’è nessuna sessione salvata. Rifai il login dalla home.');
       return;
     }
-    const response = await fetch('/api/auth', { headers: headers(), cache: 'no-store' });
+    const response = await fetch(url, { headers: headers(), cache: 'no-store' });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-      loggedOut(data.error || 'Sessione non valida. Rifai il login dalla home.');
+      root.innerHTML = `<p class="eyebrow">Account</p><h1>Profilo</h1><p class="profile-status">${esc(data.error || 'Profilo non trovato.')}</p><a class="profile-login-link" href="/">Home</a>`;
       return;
     }
     if (!data.user) {
       loggedOut('Sessione assente o scaduta. Rifai il login dalla home.');
       return;
     }
-    renderUser(data.user);
+    if (data.user.canEdit) renderOwnUser(data.user);
+    else renderPublicUser(data.user);
   };
 
   load().catch(error => {
