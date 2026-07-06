@@ -176,7 +176,7 @@ body:has(.article-format-inner)::before {
   width: 100%;
   display: flex;
   flex-direction: column;
-  animation: articleOrnamentFlow 38s linear infinite;
+  animation: articleOrnamentFlow 24s linear infinite;
   will-change: top;
   backface-visibility: hidden;
 }
@@ -314,7 +314,7 @@ body:has(.article-format-inner)::before {
   }
 
   .article-ornament-track {
-    animation-duration: 34s;
+    animation-duration: 24s;
   }
 
   .article-format-body,
