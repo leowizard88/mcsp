@@ -17,7 +17,8 @@ const randomHex = bytes => {
 };
 const hash = async value => bytesToHex(await crypto.subtle.digest('SHA-256', enc.encode(value)));
 const passHash = (password, salt) => hash(`${salt}:${password}`);
-const publicUser = user => user ? ({ id: user.id, username: user.username, bio: user.bio || '', avatar: user.avatar || '', sec: user.sec || '', createdAt: user.createdAt }) : null;
+const ownUser = user => user ? ({ id: user.id, username: user.username, bio: user.bio || '', avatar: user.avatar || '', sec: user.sec || '', createdAt: user.createdAt, canEdit: true }) : null;
+const publicUser = user => user ? ({ id: user.id, username: user.username, bio: user.bio || '', avatar: user.avatar || '', createdAt: user.createdAt, canEdit: false }) : null;
 const originKey = async request => {
   const raw = clean(request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || '');
   if (!raw) return '';
@@ -34,6 +35,14 @@ const getUserByToken = async (env, token) => {
   if (!session?.userId) return null;
   return await env.CHAT_MESSAGES.get(`auth:user:${session.userId}`, 'json').catch(() => null);
 };
+const getUserByUsername = async (env, username) => {
+  if (!env.CHAT_MESSAGES) return null;
+  const key = usernameKey(username);
+  if (!key) return null;
+  const id = await env.CHAT_MESSAGES.get(`auth:username:${key}`);
+  if (!id) return null;
+  return await env.CHAT_MESSAGES.get(`auth:user:${id}`, 'json').catch(() => null);
+};
 const saveSession = async (env, userId) => {
   const token = randomHex(32);
   await env.CHAT_MESSAGES.put(`auth:session:${token}`, JSON.stringify({ userId, time: new Date().toISOString() }), { expirationTtl: SESSION_TTL });
@@ -41,8 +50,16 @@ const saveSession = async (env, userId) => {
 };
 
 export async function onRequestGet({ request, env }) {
-  const user = await getUserByToken(env, bearer(request));
-  return json({ user: publicUser(user) });
+  const url = new URL(request.url);
+  const requested = clean(url.searchParams.get('username'));
+  const self = await getUserByToken(env, bearer(request));
+  if (requested) {
+    const user = await getUserByUsername(env, requested);
+    if (!user) return json({ error: 'Profilo non trovato' }, 404);
+    if (self?.id && self.id === user.id) return json({ user: ownUser(user) });
+    return json({ user: publicUser(user) });
+  }
+  return json({ user: ownUser(self) });
 }
 
 export async function onRequestPost({ request, env }) {
@@ -67,7 +84,7 @@ export async function onRequestPost({ request, env }) {
     await env.CHAT_MESSAGES.put(`auth:username:${key}`, id);
     if (signupKey) await env.CHAT_MESSAGES.put(signupKey, id, { expirationTtl: SIGNUP_TTL });
     const token = await saveSession(env, id);
-    return json({ token, user: publicUser(user) }, 201);
+    return json({ token, user: ownUser(user) }, 201);
   }
 
   if (action === 'login') {
@@ -78,7 +95,7 @@ export async function onRequestPost({ request, env }) {
     const user = await env.CHAT_MESSAGES.get(`auth:user:${id}`, 'json');
     if (!user || await passHash(password, user.salt) !== user.passwordHash) return json({ error: 'Credenziali non valide' }, 401);
     const token = await saveSession(env, id);
-    return json({ token, user: publicUser(user) });
+    return json({ token, user: ownUser(user) });
   }
 
   if (action === 'logout') {
@@ -100,7 +117,7 @@ export async function onRequestPost({ request, env }) {
     }
     if (data.avatar === '') user.avatar = '';
     await env.CHAT_MESSAGES.put(`auth:user:${user.id}`, JSON.stringify(user));
-    return json({ user: publicUser(user) });
+    return json({ user: ownUser(user) });
   }
 
   return json({ error: 'Azione non valida' }, 400);
