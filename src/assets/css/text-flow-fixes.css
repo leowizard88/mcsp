@@ -20,7 +20,7 @@
   white-space: pre-wrap !important;
 }
 
-/* Articles: remove the right-side image column completely. */
+/* Articles: kill the old static right image and use a narrow moving ornament column instead. */
 .single-page::after,
 .archive-page::after,
 .article-page-format::after,
@@ -35,18 +35,58 @@ body:has(.article-page-format) .article-page-format::after {
 
 .article-page-format,
 .single-page:has(.article-format-inner) {
+  --article-ornament-width: clamp(58px, 7.4vw, 96px);
+  --article-ornament-gap: clamp(20px, 3vw, 42px);
   background: #fbfaf5 !important;
   overflow-x: hidden !important;
-  padding-right: 0 !important;
+  padding-right: calc(var(--article-ornament-width) + var(--article-ornament-gap) + 18px) !important;
 }
 
 .article-format-inner,
 .single-inner.article-format-inner {
-  width: min(820px, calc(100vw - var(--side, 44px) - 64px)) !important;
-  max-width: min(820px, calc(100vw - var(--side, 44px) - 64px)) !important;
+  width: min(820px, calc(100vw - var(--side, 44px) - var(--article-ornament-width, 86px) - var(--article-ornament-gap, 34px) - 84px)) !important;
+  max-width: min(820px, calc(100vw - var(--side, 44px) - var(--article-ornament-width, 86px) - var(--article-ornament-gap, 34px) - 84px)) !important;
   margin-left: clamp(18px, 5vw, 72px) !important;
   margin-right: auto !important;
   padding-right: 0 !important;
+}
+
+.article-ornament-column {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--article-ornament-width, 86px);
+  z-index: 6;
+  overflow: hidden;
+  pointer-events: none;
+  background: #050505;
+}
+
+.article-ornament-track {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: articleOrnamentScroll 24s linear infinite;
+  will-change: transform;
+}
+
+.article-ornament-track img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  flex: 0 0 auto;
+}
+
+@keyframes articleOrnamentScroll {
+  from { transform: translateY(-50%); }
+  to { transform: translateY(0); }
 }
 
 .article-format-head,
@@ -105,10 +145,12 @@ body:has(.article-page-format) .article-page-format::after {
     overflow-x: hidden !important;
   }
 
-  .single-page,
-  .article-page-format {
+  .article-page-format,
+  .single-page:has(.article-format-inner) {
+    --article-ornament-width: 42px;
+    --article-ornament-gap: 16px;
     padding-left: 14px !important;
-    padding-right: 26px !important;
+    padding-right: calc(var(--article-ornament-width) + var(--article-ornament-gap) + 14px) !important;
   }
 
   .single-page::after,
@@ -123,10 +165,10 @@ body:has(.article-page-format) .article-page-format::after {
 
   .article-format-inner,
   .single-inner.article-format-inner {
-    width: calc(100% - 12px) !important;
-    max-width: calc(100% - 12px) !important;
+    width: 100% !important;
+    max-width: 100% !important;
     margin-left: 0 !important;
-    margin-right: 12px !important;
+    margin-right: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
     padding-top: 16px !important;
@@ -140,7 +182,7 @@ body:has(.article-page-format) .article-page-format::after {
   }
 
   .article-format-body {
-    font-size: clamp(18px, 5vw, 21px) !important;
+    font-size: clamp(17px, 4.7vw, 20px) !important;
     line-height: 1.56 !important;
   }
 
@@ -164,6 +206,12 @@ body:has(.article-page-format) .article-page-format::after {
     overflow-wrap: normal !important;
     word-break: normal !important;
     hyphens: none !important;
-    font-size: clamp(42px, 13vw, 66px) !important;
+    font-size: clamp(38px, 11.5vw, 58px) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article-ornament-track {
+    animation-duration: 80s;
   }
 }
