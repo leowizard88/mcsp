@@ -8,7 +8,12 @@ permalink: /archivio/
 
   .archive-system-page {
     min-height: 100vh;
-    background: #8b0000;
+    background:
+      linear-gradient(90deg, transparent 0 8px, rgba(92,0,130,.18) 8px 9px, transparent 9px 37px),
+      linear-gradient(90deg, transparent 0 21px, rgba(126,30,180,.13) 21px 22px, transparent 22px 64px),
+      linear-gradient(90deg, transparent 0 43px, rgba(44,0,92,.20) 43px 44px, transparent 44px 91px),
+      #8b0000;
+    background-size: 113px 100%, 173px 100%, 251px 100%, auto;
     padding: clamp(42px, 6vw, 88px);
     color: #050000;
     overflow: hidden;
@@ -42,15 +47,15 @@ permalink: /archivio/
     font-size: clamp(78px, 13vw, 194px);
     line-height: .70;
     font-weight: 400;
-    letter-spacing: .055em;
+    letter-spacing: .050em;
     text-transform: uppercase;
     color: #050000;
     -webkit-text-fill-color: #050000;
     -webkit-text-stroke: 0;
     text-shadow: none;
-    transform: scaleX(.22) skewX(-12deg);
+    transform: scaleX(.36) skewX(-9deg) rotate(-1deg);
     transform-origin: left bottom;
-    clip-path: polygon(0 0,100% 0,100% 7%,87% 7%,87% 13%,100% 13%,100% 24%,72% 24%,72% 29%,100% 29%,100% 43%,92% 43%,92% 48%,100% 48%,100% 62%,77% 62%,77% 68%,100% 68%,100% 100%,0 100%,0 84%,15% 84%,15% 78%,0 78%,0 56%,8% 56%,8% 50%,0 50%,0 35%,19% 35%,19% 29%,0 29%);
+    clip-path: polygon(0 0,100% 0,100% 10%,86% 10%,86% 15%,100% 15%,100% 30%,72% 30%,72% 34%,100% 34%,100% 50%,91% 50%,91% 55%,100% 55%,100% 72%,78% 72%,78% 77%,100% 77%,100% 100%,0 100%,0 84%,12% 84%,12% 78%,0 78%,0 57%,8% 57%,8% 52%,0 52%,0 35%,18% 35%,18% 30%,0 30%);
   }
 
   .archive-back {
@@ -92,29 +97,29 @@ permalink: /archivio/
     font-size: clamp(40px, 5.9vw, 88px);
     line-height: .76;
     font-weight: 400;
-    letter-spacing: .055em;
+    letter-spacing: .052em;
     text-transform: uppercase;
     color: #050000;
     -webkit-text-fill-color: #050000;
     display: inline-block;
     -webkit-text-stroke: 0;
     text-shadow: none;
-    transform: scaleX(.20) skewX(-10deg);
+    transform: scaleX(.34) skewX(-8deg) rotate(.35deg);
     transform-origin: left center;
-    clip-path: polygon(0 0,100% 0,100% 7%,84% 7%,84% 13%,100% 13%,100% 22%,69% 22%,69% 28%,100% 28%,100% 38%,89% 38%,89% 45%,100% 45%,100% 60%,76% 60%,76% 66%,100% 66%,100% 100%,0 100%,0 87%,11% 87%,11% 80%,0 80%,0 58%,17% 58%,17% 52%,0 52%,0 32%,9% 32%,9% 25%,0 25%);
+    clip-path: polygon(0 0,100% 0,100% 9%,84% 9%,84% 14%,100% 14%,100% 25%,68% 25%,68% 30%,100% 30%,100% 42%,89% 42%,89% 47%,100% 47%,100% 62%,76% 62%,76% 68%,100% 68%,100% 100%,0 100%,0 86%,11% 86%,11% 80%,0 80%,0 58%,16% 58%,16% 52%,0 52%,0 32%,9% 32%,9% 26%,0 26%);
   }
 
   .archive-row:hover {
-    background: rgba(5,0,0,.10);
+    background: rgba(76,0,120,.10);
   }
 
   .archive-row:hover strong {
-    transform: scaleX(.20) skewX(-10deg) translateX(8px);
-    clip-path: polygon(0 0,100% 0,100% 11%,74% 11%,74% 17%,100% 17%,100% 31%,87% 31%,87% 38%,100% 38%,100% 52%,63% 52%,63% 59%,100% 59%,100% 100%,0 100%,0 76%,18% 76%,18% 69%,0 69%,0 46%,10% 46%,10% 39%,0 39%);
+    transform: scaleX(.34) skewX(-8deg) translateX(8px) rotate(-.35deg);
+    clip-path: polygon(0 0,100% 0,100% 12%,74% 12%,74% 17%,100% 17%,100% 31%,86% 31%,86% 38%,100% 38%,100% 54%,63% 54%,63% 60%,100% 60%,100% 100%,0 100%,0 76%,18% 76%,18% 69%,0 69%,0 46%,10% 46%,10% 39%,0 39%);
   }
 
   @media(max-width:760px){
-    .archive-system-page{padding:34px 22px}
+    .archive-system-page{padding:34px 22px;background-size:79px 100%,121px 100%,171px 100%,auto}
     .archive-system-head{display:block}
     .archive-back{display:inline-block;margin-top:20px}
     .archive-row{grid-template-columns:1fr;gap:8px}
