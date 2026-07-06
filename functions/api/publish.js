@@ -19,7 +19,14 @@ const githubHeaders = env => ({
   'user-agent': 'mancuspie-publisher'
 });
 const toBase64 = value => btoa(unescape(encodeURIComponent(value)));
+const fromBase64 = value => decodeURIComponent(escape(atob(String(value || '').replace(/\s/g, ''))));
 const base64Clean = value => String(value || '').replace(/^data:[^;]+;base64,/, '').replace(/\s/g, '');
+const repoName = env => env.GITHUB_REPO || REPO;
+const contentUrl = (env, path) => `https://api.github.com/repos/${repoName(env)}/contents/${encodeURIComponent(path).replace(/%2F/g, '/')}`;
+const frontmatterValue = (text, key) => {
+  const match = String(text || '').match(new RegExp(`^${key}:\\s*["']?([^"'\\n]+)["']?`, 'm'));
+  return clean(match?.[1] || '');
+};
 
 async function getUser(env, request) {
   const token = bearer(request);
@@ -33,13 +40,38 @@ function requireRedattore(user) {
   return !!user && user.role === 'redattore';
 }
 
+function safeContentPath(path) {
+  const p = clean(path);
+  if (!/^src\/content\/testi\/[a-zA-Z0-9._-]+\.md$/.test(p)) return '';
+  return p;
+}
+
 async function githubPut(env, path, content, message) {
   if (!env.GITHUB_TOKEN) return { ok: false, status: 500, error: 'GITHUB_TOKEN mancante nei segreti Cloudflare' };
-  const repo = env.GITHUB_REPO || REPO;
-  const response = await fetch(`https://api.github.com/repos/${repo}/contents/${encodeURIComponent(path).replace(/%2F/g, '/')}`, {
+  const response = await fetch(contentUrl(env, path), {
     method: 'PUT',
     headers: githubHeaders(env),
     body: JSON.stringify({ message, content })
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) return { ok: false, status: response.status, error: data.message || 'Errore GitHub' };
+  return { ok: true, data };
+}
+
+async function githubGet(env, path) {
+  if (!env.GITHUB_TOKEN) return { ok: false, status: 500, error: 'GITHUB_TOKEN mancante nei segreti Cloudflare' };
+  const response = await fetch(contentUrl(env, path), { headers: githubHeaders(env) });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) return { ok: false, status: response.status, error: data.message || 'Errore GitHub' };
+  return { ok: true, data };
+}
+
+async function githubDelete(env, path, sha, message) {
+  if (!env.GITHUB_TOKEN) return { ok: false, status: 500, error: 'GITHUB_TOKEN mancante nei segreti Cloudflare' };
+  const response = await fetch(contentUrl(env, path), {
+    method: 'DELETE',
+    headers: githubHeaders(env),
+    body: JSON.stringify({ message, sha })
   });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) return { ok: false, status: response.status, error: data.message || 'Errore GitHub' };
@@ -94,6 +126,19 @@ async function uploadAsset(env, user, data) {
   return json({ ok: true, url: publicUrl, markdown: mime.startsWith('image/') ? `![${filename}](${publicUrl})` : `[${filename}](${publicUrl})` }, 201);
 }
 
+async function deleteArticle(env, user, data) {
+  const path = safeContentPath(data.path);
+  if (!path) return json({ error: 'Percorso articolo non valido' }, 400);
+  const got = await githubGet(env, path);
+  if (!got.ok) return json({ error: got.error }, got.status || 500);
+  const text = fromBase64(got.data.content);
+  const author = frontmatterValue(text, 'author');
+  if (author.toLowerCase() !== clean(user.username).toLowerCase()) return json({ error: 'Puoi eliminare solo i tuoi articoli' }, 403);
+  const result = await githubDelete(env, path, got.data.sha, `delete article ${path.split('/').pop()}`);
+  if (!result.ok) return json({ error: result.error }, result.status || 500);
+  return json({ ok: true });
+}
+
 export async function onRequestPost({ request, env }) {
   const user = await getUser(env, request);
   if (!requireRedattore(user)) return json({ error: 'Permesso redattore richiesto' }, 403);
@@ -102,5 +147,6 @@ export async function onRequestPost({ request, env }) {
   const action = clean(data.action).toLowerCase();
   if (action === 'publish') return publishArticle(env, user, data);
   if (action === 'upload') return uploadAsset(env, user, data);
+  if (action === 'delete') return deleteArticle(env, user, data);
   return json({ error: 'Azione non valida' }, 400);
 }
