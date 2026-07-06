@@ -68,6 +68,7 @@ title: MANCUSPIE
     opacity: .94;
     mix-blend-mode: multiply;
     transform-origin: 60% 72%;
+    overflow: visible;
   }
   .ultimi-movimenti-button img {
     display: block;
@@ -78,9 +79,10 @@ title: MANCUSPIE
   }
   .latest-drama-spine {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    left: 7%;
+    top: -3%;
+    width: 112%;
+    height: 112%;
     z-index: 3;
     pointer-events: none;
     overflow: visible;
@@ -88,12 +90,12 @@ title: MANCUSPIE
   }
   .latest-drama-spine text {
     font-family: 'Gaegu', 'Comic Sans MS', cursive;
-    font-size: 36px;
+    font-size: 56px;
     font-weight: 300;
-    letter-spacing: .035em;
+    letter-spacing: .04em;
     fill: #050505;
-    stroke: rgba(230,208,168,.35);
-    stroke-width: .7px;
+    stroke: rgba(230,208,168,.42);
+    stroke-width: .9px;
     paint-order: stroke fill;
   }
   .ultimi-movimenti-button:hover { animation: movimentiVibra .115s steps(2, end) infinite; opacity: 1; }
@@ -109,7 +111,8 @@ title: MANCUSPIE
     .hero-copy .child-title{font-size:clamp(49px,13.2vw,64px);letter-spacing:-.09em;white-space:nowrap}
     .hero-copy h2{font-size:18px !important;letter-spacing:.025em !important;margin-top:10px !important;margin-bottom:14px !important;margin-left:42px !important;max-width:calc(100vw - 124px) !important}
     .ultimi-movimenti-button{width:238px !important;right:8px;bottom:16px;opacity:.9}
-    .latest-drama-spine text{font-size:34px}
+    .latest-drama-spine{left:8%;top:-5%;width:116%;height:116%}
+    .latest-drama-spine text{font-size:54px}
   }
 </style>
 
@@ -126,12 +129,12 @@ title: MANCUSPIE
   </div>
   <a class="ultimi-movimenti-button" href="/ultimi-movimenti/" aria-label="Vai a Ultimi movimenti">
     <img alt="Figura" src="/assets/img/adfe1ddc4e68f7828ffef4e2737ca5a2.jpg">
-    <svg class="latest-drama-spine" viewBox="0 0 520 520" aria-hidden="true" focusable="false">
+    <svg class="latest-drama-spine" viewBox="0 0 620 620" aria-hidden="true" focusable="false">
       <defs>
-        <path id="latestDramaBack" d="M326 111 C398 145 438 236 418 316 C404 375 360 422 294 446" />
+        <path id="latestDramaBack" d="M392 105 C506 153 556 257 526 350 C503 423 441 484 356 526" />
       </defs>
       <text>
-        <textPath href="#latestDramaBack" startOffset="2%">latest drama</textPath>
+        <textPath href="#latestDramaBack" startOffset="0%">LATEST DRAMA</textPath>
       </text>
     </svg>
   </a>
