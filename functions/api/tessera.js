@@ -1,4 +1,7 @@
 const HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' };
+const MEMBERS_KEY = 'pcz:members';
+const MAX_MEMBERS = 1000;
+
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: HEADERS });
 const clean = value => String(value || '').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim();
 const esc = value => String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -12,6 +15,25 @@ const getPng = (value, code) => {
   if (!/^[A-Za-z0-9+/=]+$/.test(content) || content.length < 1000) throw new Error('PNG non valido');
   if (content.length > 9000000) throw new Error('PNG troppo pesante');
   return { filename: `tessera-${code}.png`, content };
+};
+
+const readMembers = async env => {
+  if (!env.CHAT_MESSAGES) return [];
+  try {
+    const stored = await env.CHAT_MESSAGES.get(MEMBERS_KEY, 'json');
+    return Array.isArray(stored) ? stored : [];
+  } catch {
+    return [];
+  }
+};
+
+const writeMember = async (env, member) => {
+  if (!env.CHAT_MESSAGES) return false;
+  const members = await readMembers(env);
+  const withoutDuplicate = members.filter(item => item.code !== member.code && item.email !== member.email);
+  withoutDuplicate.push(member);
+  await env.CHAT_MESSAGES.put(MEMBERS_KEY, JSON.stringify(withoutDuplicate.slice(-MAX_MEMBERS)));
+  return true;
 };
 
 export async function onRequestPost({ request, env }) {
@@ -57,5 +79,6 @@ export async function onRequestPost({ request, env }) {
     return json({ error: error.message || 'Errore invio email' }, 502);
   }
 
+  await writeMember(env, { nome, cognome, email, code, date, time: new Date().toISOString() });
   return json({ ok: true, code, date }, 201);
 }
