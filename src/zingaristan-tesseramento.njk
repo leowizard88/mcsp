@@ -3,7 +3,6 @@ layout: base.njk
 title: Tesseramento PCZ
 permalink: /zingaristan/tesseramento/
 ---
-<!-- deploy trigger: tesseramento email -->
 <style>
   html,
   body,
@@ -78,15 +77,8 @@ permalink: /zingaristan/tesseramento/
     text-transform: uppercase;
   }
 
-  .pcz-form {
-    display: grid;
-    gap: 14px;
-  }
-
-  .pcz-field {
-    display: grid;
-    gap: 6px;
-  }
+  .pcz-form { display: grid; gap: 14px; }
+  .pcz-field { display: grid; gap: 6px; }
 
   .pcz-field label,
   .pcz-consenso legend {
@@ -107,10 +99,7 @@ permalink: /zingaristan/tesseramento/
     outline: none;
   }
 
-  .pcz-field textarea {
-    min-height: 120px;
-    resize: vertical;
-  }
+  .pcz-field textarea { min-height: 120px; resize: vertical; }
 
   .pcz-field input:focus,
   .pcz-field textarea:focus {
@@ -125,11 +114,7 @@ permalink: /zingaristan/tesseramento/
     background: rgba(255,255,255,.48);
   }
 
-  .pcz-choice-row {
-    display: flex;
-    gap: 22px;
-    margin-top: 10px;
-  }
+  .pcz-choice-row { display: flex; gap: 22px; margin-top: 10px; }
 
   .pcz-choice-row label {
     display: inline-flex;
@@ -162,10 +147,7 @@ permalink: /zingaristan/tesseramento/
     filter: saturate(1.22);
   }
 
-  .pcz-submit.is-ready:hover {
-    box-shadow: 0 0 24px rgba(255,211,26,.95), 0 0 50px rgba(25,183,61,.55);
-  }
-
+  .pcz-submit.is-ready:hover { box-shadow: 0 0 24px rgba(255,211,26,.95), 0 0 50px rgba(25,183,61,.55); }
   .pcz-submit.is-loading { cursor: wait; opacity: .72; }
 
   .pcz-status {
@@ -243,6 +225,75 @@ permalink: /zingaristan/tesseramento/
     status.classList.toggle('is-ok', type === 'ok');
   };
 
+  const makeCode = () => Array.from({ length: 3 }, () => String(Math.floor(Math.random() * 1000)).padStart(3, '0')).join('-');
+  const today = () => new Intl.DateTimeFormat('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date());
+
+  const loadImage = src => new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+
+  const wrapLines = (text, maxChars, maxLines) => {
+    const words = String(text || '').trim().replace(/\s+/g, ' ').split(' ');
+    const lines = [];
+    let line = '';
+    for (const word of words) {
+      const next = line ? `${line} ${word}` : word;
+      if (next.length > maxChars && line) {
+        lines.push(line);
+        line = word;
+        if (lines.length >= maxLines) break;
+      } else {
+        line = next;
+      }
+    }
+    if (line && lines.length < maxLines) lines.push(line);
+    return lines;
+  };
+
+  const makeCardPng = async ({ nome, cognome, note, code, date }) => {
+    const img = await loadImage('/assets/img/tessera.png');
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth || 1597;
+    canvas.height = img.naturalHeight || 1875;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const sx = canvas.width / 1597;
+    const sy = canvas.height / 1875;
+    const rect = (x, y, w, h) => ctx.fillRect(x * sx, y * sy, w * sx, h * sy);
+    const text = (value, x, y, size, font) => {
+      ctx.font = `${size * sx}px ${font}`;
+      ctx.fillStyle = '#000';
+      ctx.fillText(value, x * sx, y * sy);
+    };
+
+    ctx.fillStyle = '#fff';
+    rect(420, 82, 510, 84);
+    rect(244, 180, 354, 74);
+    rect(648, 572, 456, 68);
+    rect(24, 1260, 900, 430);
+
+    text(`${nome} ${cognome}`.slice(0, 34), 424, 143, 60, 'Arial, Helvetica, sans-serif');
+    text(date, 250, 240, 57, 'Arial, Helvetica, sans-serif');
+    text(code, 668, 626, 53, 'Arial, Helvetica, sans-serif');
+
+    text('Note personali', 26, 1308, 48, 'Georgia, Times New Roman, serif');
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2 * sx;
+    ctx.beginPath();
+    ctx.moveTo(26 * sx, 1330 * sy);
+    ctx.lineTo(635 * sx, 1330 * sy);
+    ctx.stroke();
+
+    const lines = wrapLines(note, 39, 8);
+    lines.forEach((line, index) => text(line, 26, 1382 + index * 43, 44, 'Georgia, Times New Roman, serif'));
+
+    return canvas.toDataURL('image/png');
+  };
+
   const isReady = () => {
     const filled = fields.every(field => field.value.trim().length > 0);
     const yes = form.querySelector('input[name="consenso"][value="si"]')?.checked;
@@ -264,19 +315,26 @@ permalink: /zingaristan/tesseramento/
     if (!isReady() || submit.classList.contains('is-loading')) return;
 
     const data = new FormData(form);
+    const code = makeCode();
+    const date = today();
     const payload = {
       nome: data.get('nome'),
       cognome: data.get('cognome'),
       email: data.get('email'),
       note: data.get('note'),
-      consenso: data.get('consenso')
+      consenso: data.get('consenso'),
+      code,
+      date
     };
 
     submit.disabled = true;
     submit.classList.add('is-loading');
-    setStatus('Invio domanda...', '');
+    setStatus('Generazione tessera PNG...', '');
 
     try {
+      payload.cardPng = await makeCardPng(payload);
+      setStatus('Invio domanda...', '');
+
       const response = await fetch('/api/tesseramento', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -286,7 +344,7 @@ permalink: /zingaristan/tesseramento/
       if (!response.ok) throw new Error(result.error || 'Invio non riuscito');
 
       window.localStorage.setItem('pczTesseramentoProvvisorio', JSON.stringify(payload));
-      setStatus('Domanda inviata. Controlla la tua email.', 'ok');
+      setStatus('Domanda inviata. Controlla la tua email: la tessera PNG è allegata.', 'ok');
       form.reset();
     } catch (error) {
       setStatus(error.message || 'Errore durante invio domanda.', 'error');
