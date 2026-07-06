@@ -1,10 +1,11 @@
-/* Editor preview: prevent long text/URLs from escaping the preview box. */
+/* Editor preview: prevent long text/URLs from escaping the preview box without splitting normal words. */
 .write-preview,
 .write-preview * {
   box-sizing: border-box !important;
   max-width: 100% !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  hyphens: none !important;
 }
 
 .write-preview {
@@ -23,23 +24,38 @@
 .write-preview pre,
 .write-preview code {
   white-space: pre-wrap !important;
-  overflow-wrap: anywhere !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
 }
 
-/* Published article: keep the text column clear of the right-side figure/photo area. */
+/* Published article: one clean readable column, no right-side image collision. */
+.article-page-format {
+  background: #fbfaf5 !important;
+}
+
 .article-format-inner {
-  width: min(760px, calc(100vw - var(--side, 64px) - 460px)) !important;
-  max-width: min(760px, calc(100vw - var(--side, 64px) - 460px)) !important;
+  width: min(760px, calc(100vw - var(--side, 64px) - 72px)) !important;
+  max-width: min(760px, calc(100vw - var(--side, 64px) - 72px)) !important;
   margin-left: clamp(22px, 5vw, 72px) !important;
   margin-right: auto !important;
+}
+
+body:has(.article-page-format) .bg-layer,
+body:has(.single-page) .bg-layer,
+body:has(.article-page-format) .bg-figure,
+body:has(.single-page) .bg-figure,
+body:has(.article-page-format)::before,
+body:has(.article-page-format)::after {
+  display: none !important;
 }
 
 .article-format-body,
 .article-format-head,
 .article-comments {
   max-width: 100% !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  hyphens: none !important;
 }
 
 .article-format-body p,
@@ -47,34 +63,85 @@
 .article-format-body blockquote,
 .article-format-body h1,
 .article-format-body h2,
-.article-format-body h3 {
+.article-format-body h3,
+.article-format-body h4,
+.article-format-body h5,
+.article-format-body h6 {
   max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  hyphens: none !important;
 }
 
 .article-format-body pre,
 .article-format-body code {
   white-space: pre-wrap !important;
-  overflow-wrap: anywhere !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
 }
 
 .article-format-body img,
 .article-format-body video,
 .article-format-body iframe {
   max-width: 100% !important;
+  height: auto !important;
 }
 
 @media (max-width: 1180px) {
   .article-format-inner {
-    width: min(720px, calc(100vw - var(--side, 64px) - 120px)) !important;
-    max-width: min(720px, calc(100vw - var(--side, 64px) - 120px)) !important;
+    width: min(720px, calc(100vw - var(--side, 64px) - 42px)) !important;
+    max-width: min(720px, calc(100vw - var(--side, 64px) - 42px)) !important;
   }
 }
 
 @media (max-width: 760px) {
+  body:has(.article-page-format),
+  body:has(.single-page),
+  body:has(.article-page-format) .site-main,
+  body:has(.single-page) .site-main {
+    overflow-x: hidden !important;
+  }
+
   .article-format-inner {
-    width: auto !important;
-    max-width: none !important;
-    margin-left: 18px !important;
-    margin-right: 10px !important;
+    width: calc(100vw - var(--side, 64px) - 28px) !important;
+    max-width: calc(100vw - var(--side, 64px) - 28px) !important;
+    margin-left: 14px !important;
+    margin-right: 14px !important;
+    padding-top: 16px !important;
+  }
+
+  .article-format-head,
+  .article-format-body,
+  .article-comments {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .article-format-body {
+    font-size: clamp(18px, 5.4vw, 22px) !important;
+    line-height: 1.52 !important;
+  }
+
+  .article-format-body p,
+  .article-format-body li,
+  .article-format-body blockquote {
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+  }
+
+  .article-format-body a,
+  .article-format-body code,
+  .article-format-body pre {
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .article-format-head h1 {
+    max-width: 100% !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
   }
 }
