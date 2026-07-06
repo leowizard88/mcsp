@@ -1,0 +1,22 @@
+.mc-account-user-avatar,
+.chat-avatar,
+.comment-avatar,
+.profile-avatar {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  filter: none !important;
+}
+
+.mc-account-button {
+  filter: none !important;
+}
+
+.mc-account-user-avatar,
+.chat-avatar,
+.comment-avatar,
+.profile-avatar {
+  display: block;
+  object-fit: cover;
+}
