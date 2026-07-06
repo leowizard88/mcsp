@@ -3,42 +3,50 @@ layout: base.njk
 title: MANCUSPIE
 ---
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400&display=swap');
 
   .hero-panel::after { display: none !important; }
 
   .hero-copy .child-title {
-    font-family: 'Coming Soon', 'Comic Sans MS', cursive;
-    font-size: clamp(74px, 12vw, 178px);
-    line-height: .82;
-    letter-spacing: -.045em;
-    font-weight: 400;
-    margin: 0 0 20px;
-    color: rgba(31,28,24,.72);
+    font-family: 'Gaegu', 'Comic Sans MS', cursive;
+    font-size: clamp(82px, 13vw, 192px);
+    line-height: .76;
+    letter-spacing: -.065em;
+    font-weight: 300;
+    margin: 0 0 22px;
+    color: transparent;
     text-transform: uppercase;
-    -webkit-text-stroke: .35px rgba(31,28,24,.38);
+    background-image:
+      repeating-linear-gradient(102deg, rgba(31,28,24,.66) 0 1px, rgba(31,28,24,.30) 1px 2px, transparent 2px 5px),
+      repeating-linear-gradient(14deg, rgba(31,28,24,.34) 0 1px, transparent 1px 4px),
+      radial-gradient(circle at 23% 37%, rgba(31,28,24,.50), transparent 2px),
+      radial-gradient(circle at 61% 64%, rgba(31,28,24,.36), transparent 2px);
+    background-size: 17px 100%, 31px 100%, 13px 11px, 19px 17px;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 0;
     text-shadow:
-      .7px .2px 0 rgba(31,28,24,.18),
-      -.45px .65px 0 rgba(31,28,24,.10),
-      .25px -.35px 0 rgba(31,28,24,.08);
-    filter: contrast(.92) saturate(.65);
+      .18px .12px 0 rgba(31,28,24,.18),
+      -.16px .22px 0 rgba(31,28,24,.10);
+    filter: contrast(1.12) grayscale(.25);
   }
 
   .child-title span {
     display: inline-block;
     transform-origin: 50% 70%;
-    opacity: .88;
+    opacity: .86;
   }
 
   .child-title .l1 { transform: rotate(-5deg) translateY(4px); }
-  .child-title .l2 { transform: rotate(3deg) translateY(-7px); opacity:.78; }
+  .child-title .l2 { transform: rotate(3deg) translateY(-7px); opacity:.74; }
   .child-title .l3 { transform: scaleX(-1) rotate(-7deg) translateY(8px); margin: 0 .015em; opacity:.82; }
-  .child-title .l4 { transform: rotate(6deg) translateY(-2px); }
-  .child-title .l5 { transform: rotate(-3deg) translateY(6px); opacity:.76; }
-  .child-title .l6 { transform: rotate(4deg) translateY(-5px); }
-  .child-title .l7 { transform: rotate(-6deg) translateY(4px); opacity:.84; }
-  .child-title .l8 { transform: rotate(2deg) translateY(-3px); opacity:.70; }
-  .child-title .l9 { transform: rotate(-4deg) translateY(5px); }
+  .child-title .l4 { transform: rotate(6deg) translateY(-2px); opacity:.79; }
+  .child-title .l5 { transform: rotate(-3deg) translateY(6px); opacity:.72; }
+  .child-title .l6 { transform: rotate(4deg) translateY(-5px); opacity:.83; }
+  .child-title .l7 { transform: rotate(-6deg) translateY(4px); opacity:.76; }
+  .child-title .l8 { transform: rotate(2deg) translateY(-3px); opacity:.64; }
+  .child-title .l9 { transform: rotate(-4deg) translateY(5px); opacity:.80; }
 
   .ultimi-movimenti-button {
     position: absolute;
@@ -70,7 +78,7 @@ title: MANCUSPIE
     100% { transform: translate(-1px, 0) rotate(-1.1deg); }
   }
   @media(max-width:760px){
-    .hero-copy .child-title{font-size:58px;letter-spacing:-.05em}
+    .hero-copy .child-title{font-size:64px;letter-spacing:-.07em}
     .ultimi-movimenti-button{width:215px !important;right:10px;bottom:16px;opacity:.9}
   }
 </style>
