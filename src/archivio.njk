@@ -4,30 +4,25 @@ title: Archivio | MANCUSPIE
 permalink: /archivio/
 ---
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap');
-
   .archive-system-page {
     min-height: 100vh;
     background:
-      linear-gradient(90deg, transparent 0 8px, rgba(92,0,130,.18) 8px 9px, transparent 9px 37px),
-      linear-gradient(90deg, transparent 0 21px, rgba(126,30,180,.13) 21px 22px, transparent 22px 64px),
-      linear-gradient(90deg, transparent 0 43px, rgba(44,0,92,.20) 43px 44px, transparent 44px 91px),
+      repeating-linear-gradient(90deg, transparent 0 31px, rgba(79, 0, 112, .16) 31px 32px, transparent 32px 83px),
+      repeating-linear-gradient(90deg, transparent 0 67px, rgba(119, 35, 154, .11) 67px 68px, transparent 68px 151px),
+      repeating-linear-gradient(90deg, transparent 0 109px, rgba(37, 0, 78, .20) 109px 110px, transparent 110px 229px),
       #8b0000;
-    background-size: 113px 100%, 173px 100%, 251px 100%, auto;
-    padding: clamp(42px, 6vw, 88px);
-    color: #050000;
+    padding: clamp(42px, 6vw, 90px);
+    color: #090000;
     overflow: hidden;
   }
 
   .archive-system-page::before,
-  .archive-system-page::after {
-    display: none !important;
-  }
+  .archive-system-page::after { display: none !important; }
 
   .archive-system-inner {
     position: relative;
     z-index: 4;
-    max-width: 1120px;
+    max-width: 1180px;
     margin: 0 auto;
   }
 
@@ -35,94 +30,94 @@ permalink: /archivio/
     display: flex;
     align-items: end;
     justify-content: space-between;
-    gap: 24px;
-    border-bottom: 1px solid rgba(5,0,0,.42);
-    padding-bottom: 22px;
-    margin-bottom: clamp(28px, 4vw, 58px);
+    gap: clamp(24px, 5vw, 90px);
+    border-bottom: 1px solid rgba(9,0,0,.34);
+    padding-bottom: clamp(22px, 3.5vw, 44px);
+    margin-bottom: clamp(38px, 6vw, 82px);
   }
 
   .archive-system-head h1 {
     margin: 0;
-    font-family: 'Metal Mania', fantasy;
-    font-size: clamp(78px, 13vw, 194px);
-    line-height: .70;
-    font-weight: 400;
-    letter-spacing: .050em;
+    font-family: var(--font-serif);
+    font-size: clamp(70px, 12vw, 174px);
+    line-height: .78;
+    font-weight: 300;
+    letter-spacing: .04em;
     text-transform: uppercase;
-    color: #050000;
-    -webkit-text-fill-color: #050000;
-    -webkit-text-stroke: 0;
-    text-shadow: none;
-    transform: scaleX(.36) skewX(-9deg) rotate(-1deg);
+    color: #090000;
+    transform: skewX(-9deg) rotate(-1deg);
     transform-origin: left bottom;
-    clip-path: polygon(0 0,100% 0,100% 10%,86% 10%,86% 15%,100% 15%,100% 30%,72% 30%,72% 34%,100% 34%,100% 50%,91% 50%,91% 55%,100% 55%,100% 72%,78% 72%,78% 77%,100% 77%,100% 100%,0 100%,0 84%,12% 84%,12% 78%,0 78%,0 57%,8% 57%,8% 52%,0 52%,0 35%,18% 35%,18% 30%,0 30%);
+    font-style: italic;
+  }
+
+  .archive-system-head h1::first-letter {
+    letter-spacing: -.06em;
   }
 
   .archive-back {
     font: 300 11px/1 var(--font-sans);
-    letter-spacing: .14em;
+    letter-spacing: .16em;
     text-transform: uppercase;
-    color: #050000;
-    border-bottom: 1px solid currentColor;
-    padding-bottom: 7px;
+    color: #090000;
+    border-bottom: 1px solid rgba(9,0,0,.55);
+    padding-bottom: 8px;
     white-space: nowrap;
   }
 
   .archive-chronology {
     display: grid;
-    gap: 0;
+    gap: clamp(18px, 3vw, 42px);
   }
 
   .archive-row {
     display: grid;
-    grid-template-columns: minmax(110px, 160px) 1fr minmax(110px, 180px);
-    gap: clamp(18px, 3vw, 50px);
+    grid-template-columns: minmax(112px, 160px) 1fr minmax(108px, 170px);
+    gap: clamp(20px, 4vw, 72px);
     align-items: baseline;
-    padding: clamp(18px, 2.5vw, 32px) 0;
-    border-bottom: 1px solid rgba(5,0,0,.34);
-    color: #050000;
+    padding: 0 0 clamp(20px, 2.8vw, 38px);
+    border-bottom: 1px solid rgba(9,0,0,.28);
+    color: #090000;
   }
 
   .archive-row time,
   .archive-row em {
-    font: 300 12px/1.2 var(--font-sans);
-    letter-spacing: .12em;
+    font: 300 11px/1.25 var(--font-sans);
+    letter-spacing: .15em;
     text-transform: uppercase;
-    color: rgba(5,0,0,.72);
+    color: rgba(9,0,0,.64);
     font-style: normal;
   }
 
   .archive-row strong {
-    font-family: 'Metal Mania', fantasy;
-    font-size: clamp(40px, 5.9vw, 88px);
-    line-height: .76;
-    font-weight: 400;
-    letter-spacing: .052em;
+    font-family: var(--font-serif);
+    font-size: clamp(34px, 5.4vw, 82px);
+    line-height: .86;
+    font-weight: 300;
+    letter-spacing: .015em;
     text-transform: uppercase;
-    color: #050000;
-    -webkit-text-fill-color: #050000;
+    color: #090000;
     display: inline-block;
-    -webkit-text-stroke: 0;
-    text-shadow: none;
-    transform: scaleX(.34) skewX(-8deg) rotate(.35deg);
+    font-style: italic;
+    transform: skewX(-7deg) rotate(.35deg);
     transform-origin: left center;
-    clip-path: polygon(0 0,100% 0,100% 9%,84% 9%,84% 14%,100% 14%,100% 25%,68% 25%,68% 30%,100% 30%,100% 42%,89% 42%,89% 47%,100% 47%,100% 62%,76% 62%,76% 68%,100% 68%,100% 100%,0 100%,0 86%,11% 86%,11% 80%,0 80%,0 58%,16% 58%,16% 52%,0 52%,0 32%,9% 32%,9% 26%,0 26%);
   }
 
-  .archive-row:hover {
-    background: rgba(76,0,120,.10);
+  .archive-row:nth-child(even) strong {
+    transform: skewX(6deg) rotate(-.5deg);
+    letter-spacing: .035em;
   }
 
-  .archive-row:hover strong {
-    transform: scaleX(.34) skewX(-8deg) translateX(8px) rotate(-.35deg);
-    clip-path: polygon(0 0,100% 0,100% 12%,74% 12%,74% 17%,100% 17%,100% 31%,86% 31%,86% 38%,100% 38%,100% 54%,63% 54%,63% 60%,100% 60%,100% 100%,0 100%,0 76%,18% 76%,18% 69%,0 69%,0 46%,10% 46%,10% 39%,0 39%);
-  }
+  .archive-row:hover { background: rgba(68,0,100,.10); }
+  .archive-row:hover strong { transform: skewX(-11deg) translateX(8px); }
+  .archive-row:nth-child(even):hover strong { transform: skewX(10deg) translateX(8px); }
 
   @media(max-width:760px){
-    .archive-system-page{padding:34px 22px;background-size:79px 100%,121px 100%,171px 100%,auto}
+    .archive-system-page{padding:34px 22px}
     .archive-system-head{display:block}
-    .archive-back{display:inline-block;margin-top:20px}
+    .archive-system-head h1{font-size:clamp(50px,16vw,82px)}
+    .archive-back{display:inline-block;margin-top:22px}
     .archive-row{grid-template-columns:1fr;gap:8px}
+    .archive-row strong{font-size:clamp(34px,10vw,54px)}
   }
 </style>
 
