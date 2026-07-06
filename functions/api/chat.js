@@ -10,6 +10,7 @@ const clean = value => String(value || '')
   .replace(/[\u0000-\u001f\u007f]/g, ' ')
   .replace(/\s+/g, ' ')
   .trim();
+const usernameKey = value => clean(value).toLowerCase();
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: HEADERS });
 const bearer = request => {
@@ -17,15 +18,23 @@ const bearer = request => {
   if (auth.toLowerCase().startsWith('bearer ')) return auth.slice(7).trim();
   return request.headers.get('x-mancuspie-token') || '';
 };
+const publicUserByName = async (env, name) => {
+  const key = usernameKey(name);
+  if (!env.CHAT_MESSAGES || !key || key === 'anonimo') return null;
+  const id = await env.CHAT_MESSAGES.get(`auth:username:${key}`).catch(() => null);
+  if (!id) return null;
+  return await env.CHAT_MESSAGES.get(`auth:user:${id}`, 'json').catch(() => null);
+};
 const userFromSession = async (env, request) => {
   const token = bearer(request);
-  if (!env.CHAT_MESSAGES || !token) return { name: 'Anonimo', avatar: '' };
+  if (!env.CHAT_MESSAGES || !token) return { name: 'Anonimo', avatar: '', userId: '' };
   const session = await env.CHAT_MESSAGES.get(`auth:session:${token}`, 'json').catch(() => null);
-  if (!session?.userId) return { name: 'Anonimo', avatar: '' };
+  if (!session?.userId) return { name: 'Anonimo', avatar: '', userId: '' };
   const user = await env.CHAT_MESSAGES.get(`auth:user:${session.userId}`, 'json').catch(() => null);
   return {
     name: clean(user?.username).slice(0, 24) || 'Anonimo',
-    avatar: String(user?.avatar || '').slice(0, 450000)
+    avatar: String(user?.avatar || '').slice(0, 450000),
+    userId: user?.id || session.userId || ''
   };
 };
 
@@ -39,6 +48,21 @@ async function readMessages(env) {
   }
 }
 
+async function hydrateProfiles(env, messages) {
+  if (!env.CHAT_MESSAGES || !Array.isArray(messages) || !messages.length) return messages || [];
+  const names = [...new Set(messages.map(message => clean(message.name)).filter(name => name && name.toLowerCase() !== 'anonimo'))];
+  const users = new Map();
+  await Promise.all(names.map(async name => {
+    const user = await publicUserByName(env, name);
+    if (user) users.set(usernameKey(name), user);
+  }));
+  return messages.map(message => {
+    const user = users.get(usernameKey(message.name));
+    if (!user) return { ...message, avatar: '' };
+    return { ...message, name: clean(user.username).slice(0, 24), avatar: String(user.avatar || '').slice(0, 450000), userId: user.id || message.userId || '' };
+  });
+}
+
 async function writeMessages(env, messages) {
   if (!env.CHAT_MESSAGES) return false;
   await env.CHAT_MESSAGES.put(STORE_KEY, JSON.stringify(messages.slice(-MAX_MESSAGES)));
@@ -46,7 +70,7 @@ async function writeMessages(env, messages) {
 }
 
 export async function onRequestGet({ env }) {
-  const messages = await readMessages(env);
+  const messages = await hydrateProfiles(env, await readMessages(env));
   return json({ messages });
 }
 
@@ -76,6 +100,7 @@ export async function onRequestPost({ request, env }) {
   messages.push({
     id: crypto.randomUUID(),
     parentId,
+    userId: user.userId,
     name: user.name,
     avatar: user.avatar,
     text,
@@ -83,5 +108,5 @@ export async function onRequestPost({ request, env }) {
   });
   await writeMessages(env, messages);
 
-  return json({ messages: messages.slice(-MAX_MESSAGES) }, 201);
+  return json({ messages: await hydrateProfiles(env, messages.slice(-MAX_MESSAGES)) }, 201);
 }
