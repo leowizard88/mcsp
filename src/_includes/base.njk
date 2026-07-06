@@ -6,6 +6,14 @@
   <title>{{ title or site.title }}</title>
   <meta name="description" content="{{ site.subtitle }}">
   <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    html, body, .site-main { background: #f6f2e8; }
+    .site-main > .panel:not(.archive-system-page):not(.ultimi-page) { background: #f6f2e8; }
+    .site-main > .panel:not(.archive-system-page):not(.ultimi-page)::before {
+      display: block;
+      background: linear-gradient(115deg, #f6f2e8, #ebe4d5) !important;
+    }
+  </style>
 </head>
 <body>
   <aside class="side-index" aria-label="Indice principale">
@@ -43,7 +51,7 @@
         }
 
         if (!user && window.location.hash.indexOf("recovery_token") !== -1) {
-          window.netlifyIdentity.open("recovery");
+          window.location.href = "/admin/";
         }
       });
 
