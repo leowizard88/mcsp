@@ -29,11 +29,12 @@ permalink: /profilo/
   const fileToDataUrl = file => new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(file); });
   const roleLabel = user => user?.isRedattore ? 'redattore' : 'user';
   const loadArticles = async () => {
-    if (Array.isArray(window.MANCUSPIE_ARTICOLI)) { ARTICLES = window.MANCUSPIE_ARTICOLI; return; }
     try {
-      const response = await fetch('/articoli.json', { cache: 'no-store' });
+      const response = await fetch(`/articoli.json?v=${Date.now()}`, { cache: 'no-store' });
       ARTICLES = response.ok ? await response.json() : [];
+      if (ARTICLES.length) return;
     } catch { ARTICLES = []; }
+    if (Array.isArray(window.MANCUSPIE_ARTICOLI)) ARTICLES = window.MANCUSPIE_ARTICOLI;
   };
   const articlesHtml = username => {
     const items = ARTICLES.filter(item => norm(item.author) === norm(username));
@@ -41,13 +42,8 @@ permalink: /profilo/
     return `<section class="profile-articles"><h2>Articoli scritti:</h2>${items.length ? `<ul class="profile-articles-list">${list}</ul>` : '<p class="profile-status">Nessun articolo pubblicato.</p>'}</section>`;
   };
 
-  const loggedOut = message => {
-    root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">${esc(message || 'Non risulti loggato su questo browser.')}</p><div class="profile-actions"><a class="profile-login-link" href="/">Torna alla home e accedi dall’icona</a></div></div></div>`;
-  };
-
-  const renderPublicUser = user => {
-    root.innerHTML = `<p class="profile-kicker">Profilo pubblico</p><h1>Profilo</h1><div class="profile-card profile-public-card"><div class="profile-left"><img class="profile-avatar" src="${esc(user.avatar || '')}" alt="Foto profilo"><p class="profile-role">${esc(roleLabel(user))}</p></div><div class="profile-right"><p class="profile-username">${esc(user.username)}</p><p class="profile-bio-public">${esc(user.bio || 'Nessuna descrizione pubblicata.')}</p><div class="profile-actions"><a href="/">Home</a></div></div>${articlesHtml(user.username)}</div>`;
-  };
+  const loggedOut = message => { root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">${esc(message || 'Non risulti loggato su questo browser.')}</p><div class="profile-actions"><a class="profile-login-link" href="/">Torna alla home e accedi dall’icona</a></div></div></div>`; };
+  const renderPublicUser = user => { root.innerHTML = `<p class="profile-kicker">Profilo pubblico</p><h1>Profilo</h1><div class="profile-card profile-public-card"><div class="profile-left"><img class="profile-avatar" src="${esc(user.avatar || '')}" alt="Foto profilo"><p class="profile-role">${esc(roleLabel(user))}</p></div><div class="profile-right"><p class="profile-username">${esc(user.username)}</p><p class="profile-bio-public">${esc(user.bio || 'Nessuna descrizione pubblicata.')}</p><div class="profile-actions"><a href="/">Home</a></div></div>${articlesHtml(user.username)}</div>`; };
 
   const renderOwnUser = user => {
     const redattoreTools = user.isRedattore ? `<div class="profile-actions"><a class="writer-link" href="/scrivi/">Scrivi un articolo</a></div>` : `<div class="sec-box"><label class="profile-field">Codice SEC <div class="sec-row"><input data-sec-code type="text" maxlength="120" placeholder="codice monouso"><button type="button" data-sec-submit>Invia codice</button></div></label><p>Il codice SEC monouso abilita il permesso redattore.</p></div>`;
