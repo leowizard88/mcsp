@@ -1,9 +1,8 @@
 [
-  { "label": "Home", "url": "/#home" },
-  { "label": "Call", "url": "/#call" },
-  { "label": "Testi", "url": "/#testi" },
-  { "label": "Manifesti", "url": "/#note" },
   { "label": "Latest drama", "url": "/ultimi-movimenti/" },
+  { "label": "Call", "url": "/#call" },
+  { "label": "Testi in<br>primo piano", "url": "/#testi" },
+  { "label": "Manifesti", "url": "/#note" },
   { "label": "Noi", "url": "/#noi" },
-  { "label": "Progetti", "url": "/#progetti" }
+  { "label": "Altri progetti", "url": "/#progetti" }
 ]
