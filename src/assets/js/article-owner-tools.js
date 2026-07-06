@@ -4,25 +4,38 @@
   const headers = () => token() ? { authorization: `Bearer ${token()}` } : {};
   const esc = value => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
   const norm = value => String(value || '').trim().toLowerCase();
+  const cleanSourcePath = value => String(value || '').replace(/^\.\//, '');
+  const pathNow = () => location.pathname.endsWith('/') ? location.pathname : `${location.pathname}/`;
 
   const style = document.createElement('style');
   style.textContent = `
     .article-owner-tools{margin:22px 0 0;display:none;gap:10px;align-items:center;flex-wrap:wrap;font-family:var(--font-sans,system-ui,sans-serif)}
-    .article-owner-tools.is-visible{display:flex}
+    .article-owner-tools.is-visible{display:flex!important}
     .article-owner-tools button{border:0;background:#8b0000;color:#fbfaf5;padding:11px 13px;font:700 10px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.15em;text-transform:uppercase;cursor:pointer}
     .article-owner-tools span{font-size:13px;color:#6b0000}
   `;
   document.head.appendChild(style);
 
+  const domArticle = () => {
+    const authorLine = document.querySelector('.article-format-author')?.childNodes?.[0]?.textContent?.trim() || '';
+    const title = document.querySelector('.article-format-head h1')?.textContent?.trim() || 'articolo';
+    return { author: authorLine, title };
+  };
+
   const currentArticle = () => {
-    const path = location.pathname.endsWith('/') ? location.pathname : `${location.pathname}/`;
-    return (window.MANCUSPIE_ARTICOLI || []).find(item => item.url === path || item.url === location.pathname);
+    const path = pathNow();
+    const fromData = (window.MANCUSPIE_ARTICOLI || []).find(item => item.url === path || item.url === location.pathname);
+    if (fromData) return { ...fromData, sourcePath: cleanSourcePath(fromData.sourcePath) };
+    const slug = path.split('/').filter(Boolean).pop() || '';
+    const d = domArticle();
+    return { ...d, url: path, sourcePath: `src/content/testi/${slug}.md` };
   };
 
   const init = async () => {
-    const article = currentArticle();
     const host = document.querySelector('.article-format-head') || document.querySelector('.single-inner');
-    if (!article || !host || !token()) return;
+    if (!host || host.querySelector('.article-owner-tools') || !token()) return;
+    const article = currentArticle();
+    if (!article?.author) return;
     const response = await fetch('/api/auth', { headers: headers(), cache: 'no-store' });
     const data = await response.json().catch(() => ({}));
     const user = data.user;
