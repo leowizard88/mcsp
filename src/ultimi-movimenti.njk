@@ -4,6 +4,12 @@ title: Ultimi movimenti | MANCUSPIE
 permalink: /ultimi-movimenti/
 ---
 <style>
+  html:has(.ultimi-page),
+  body:has(.ultimi-page),
+  .site-main:has(.ultimi-page) {
+    background: #050000 !important;
+  }
+
   .ultimi-page {
     min-height: 100vh;
     min-height: 100svh;
@@ -16,6 +22,7 @@ permalink: /ultimi-movimenti/
     display: block;
     padding: clamp(34px, 5vw, 70px) clamp(20px, 4vw, 56px);
     overflow: hidden;
+    margin: 0;
   }
 
   .ultimi-bg-figure {
