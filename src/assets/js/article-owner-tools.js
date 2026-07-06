@@ -17,7 +17,10 @@
   document.head.appendChild(style);
 
   const domArticle = () => {
-    const authorLine = document.querySelector('.article-format-author')?.childNodes?.[0]?.textContent?.trim() || '';
+    const authorNode = document.querySelector('.article-format-author');
+    const clone = authorNode ? authorNode.cloneNode(true) : null;
+    clone?.querySelectorAll('span').forEach(span => span.remove());
+    const authorLine = clone?.textContent?.trim() || '';
     const title = document.querySelector('.article-format-head h1')?.textContent?.trim() || 'articolo';
     return { author: authorLine, title };
   };
