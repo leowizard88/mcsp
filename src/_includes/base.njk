@@ -7,11 +7,21 @@
   <meta name="description" content="{{ site.subtitle }}">
   <link rel="stylesheet" href="/assets/css/style.css">
   <style>
-    html, body, .site-main { background: #f6f2e8; }
-    .site-main > .panel:not(.archive-system-page):not(.ultimi-page) { background: #f6f2e8; }
+    html,
+    body,
+    .site-main {
+      background: #f1e5c9 !important;
+    }
+
+    .site-main > .panel:not(.archive-system-page):not(.ultimi-page) {
+      background: #f1e5c9 !important;
+    }
+
     .site-main > .panel:not(.archive-system-page):not(.ultimi-page)::before {
-      display: block;
-      background: linear-gradient(115deg, #f6f2e8, #ebe4d5) !important;
+      display: block !important;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(255,255,255,.34), transparent 34%),
+        linear-gradient(115deg, #f3ead4 0%, #eadbbd 100%) !important;
     }
   </style>
 </head>
