@@ -47,7 +47,7 @@ permalink: /zingaristan/
     position: absolute !important;
     inset: 0 !important;
     display: block !important;
-    background: radial-gradient(circle at 50% 36%, rgba(0,0,0,.04), rgba(0,0,0,.34) 76%), linear-gradient(90deg, rgba(0,0,0,.40), rgba(0,0,0,.08), rgba(0,0,0,.42)) !important;
+    background: linear-gradient(90deg, rgba(0,0,0,.16), rgba(0,0,0,0), rgba(0,0,0,.18)) !important;
     pointer-events: none !important;
     z-index: 1 !important;
   }
@@ -74,7 +74,7 @@ permalink: /zingaristan/
     width: min(980px, 90vw);
     height: clamp(160px, 29vw, 330px);
     overflow: visible;
-    filter: drop-shadow(0 4px 0 rgba(0,0,0,.22)) drop-shadow(0 0 12px rgba(255,224,0,.12));
+    filter: drop-shadow(0 2px 0 rgba(0,0,0,.16));
   }
 
   .zingaristan-title text {
@@ -84,8 +84,8 @@ permalink: /zingaristan/
     letter-spacing: .055em;
     text-transform: uppercase;
     paint-order: stroke fill;
-    stroke: rgba(0,0,0,.32);
-    stroke-width: 1.55px;
+    stroke: rgba(0,0,0,.22);
+    stroke-width: 1.15px;
   }
 
   .zingaristan-title .z-black { fill: #050505; }
@@ -100,7 +100,7 @@ permalink: /zingaristan/
     font-size: clamp(15px, 2.2vw, 30px);
     letter-spacing: .28em;
     text-transform: uppercase;
-    text-shadow: 0 2px 5px rgba(0,0,0,.55);
+    text-shadow: 0 1px 2px rgba(0,0,0,.36);
   }
 
   .zingaristan-actions {
@@ -117,21 +117,21 @@ permalink: /zingaristan/
     place-items: center;
     padding: 18px 14px;
     border: 2px solid rgba(255,211,26,.82);
-    background: linear-gradient(180deg, rgba(5,5,5,.58), rgba(8,58,146,.40));
+    background: linear-gradient(180deg, rgba(5,5,5,.42), rgba(8,58,146,.30));
     color: #ffd31a !important;
     font-family: var(--font-sans);
     font-size: clamp(12px, 1.5vw, 17px);
     letter-spacing: .15em;
     text-transform: uppercase;
     text-decoration: none !important;
-    box-shadow: 0 7px 18px rgba(0,0,0,.28), inset 0 0 0 1px rgba(25,183,61,.36);
+    box-shadow: 0 4px 10px rgba(0,0,0,.18), inset 0 0 0 1px rgba(25,183,61,.30);
   }
 
   .zingaristan-button.is-disabled {
-    opacity: .70;
+    opacity: .78;
     cursor: default;
     pointer-events: none;
-    filter: grayscale(.15);
+    filter: grayscale(.08);
   }
 
   .zingaristan-button:hover {
@@ -141,28 +141,31 @@ permalink: /zingaristan/
 
   @media(max-width:760px) {
     .zingaristan-home {
-      padding: 22px 10px !important;
+      padding: 20px 8px !important;
       place-items: center !important;
       background-position: center center !important;
     }
+    .zingaristan-home::before {
+      background: linear-gradient(90deg, rgba(0,0,0,.08), rgba(0,0,0,0), rgba(0,0,0,.10)) !important;
+    }
     .zingaristan-portal {
       width: 100%;
-      max-width: calc(100vw - 20px);
+      max-width: calc(100vw - 16px);
       min-height: 78svh;
-      overflow: hidden;
+      overflow: visible;
     }
-    .zingaristan-title-wrap { padding-top: 18px; overflow: hidden; }
+    .zingaristan-title-wrap { padding-top: 14px; overflow: visible; }
     .zingaristan-title {
       width: 100%;
       max-width: 100%;
-      height: 190px;
+      height: 250px;
       overflow: visible;
       transform: none;
     }
-    .zingaristan-title text { font-size: 50px; letter-spacing: .01em; stroke-width: 1.1px; }
-    .zingaristan-official { margin-top: -34px; font-size: 13px; letter-spacing: .18em; }
-    .zingaristan-actions { grid-template-columns: 1fr; gap: 12px; margin-top: 42px; }
-    .zingaristan-button { min-height: 52px; padding: 14px 12px; }
+    .zingaristan-title text { font-size: 70px; letter-spacing: .012em; stroke-width: 1px; }
+    .zingaristan-official { margin-top: -50px; font-size: 14px; letter-spacing: .16em; }
+    .zingaristan-actions { grid-template-columns: 1fr; gap: 12px; margin-top: 44px; }
+    .zingaristan-button { min-height: 52px; padding: 14px 12px; background: linear-gradient(180deg, rgba(5,5,5,.34), rgba(8,58,146,.24)); }
   }
 </style>
 
