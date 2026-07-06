@@ -34,7 +34,7 @@ permalink: /archivio/
   .archive-system-inner {
     position: relative;
     z-index: 4;
-    max-width: 1180px;
+    max-width: 1060px;
     margin: 0 auto;
   }
 
@@ -113,49 +113,69 @@ permalink: /archivio/
     color: rgba(9,0,0,.68);
   }
 
-  .archive-chronology { display: grid; gap: clamp(18px, 3vw, 42px); }
+  .archive-chronology { display: grid; gap: 0; }
 
   .archive-row {
     display: grid;
-    grid-template-columns: minmax(112px, 160px) 1fr minmax(108px, 190px);
-    gap: clamp(20px, 4vw, 72px);
-    align-items: baseline;
-    padding: 0 0 clamp(20px, 2.8vw, 38px);
+    grid-template-columns: 96px minmax(0, 1fr) 150px;
+    gap: 28px;
+    align-items: start;
+    min-width: 0;
+    width: 100%;
+    padding: 20px 0 22px;
     border-bottom: 1px solid rgba(9,0,0,.28);
     color: #090000;
+    overflow: hidden;
+  }
+
+  .archive-row > div {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .archive-row time,
   .archive-row em,
   .archive-row small {
-    font: 300 11px/1.25 var(--font-sans);
+    font: 300 11px/1.35 var(--font-sans);
     letter-spacing: .15em;
     text-transform: uppercase;
     color: rgba(9,0,0,.64);
     font-style: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
   }
+
+  .archive-row em { max-width: 150px; }
 
   .archive-row strong {
     font-family: var(--font-serif);
-    font-size: clamp(34px, 5.4vw, 82px);
-    line-height: .86;
+    font-size: clamp(24px, 2.7vw, 42px);
+    line-height: 1.12;
     font-weight: 300;
-    letter-spacing: .018em;
-    text-transform: uppercase;
+    letter-spacing: 0;
+    text-transform: none;
     color: #090000;
-    display: inline-block;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    hyphens: none;
   }
 
   .archive-row span {
     display: block;
     margin-top: 8px;
-    max-width: 760px;
-    font: 300 clamp(17px, 2vw, 27px)/1.1 var(--font-serif);
+    max-width: 100%;
+    font: 300 clamp(14px, 1.15vw, 18px)/1.25 var(--font-serif);
     color: rgba(9,0,0,.72);
+    overflow-wrap: anywhere;
+    word-break: normal;
   }
 
   .archive-row:hover { background: rgba(68,0,100,.10); }
-  .archive-row:hover strong { transform: translateX(8px); }
+  .archive-row:hover strong { transform: none; }
   .archive-empty { font: 300 24px/1.1 var(--font-serif); }
 
   @media(max-width:760px){
