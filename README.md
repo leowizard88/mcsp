@@ -1,4 +1,4 @@
-# MANCUSPIE · Netlify + Decap CMS
+# MANCUSPIE · Netlify + Decap CMS m
 
 Questa è la cartella pulita. Niente sottocartelle-trappola.
 
