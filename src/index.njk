@@ -8,14 +8,17 @@ title: MANCUSPIE
   .hero-panel::after { display: none !important; }
 
   .hero-copy .child-title {
+    display: inline-block;
+    max-width: 100%;
     font-family: 'Gaegu', 'Comic Sans MS', cursive;
-    font-size: clamp(82px, 13vw, 192px);
+    font-size: clamp(78px, 12.2vw, 184px);
     line-height: .76;
-    letter-spacing: -.065em;
+    letter-spacing: -.075em;
     font-weight: 300;
     margin: 0 0 22px;
     color: #050505;
     text-transform: uppercase;
+    white-space: nowrap;
     background: none;
     -webkit-background-clip: initial;
     background-clip: initial;
@@ -33,13 +36,13 @@ title: MANCUSPIE
 
   .child-title .l1 { transform: rotate(-5deg) translateY(4px) scaleX(.92); }
   .child-title .l2 { transform: rotate(3deg) translateY(-7px) scaleX(.90); opacity:1; }
-  .child-title .l3 { transform: scaleX(-.92) rotate(-7deg) translateY(8px); margin: 0 .015em; opacity:1; }
+  .child-title .l3 { transform: scaleX(-.92) rotate(-7deg) translateY(8px); margin: 0 .006em; opacity:1; }
   .child-title .l4 { transform: rotate(6deg) translateY(-2px) scaleX(.90); opacity:1; }
   .child-title .l5 { transform: rotate(-3deg) translateY(6px) scaleX(.92); opacity:1; }
   .child-title .l6 { transform: rotate(4deg) translateY(-5px) scaleX(.90); opacity:1; }
   .child-title .l7 { transform: rotate(-6deg) translateY(4px) scaleX(.90); opacity:1; }
-  .child-title .l8 { transform: rotate(2deg) translateY(-3px) scaleX(.82); opacity:1; }
-  .child-title .l9 { transform: rotate(-4deg) translateY(5px) scaleX(.90); opacity:1; }
+  .child-title .l8 { transform: rotate(2deg) translateY(-3px) scaleX(.80); opacity:1; }
+  .child-title .l9 { transform: rotate(-4deg) translateY(5px) scaleX(.88); opacity:1; }
 
   .ultimi-movimenti-button {
     position: absolute;
@@ -71,7 +74,7 @@ title: MANCUSPIE
     100% { transform: translate(-1px, 0) rotate(-1.1deg); }
   }
   @media(max-width:760px){
-    .hero-copy .child-title{font-size:64px;letter-spacing:-.07em}
+    .hero-copy .child-title{font-size:clamp(49px,13.2vw,64px);letter-spacing:-.09em;white-space:nowrap}
     .ultimi-movimenti-button{width:215px !important;right:10px;bottom:16px;opacity:.9}
   }
 </style>
