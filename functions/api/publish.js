@@ -1,6 +1,6 @@
 const HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' };
 const REPO = 'leowizard88/mcsp';
-const TYPES = new Set(['racconto', 'romanzo', 'visivo', 'marginalia', 'impressioni', 'notizie', 'manifesto', 'saggio']);
+const TYPES = new Set(['racconto', 'romanzo', 'visivo', 'marginalia', 'impressioni', 'notizie', 'manifesto', 'saggio', 'idee']);
 const MAX_BODY = 120000;
 const MAX_FILE = 2800000;
 
