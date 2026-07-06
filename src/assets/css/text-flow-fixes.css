@@ -20,6 +20,61 @@
   white-space: pre-wrap !important;
 }
 
+/* Desktop archive: keep long titles inside their own boxes. */
+@media (min-width: 761px) {
+  .archive-page:not(:has(.article-format-inner)) {
+    overflow-x: hidden !important;
+  }
+
+  .archive-page:not(:has(.article-format-inner)) .archive-inner {
+    width: min(980px, calc(100vw - var(--side, 44px) - 180px)) !important;
+    max-width: min(980px, calc(100vw - var(--side, 44px) - 180px)) !important;
+    margin-left: clamp(48px, 7vw, 118px) !important;
+    margin-right: auto !important;
+    padding-right: 0 !important;
+  }
+
+  .archive-page:not(:has(.article-format-inner)) .archive-item {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(130px, 220px) !important;
+    grid-template-areas: "title author" "excerpt excerpt" !important;
+    column-gap: clamp(24px, 3vw, 46px) !important;
+    row-gap: 10px !important;
+    align-items: start !important;
+    padding: 22px 0 24px !important;
+    min-width: 0 !important;
+  }
+
+  .archive-page:not(:has(.article-format-inner)) .archive-item span {
+    grid-area: title !important;
+    display: block !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    font-size: clamp(28px, 2.4vw, 42px) !important;
+    line-height: 1.02 !important;
+    letter-spacing: -.012em !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+  }
+
+  .archive-page:not(:has(.article-format-inner)) .archive-item em {
+    grid-area: author !important;
+    justify-self: end !important;
+    max-width: 220px !important;
+    text-align: right !important;
+    line-height: 1.25 !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .archive-page:not(:has(.article-format-inner)) .archive-item p {
+    grid-area: excerpt !important;
+    max-width: 720px !important;
+    margin: 0 !important;
+    line-height: 1.35 !important;
+  }
+}
+
 /* Articles: stable moving ornament column. */
 body:has(.article-page-format) {
   --article-ornament-width: clamp(150px, 15.5vw, 232px);
@@ -47,11 +102,27 @@ body:has(.article-page-format) .article-page-format::after {
 
 .article-format-inner,
 .single-inner.article-format-inner {
+  position: relative !important;
+  z-index: 2 !important;
   width: min(820px, calc(100vw - var(--side, 44px) - var(--article-ornament-width) - var(--article-ornament-gap) - 112px)) !important;
   max-width: min(820px, calc(100vw - var(--side, 44px) - var(--article-ornament-width) - var(--article-ornament-gap) - 112px)) !important;
   margin-left: clamp(18px, 5vw, 72px) !important;
   margin-right: auto !important;
   padding-right: 0 !important;
+}
+
+body:has(.article-format-inner)::before {
+  content: "" !important;
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: min(46vw, 620px) !important;
+  height: min(46vw, 620px) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  background: url('/assets/img/a0561d0149768168e5596018d4eb9eae.jpg') top right / contain no-repeat !important;
+  opacity: .055 !important;
+  mix-blend-mode: multiply !important;
 }
 
 .article-ornament-column {
@@ -162,6 +233,12 @@ body:has(.article-page-format) .article-page-format::after {
   .single-page,
   .article-page-format {
     overflow-x: hidden !important;
+  }
+
+  body:has(.article-format-inner)::before {
+    width: 72vw !important;
+    height: 72vw !important;
+    opacity: .04 !important;
   }
 
   body:has(.article-page-format) .site-main,
