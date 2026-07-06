@@ -1,0 +1,267 @@
+---
+layout: base.njk
+title: Tesseramento PCZ
+permalink: /zingaristan/tesseramento/
+---
+<style>
+  html,
+  body,
+  .site-main,
+  body:has(.pcz-tesseramento),
+  body:has(.pcz-tesseramento) .site-main,
+  .site-main:has(.pcz-tesseramento) {
+    background: #050505 !important;
+    background-image: none !important;
+  }
+
+  body:has(.pcz-tesseramento)::before,
+  body:has(.pcz-tesseramento)::after,
+  .site-main:has(.pcz-tesseramento)::before,
+  .site-main:has(.pcz-tesseramento)::after,
+  .pcz-tesseramento::after {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+  }
+
+  .pcz-tesseramento {
+    min-height: 100svh !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: clamp(24px, 4vw, 58px) clamp(14px, 4vw, 52px) !important;
+    position: relative !important;
+    display: grid !important;
+    place-items: center !important;
+    overflow-x: hidden !important;
+    background: #050505 url('/assets/img/416d96d6-6d37-4fd4-8a09-1dacc26d68fd.jpeg') center center / cover no-repeat !important;
+  }
+
+  .pcz-tesseramento::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    display: block !important;
+    background: linear-gradient(90deg, rgba(0,0,0,.34), rgba(0,0,0,.08), rgba(0,0,0,.38)) !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+  }
+
+  .pcz-form-card {
+    position: relative;
+    z-index: 2;
+    width: min(620px, 94vw);
+    padding: clamp(22px, 4vw, 42px);
+    background: rgba(250,248,240,.92);
+    border: 2px solid rgba(255,211,26,.72);
+    box-shadow: 0 18px 70px rgba(0,0,0,.38);
+    color: #151515;
+    font-family: var(--font-sans);
+  }
+
+  .pcz-form-card h1 {
+    margin: 0 0 8px;
+    color: #050505;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(36px, 8vw, 70px);
+    line-height: .9;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+  }
+
+  .pcz-form-card p {
+    margin: 0 0 24px;
+    color: #263252;
+    font-size: 14px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .pcz-form {
+    display: grid;
+    gap: 14px;
+  }
+
+  .pcz-field {
+    display: grid;
+    gap: 6px;
+  }
+
+  .pcz-field label,
+  .pcz-consenso legend {
+    font-size: 12px;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: #061a46;
+  }
+
+  .pcz-field input,
+  .pcz-field textarea {
+    width: 100%;
+    border: 1px solid rgba(6,26,70,.38);
+    background: rgba(255,255,255,.86);
+    color: #050505;
+    padding: 12px 12px;
+    font: 16px/1.35 var(--font-sans);
+    outline: none;
+  }
+
+  .pcz-field textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .pcz-field input:focus,
+  .pcz-field textarea:focus {
+    border-color: #083a92;
+    box-shadow: 0 0 0 3px rgba(8,58,146,.15);
+  }
+
+  .pcz-consenso {
+    margin: 4px 0 0;
+    padding: 12px;
+    border: 1px solid rgba(6,26,70,.32);
+    background: rgba(255,255,255,.48);
+  }
+
+  .pcz-choice-row {
+    display: flex;
+    gap: 22px;
+    margin-top: 10px;
+  }
+
+  .pcz-choice-row label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .pcz-submit {
+    margin-top: 12px;
+    min-height: 58px;
+    border: 2px solid rgba(6,26,70,.35);
+    background: rgba(5,5,5,.22);
+    color: rgba(5,5,5,.45);
+    font: 700 14px/1 var(--font-sans);
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    cursor: not-allowed;
+    transition: filter .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+  }
+
+  .pcz-submit.is-ready {
+    cursor: pointer;
+    border-color: #ffd31a;
+    background: linear-gradient(180deg, #19b73d, #083a92);
+    color: #ffd31a;
+    box-shadow: 0 0 18px rgba(255,211,26,.75), 0 0 34px rgba(25,183,61,.42);
+    filter: saturate(1.22);
+  }
+
+  .pcz-submit.is-ready:hover {
+    box-shadow: 0 0 24px rgba(255,211,26,.95), 0 0 50px rgba(25,183,61,.55);
+  }
+
+  .pcz-status {
+    min-height: 18px;
+    margin-top: 8px !important;
+    color: #061a46 !important;
+    text-transform: none !important;
+    letter-spacing: .02em !important;
+    font-size: 13px !important;
+  }
+
+  @media(max-width:760px) {
+    .pcz-tesseramento { padding: 18px 10px !important; }
+    .pcz-form-card { width: min(520px, 94vw); padding: 18px; }
+    .pcz-form-card h1 { font-size: 44px; }
+    .pcz-choice-row { gap: 18px; }
+  }
+</style>
+
+<section class="single-page pcz-tesseramento">
+  <article class="pcz-form-card">
+    <h1>Tesseramento</h1>
+    <p>Partito Comunista Zingaro</p>
+
+    <form class="pcz-form" data-pcz-form>
+      <div class="pcz-field">
+        <label for="pcz-nome">Nome</label>
+        <input id="pcz-nome" name="nome" type="text" autocomplete="given-name" required>
+      </div>
+
+      <div class="pcz-field">
+        <label for="pcz-cognome">Cognome</label>
+        <input id="pcz-cognome" name="cognome" type="text" autocomplete="family-name" required>
+      </div>
+
+      <div class="pcz-field">
+        <label for="pcz-email">Email</label>
+        <input id="pcz-email" name="email" type="email" autocomplete="email" required>
+      </div>
+
+      <div class="pcz-field">
+        <label for="pcz-note">Note personali</label>
+        <textarea id="pcz-note" name="note" required></textarea>
+      </div>
+
+      <fieldset class="pcz-consenso">
+        <legend>Acconsento a diventare compagno del PCZ</legend>
+        <div class="pcz-choice-row">
+          <label><input type="radio" name="consenso" value="si" required> Sì</label>
+          <label><input type="radio" name="consenso" value="no" required> No</label>
+        </div>
+      </fieldset>
+
+      <button class="pcz-submit" type="submit" disabled data-pcz-submit>Invia</button>
+      <p class="pcz-status" data-pcz-status></p>
+    </form>
+  </article>
+</section>
+
+<script>
+(() => {
+  const form = document.querySelector('[data-pcz-form]');
+  if (!form) return;
+
+  const submit = form.querySelector('[data-pcz-submit]');
+  const status = form.querySelector('[data-pcz-status]');
+  const fields = [...form.querySelectorAll('input[type="text"], input[type="email"], textarea')];
+
+  const isReady = () => {
+    const filled = fields.every(field => field.value.trim().length > 0);
+    const yes = form.querySelector('input[name="consenso"][value="si"]')?.checked;
+    const email = form.querySelector('input[type="email"]');
+    return filled && yes && email.validity.valid;
+  };
+
+  const sync = () => {
+    const ready = isReady();
+    submit.disabled = !ready;
+    submit.classList.toggle('is-ready', ready);
+  };
+
+  form.addEventListener('input', sync);
+  form.addEventListener('change', sync);
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (!isReady()) return;
+    const data = new FormData(form);
+    const payload = {
+      nome: data.get('nome'),
+      cognome: data.get('cognome'),
+      email: data.get('email'),
+      note: data.get('note'),
+      consenso: data.get('consenso')
+    };
+    window.localStorage.setItem('pczTesseramentoProvvisorio', JSON.stringify(payload));
+    status.textContent = 'Domanda registrata. Il sistema tessera arriverà nella fase successiva.';
+  });
+
+  sync();
+})();
+</script>
