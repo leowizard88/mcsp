@@ -43,6 +43,7 @@
     .vertical-nav a {
       color: #fff !important;
       opacity: .84 !important;
+      text-align: center !important;
     }
 
     .vertical-nav a:hover,
@@ -68,7 +69,7 @@
 
     <nav class="vertical-nav">
       {% for item in nav %}
-      <a href="{{ item.url }}">{{ item.label }}</a>
+      <a href="{{ item.url }}">{{ item.label | safe }}</a>
       {% endfor %}
     </nav>
   </aside>
