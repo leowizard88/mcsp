@@ -17,13 +17,16 @@ const bearer = request => {
   if (auth.toLowerCase().startsWith('bearer ')) return auth.slice(7).trim();
   return request.headers.get('x-mancuspie-token') || '';
 };
-const nameFromSession = async (env, request) => {
+const userFromSession = async (env, request) => {
   const token = bearer(request);
-  if (!env.CHAT_MESSAGES || !token) return 'Anonimo';
+  if (!env.CHAT_MESSAGES || !token) return { name: 'Anonimo', avatar: '' };
   const session = await env.CHAT_MESSAGES.get(`auth:session:${token}`, 'json').catch(() => null);
-  if (!session?.userId) return 'Anonimo';
+  if (!session?.userId) return { name: 'Anonimo', avatar: '' };
   const user = await env.CHAT_MESSAGES.get(`auth:user:${session.userId}`, 'json').catch(() => null);
-  return clean(user?.username).slice(0, 24) || 'Anonimo';
+  return {
+    name: clean(user?.username).slice(0, 24) || 'Anonimo',
+    avatar: String(user?.avatar || '').slice(0, 450000)
+  };
 };
 
 async function readMessages(env) {
@@ -59,7 +62,7 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'JSON non valido' }, 400);
   }
 
-  const name = await nameFromSession(env, request);
+  const user = await userFromSession(env, request);
   const text = clean(data.text).slice(0, 260);
   const parentId = clean(data.parentId).slice(0, 80) || null;
 
@@ -73,7 +76,8 @@ export async function onRequestPost({ request, env }) {
   messages.push({
     id: crypto.randomUUID(),
     parentId,
-    name,
+    name: user.name,
+    avatar: user.avatar,
     text,
     time: new Date().toISOString()
   });
