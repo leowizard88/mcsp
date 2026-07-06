@@ -21,14 +21,6 @@
     }
     return '';
   };
-  const pattern = (m2, m1) => {
-    const rows = [];
-    for (let i = 0; i < 26; i += 1) {
-      rows.push(m2);
-      if (m1 && [4, 11, 19, 24].includes(i)) rows.push(m1);
-    }
-    return rows;
-  };
   const build = async () => {
     if (!isArticle() || document.querySelector('[data-article-ornament-column]')) return;
     const m2 = await findImage('m2');
@@ -36,18 +28,30 @@
     const m1 = await findImage('m1');
     await preload(m2);
     if (m1) await preload(m1);
+
     const column = document.createElement('aside');
     column.className = 'article-ornament-column';
     column.dataset.articleOrnamentColumn = '1';
     column.setAttribute('aria-hidden', 'true');
-    const track = document.createElement('div');
-    track.className = 'article-ornament-track';
-    const images = pattern(m2, m1);
-    const doubled = images.concat(images);
-    track.innerHTML = doubled.map((src, index) => `<img src="${src}" alt="" loading="eager" decoding="async" data-ornament-index="${index}">`).join('');
-    column.appendChild(track);
+    column.style.setProperty('--ornament-m2', `url("${m2}")`);
+
+    if (m1) {
+      for (let i = 0; i < 4; i += 1) {
+        const img = document.createElement('img');
+        img.className = 'article-ornament-m1';
+        img.src = m1;
+        img.alt = '';
+        img.decoding = 'async';
+        img.loading = 'eager';
+        column.appendChild(img);
+      }
+    }
+
     document.body.appendChild(column);
     requestAnimationFrame(() => column.classList.add('is-ready'));
   };
-  build().catch(() => {});
+
+  const start = () => build().catch(() => {});
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+  else start();
 })();
