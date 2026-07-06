@@ -27,8 +27,8 @@
   };
   const style = document.createElement('style');
   style.textContent = `
-    .mc-account-button{position:fixed;right:18px;top:16px;z-index:9999;border:0;background:transparent;color:#050505;padding:0;cursor:pointer;filter:drop-shadow(0 2px 0 rgba(0,0,0,.18))}
-    .mc-account-button img{display:block;width:52px;height:52px;object-fit:contain;mix-blend-mode:multiply}
+    .mc-account-button{position:fixed;right:22px;top:18px;z-index:9999;border:0;background:transparent;color:#050505;padding:0;cursor:pointer;filter:drop-shadow(0 3px 0 rgba(0,0,0,.20))}
+    .mc-account-button img{display:block;width:92px;height:92px;object-fit:contain;mix-blend-mode:multiply}
     .mc-account-name{display:block;max-width:190px;border:1px solid rgba(5,5,5,.42);background:rgba(234,215,179,.74);padding:10px 12px;font:300 13px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.13em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#050505}
     .mc-account-modal{position:fixed;inset:0;z-index:10000;display:none;background:rgba(5,0,0,.72);align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
     .mc-account-modal.is-open{display:flex}
@@ -40,7 +40,7 @@
     .mc-account-card form{position:relative;display:grid;gap:10px}.mc-account-card input{width:100%;box-sizing:border-box;border:0;border-bottom:1px solid rgba(5,5,5,.58);background:rgba(255,255,255,.18);color:#050505;padding:14px 12px;font:300 18px/1.15 var(--font-serif,Georgia,serif);outline:none}.mc-account-card input:focus{background:rgba(255,255,255,.32);border-bottom-color:#050505}
     .mc-account-card form button{justify-self:start;margin-top:6px;border:1px solid #050505;background:#050505;color:#ead7b3;padding:13px 16px;font:300 11px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.18em;text-transform:uppercase;cursor:pointer}.mc-account-card form button:hover,.mc-account-close:hover{transform:translateY(-1px)}
     .mc-account-error{position:relative;min-height:18px;margin:12px 0 0;color:#6c0000;font-size:13px;letter-spacing:.04em}.mc-account-close{position:absolute;right:14px;top:12px;z-index:3;background:transparent;color:#050505;border:0;padding:0;font:300 34px/.8 var(--font-serif,Georgia,serif);cursor:pointer}
-    @media(max-width:760px){.mc-account-button{right:10px;top:10px}.mc-account-button img{width:44px;height:44px}.mc-account-name{max-width:126px;padding:8px 9px;font-size:10px}.mc-account-card{box-shadow:8px 8px 0 rgba(5,5,5,.82)}}
+    @media(max-width:760px){.mc-account-button{right:10px;top:10px}.mc-account-button img{width:66px;height:66px}.mc-account-name{max-width:126px;padding:8px 9px;font-size:10px}.mc-account-card{box-shadow:8px 8px 0 rgba(5,5,5,.82)}}
   `;
   document.head.appendChild(style);
   const button = document.createElement('button');
