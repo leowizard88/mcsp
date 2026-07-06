@@ -20,58 +20,83 @@
   white-space: pre-wrap !important;
 }
 
-/* Desktop archive: keep long titles inside their own boxes. */
+/* Archive: hard reset. One item, one box, no title collision. */
+.archive-page {
+  overflow-x: hidden !important;
+}
+
+.archive-page .archive-inner {
+  width: min(900px, calc(100vw - var(--side, 44px) - 150px)) !important;
+  max-width: min(900px, calc(100vw - var(--side, 44px) - 150px)) !important;
+  margin-left: clamp(38px, 7vw, 112px) !important;
+  margin-right: auto !important;
+  padding-right: 0 !important;
+}
+
+.archive-page .archive-item {
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  clear: both !important;
+  padding: 22px 0 24px !important;
+  margin: 0 !important;
+  border-top: 1px solid var(--line) !important;
+  overflow: visible !important;
+}
+
+.archive-page .archive-item span,
+.archive-page .archive-item em,
+.archive-page .archive-item p {
+  position: static !important;
+  float: none !important;
+  transform: none !important;
+  width: auto !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+
+.archive-page .archive-item span {
+  display: block !important;
+  margin: 0 0 9px !important;
+  font-size: clamp(25px, 2vw, 34px) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -.01em !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  hyphens: none !important;
+  text-wrap: pretty;
+}
+
+.archive-page .archive-item em {
+  display: block !important;
+  margin: 0 0 8px !important;
+  color: var(--muted) !important;
+  font: 300 13px/1.25 var(--font-sans) !important;
+  letter-spacing: .04em !important;
+  text-align: left !important;
+  overflow-wrap: break-word !important;
+}
+
+.archive-page .archive-item p {
+  display: block !important;
+  margin: 0 !important;
+  color: var(--muted) !important;
+  font: 300 14px/1.36 var(--font-sans) !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
 @media (min-width: 761px) {
-  .archive-page:not(:has(.article-format-inner)) {
-    overflow-x: hidden !important;
-  }
-
-  .archive-page:not(:has(.article-format-inner)) .archive-inner {
-    width: min(980px, calc(100vw - var(--side, 44px) - 180px)) !important;
-    max-width: min(980px, calc(100vw - var(--side, 44px) - 180px)) !important;
-    margin-left: clamp(48px, 7vw, 118px) !important;
-    margin-right: auto !important;
-    padding-right: 0 !important;
-  }
-
-  .archive-page:not(:has(.article-format-inner)) .archive-item {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) minmax(130px, 220px) !important;
-    grid-template-areas: "title author" "excerpt excerpt" !important;
-    column-gap: clamp(24px, 3vw, 46px) !important;
-    row-gap: 10px !important;
-    align-items: start !important;
-    padding: 22px 0 24px !important;
-    min-width: 0 !important;
-  }
-
-  .archive-page:not(:has(.article-format-inner)) .archive-item span {
-    grid-area: title !important;
-    display: block !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-    font-size: clamp(28px, 2.4vw, 42px) !important;
-    line-height: 1.02 !important;
-    letter-spacing: -.012em !important;
-    overflow-wrap: normal !important;
-    word-break: normal !important;
-    hyphens: none !important;
-  }
-
-  .archive-page:not(:has(.article-format-inner)) .archive-item em {
-    grid-area: author !important;
-    justify-self: end !important;
-    max-width: 220px !important;
-    text-align: right !important;
-    line-height: 1.25 !important;
-    overflow-wrap: break-word !important;
-  }
-
-  .archive-page:not(:has(.article-format-inner)) .archive-item p {
-    grid-area: excerpt !important;
-    max-width: 720px !important;
-    margin: 0 !important;
-    line-height: 1.35 !important;
+  .archive-page .archive-inner h1 {
+    font-size: clamp(58px, 7vw, 112px) !important;
+    margin-bottom: 34px !important;
   }
 }
 
