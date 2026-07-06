@@ -76,6 +76,26 @@ title: MANCUSPIE
     mix-blend-mode: multiply;
     filter: contrast(1.05) saturate(.82);
   }
+  .latest-drama-spine {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+    overflow: visible;
+    mix-blend-mode: multiply;
+  }
+  .latest-drama-spine text {
+    font-family: 'Gaegu', 'Comic Sans MS', cursive;
+    font-size: 36px;
+    font-weight: 300;
+    letter-spacing: .035em;
+    fill: #050505;
+    stroke: rgba(230,208,168,.35);
+    stroke-width: .7px;
+    paint-order: stroke fill;
+  }
   .ultimi-movimenti-button:hover { animation: movimentiVibra .115s steps(2, end) infinite; opacity: 1; }
   @keyframes movimentiVibra {
     0% { transform: translate(0, 0) rotate(-1deg); }
@@ -89,6 +109,7 @@ title: MANCUSPIE
     .hero-copy .child-title{font-size:clamp(49px,13.2vw,64px);letter-spacing:-.09em;white-space:nowrap}
     .hero-copy h2{font-size:18px !important;letter-spacing:.025em !important;margin-top:10px !important;margin-bottom:14px !important;margin-left:42px !important;max-width:calc(100vw - 124px) !important}
     .ultimi-movimenti-button{width:238px !important;right:8px;bottom:16px;opacity:.9}
+    .latest-drama-spine text{font-size:34px}
   }
 </style>
 
@@ -105,6 +126,14 @@ title: MANCUSPIE
   </div>
   <a class="ultimi-movimenti-button" href="/ultimi-movimenti/" aria-label="Vai a Ultimi movimenti">
     <img alt="Figura" src="/assets/img/adfe1ddc4e68f7828ffef4e2737ca5a2.jpg">
+    <svg class="latest-drama-spine" viewBox="0 0 520 520" aria-hidden="true" focusable="false">
+      <defs>
+        <path id="latestDramaBack" d="M326 111 C398 145 438 236 418 316 C404 375 360 422 294 446" />
+      </defs>
+      <text>
+        <textPath href="#latestDramaBack" startOffset="2%">latest drama</textPath>
+      </text>
+    </svg>
   </a>
 </section>
 
