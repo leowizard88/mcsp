@@ -1,0 +1,15 @@
+---
+layout: base.njk
+title: Greed Island
+---
+<style>
+  body:has(.greed-island-page), .site-main:has(.greed-island-page){background:#050000!important}
+  .greed-island-page{min-height:100vh;margin:0;padding:clamp(18px,4vw,52px) 16px;display:grid;place-items:center;background:linear-gradient(rgba(0,0,0,.18),rgba(0,0,0,.58)),url('/assets/img/greed.jpg') center/cover no-repeat;color:#fff;overflow:hidden}
+  .greed-card{width:min(560px,calc(100vw - var(--side,44px) - 36px));min-height:230px;display:grid;place-items:center;text-align:center;border:3px solid rgba(255,226,104,.95);background:rgba(9,20,18,.76);box-shadow:0 0 0 4px rgba(82,42,0,.8),10px 10px 0 rgba(0,0,0,.62),0 0 34px rgba(255,214,82,.32);backdrop-filter:blur(3px) saturate(1.25);padding:clamp(26px,5vw,54px)}
+  .greed-card h1{margin:0;font-family:Impact,Haettenschweiler,'Arial Black',serif;font-size:clamp(34px,6vw,72px);line-height:.95;text-transform:uppercase;letter-spacing:.04em;color:#ffe16a;-webkit-text-stroke:1px #3a1400;text-shadow:0 3px 0 #7c2d00,0 6px 0 #1a0700,0 0 18px rgba(255,212,72,.65)}
+</style>
+<section class="greed-island-page" aria-label="Greed Island">
+  <div class="greed-card">
+    <h1>Crea il tuo personaggio</h1>
+  </div>
+</section>
