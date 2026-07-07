@@ -7,27 +7,33 @@ const persona = 'Rispondi in italiano come Chrollo Lucifer di Hunter x Hunter. T
 const readText = data => {
   if (typeof data?.output_text === 'string') return data.output_text.trim();
   const parts = [];
-  for (const item of data?.output || []) {
-    for (const c of item?.content || []) if (c?.text) parts.push(c.text);
+  for (const step of data?.steps || []) {
+    for (const part of step?.content || []) if (part?.text) parts.push(part.text);
   }
   return parts.join('\n').trim();
 };
 
+const transcript = messages => messages.map(m => `${m.role === 'assistant' ? 'Chrollo' : 'Utente'}: ${cut(m.content)}`).join('\n');
+
 export async function onRequestPost({ request, env }) {
-  const key = env.OPENAI_API_KEY;
-  if (!key) return out({ error: 'Chiave AI mancante.' }, 500);
+  const key = env.GEMINI_API_KEY;
+  if (!key) return out({ error: 'GEMINI_API_KEY mancante.' }, 500);
   const body = await request.json().catch(() => ({}));
   const messages = Array.isArray(body.messages) ? body.messages.slice(-10) : [];
-  const input = messages.map(m => ({ role: m.role === 'assistant' ? 'assistant' : 'user', content: cut(m.content) })).filter(m => m.content);
-  if (!input.length) return out({ error: 'Scrivi qualcosa.' }, 400);
+  const input = transcript(messages);
+  if (!input) return out({ error: 'Scrivi qualcosa.' }, 400);
 
-  const endpoint = 'https://api.openai.com/v1/responses';
-  const response = await fetch(endpoint, {
+  const response = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
     method: 'POST',
-    headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ model: env.CHROLLO_MODEL || env.SIGNORA9_MODEL || 'gpt-4.1-mini', instructions: persona, input, max_output_tokens: 650 })
+    headers: { 'x-goog-api-key': key, 'content-type': 'application/json' },
+    body: JSON.stringify({
+      model: env.GEMINI_MODEL || 'gemini-3.5-flash',
+      system_instruction: persona,
+      input,
+      generation_config: { temperature: 0.75 }
+    })
   });
   const data = await response.json().catch(() => ({}));
-  if (!response.ok) return out({ error: data?.error?.message || 'Guasto.' }, response.status);
+  if (!response.ok) return out({ error: data?.error?.message || 'Guasto Gemini.' }, response.status);
   return out({ reply: readText(data) || 'Il silenzio e gia una scelta.' });
 }
