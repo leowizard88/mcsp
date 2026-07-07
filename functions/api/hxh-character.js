@@ -38,6 +38,7 @@ const PARAMS = ['forza','robustezza','nen','intelligenza','malizia','agilita','o
 const healthBase = { testa:5, corpo:8, braccioDx:6, braccioSx:6, gambaDx:7, gambaSx:7 };
 const characterKey = user => `hxh:character:${user.id}`;
 const clampInt = (value, min = 0, max = 999999) => Math.max(min, Math.min(max, Math.floor(Number(value) || 0)));
+const maxEnergyFor = level => 3 + ((clampInt(level, 1) - 1) * 2);
 const nextXpFor = level => {
   let needed = 10;
   for (let i = 1; i < clampInt(level, 1); i++) needed += Math.ceil(needed / 2);
@@ -53,15 +54,18 @@ const healthPart = (base, robustezza, level) => {
 const derivedStats = character => {
   const params = { ...blankParams(), ...(character.params || {}) };
   const level = clampInt(character.level, 1);
+  const maxEnergy = maxEnergyFor(level);
+  const currentEnergy = clampInt(character.energy ?? maxEnergy, 0, maxEnergy);
   const salute = Object.fromEntries(Object.entries(healthBase).map(([k, base]) => [k, healthPart(base, params.robustezza, level)]));
   const saluteGenerale = Math.ceil(Object.values(salute).reduce((a,b) => a + b, 0) / Object.values(salute).length);
-  return { generali:{ livello:level, esperienza:clampInt(character.xp), prossimoLivello:nextXpFor(level), puntiParametro:clampInt(character.paramPoints), puntiSetup:clampInt(character.setupPoints), energia:3 + ((level - 1) * 2), saluteGenerale, nen:1 + (clampInt(params.nen) * 4), jenny:clampInt(character.jenny) }, salute };
+  return { generali:{ livello:level, esperienza:clampInt(character.xp), prossimoLivello:nextXpFor(level), puntiParametro:clampInt(character.paramPoints), puntiSetup:clampInt(character.setupPoints), energia:currentEnergy, energiaMax:maxEnergy, saluteGenerale, saluteGeneraleMax:saluteGenerale, nen:1 + (clampInt(params.nen) * 4), nenMax:1 + (clampInt(params.nen) * 4), jenny:clampInt(character.jenny) }, salute };
 };
 const normalizeCharacter = value => {
   if (!value) return null;
   const level = clampInt(value.level || 1, 1);
   const params = { ...blankParams(), ...(value.params || {}) };
-  const character = { ...value, level, xp:clampInt(value.xp), nextXp:nextXpFor(level), paramPoints:clampInt(value.paramPoints), setupPoints:clampInt(value.setupPoints), params, location:value.location || 'Sperduto', jenny:clampInt(value.jenny) };
+  const maxEnergy = maxEnergyFor(level);
+  const character = { ...value, level, xp:clampInt(value.xp), nextXp:nextXpFor(level), paramPoints:clampInt(value.paramPoints), setupPoints:clampInt(value.setupPoints), params, location:value.location || 'Sperduto', jenny:clampInt(value.jenny), energy:clampInt(value.energy ?? maxEnergy, 0, maxEnergy), inventory:Array.isArray(value.inventory) ? value.inventory : [] };
   character.ready = character.setupPoints <= 0;
   character.stats = derivedStats(character);
   return character;
@@ -72,7 +76,7 @@ const publicCharacter = value => {
 };
 const ownCharacter = value => {
   const c = normalizeCharacter(value);
-  return c ? { userId:c.userId, username:c.username, nome:c.nome, cognome:c.cognome, eta:c.eta, sesso:c.sesso, storia:c.storia, nen:c.nen, autore:c.autore, location:c.location, level:c.level, xp:c.xp, nextXp:c.nextXp, paramPoints:c.paramPoints, setupPoints:c.setupPoints, jenny:c.jenny, ready:c.ready, params:c.params, stats:c.stats, createdAt:c.createdAt, updatedAt:c.updatedAt } : null;
+  return c ? { userId:c.userId, username:c.username, nome:c.nome, cognome:c.cognome, eta:c.eta, sesso:c.sesso, storia:c.storia, nen:c.nen, autore:c.autore, location:c.location, level:c.level, xp:c.xp, nextXp:c.nextXp, paramPoints:c.paramPoints, setupPoints:c.setupPoints, jenny:c.jenny, energy:c.energy, inventory:c.inventory, ready:c.ready, params:c.params, stats:c.stats, createdAt:c.createdAt, updatedAt:c.updatedAt } : null;
 };
 const saveCharacter = (env, key, character) => env.CHAT_MESSAGES.put(key, JSON.stringify(normalizeCharacter(character)));
 
@@ -102,7 +106,7 @@ export async function onRequestPost({ request, env }) {
 
   if (action === 'save') {
     const existing = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
-    const character = { userId:user.id, username:user.username, nome:clean(data.nome).slice(0,40), cognome:clean(data.cognome).slice(0,40), eta:clean(data.eta).slice(0,8), sesso:clean(data.sesso).slice(0,40), storia:clean(data.storia).slice(0,1400), nen:clean(data.nen).slice(0,900), autore:clean(data.autore).slice(0,80), location:existing?.location || 'Sperduto', level:existing?.level || 1, xp:existing?.xp || 0, jenny:existing?.jenny || 0, paramPoints:existing?.paramPoints || 0, setupPoints:existing ? existing.setupPoints : 10, params:existing?.params || blankParams(), createdAt:existing?.createdAt || new Date().toISOString(), updatedAt:new Date().toISOString() };
+    const character = { userId:user.id, username:user.username, nome:clean(data.nome).slice(0,40), cognome:clean(data.cognome).slice(0,40), eta:clean(data.eta).slice(0,8), sesso:clean(data.sesso).slice(0,40), storia:clean(data.storia).slice(0,1400), nen:clean(data.nen).slice(0,900), autore:clean(data.autore).slice(0,80), location:existing?.location || 'Sperduto', level:existing?.level || 1, xp:existing?.xp || 0, jenny:existing?.jenny || 0, energy:existing?.energy ?? maxEnergyFor(existing?.level || 1), inventory:existing?.inventory || [], paramPoints:existing?.paramPoints || 0, setupPoints:existing ? existing.setupPoints : 10, params:existing?.params || blankParams(), createdAt:existing?.createdAt || new Date().toISOString(), updatedAt:new Date().toISOString() };
     if (!character.nome || !character.cognome || !character.eta || !character.sesso || !character.storia || !character.nen || !character.autore) return json({ error: 'Compila tutti i campi' }, 400);
     await saveCharacter(env, key, character);
     return json({ character: ownCharacter(character) });
@@ -143,6 +147,7 @@ export async function onRequestPost({ request, env }) {
     if (!character) return json({ error: 'Crea prima un personaggio HxH' }, 404);
     character.level = clampInt(character.level, 1) + 1;
     character.paramPoints = clampInt(character.paramPoints) + 3;
+    character.energy = clampInt(character.energy) + 2;
     character.xp = 0;
     character.updatedAt = new Date().toISOString();
     await saveCharacter(env, key, character);
@@ -155,9 +160,11 @@ export async function onRequestPost({ request, env }) {
     if (!character.ready) return json({ error: 'Distribuisci prima tutti i 10 punti parametro iniziali' }, 403);
     const place = clean(data.place);
     if (!allowedPlaces.has(place)) return json({ error: 'Location non valida' }, 400);
-    if (character.location === 'Masadora' && place === 'Limeiro') return json({ error: 'Limeiro è accessibile da Masadora solo se possiedi tutte le carte.' }, 403);
+    if (place === 'Limeiro') return json({ error: 'Limeiro è off limits finché non possiedi tutte le carte.' }, 403);
     const from = character.location || 'Sperduto';
     if (!(routes[from] || []).includes(place)) return json({ error: 'non puoi arrivare qua a piedi da dove sei ora!' }, 403);
+    if (clampInt(character.energy) < 1) return json({ error: 'Energia insufficiente: ogni spostamento consuma 1 energia.' }, 403);
+    character.energy = clampInt(character.energy) - 1;
     character.location = place;
     character.updatedAt = new Date().toISOString();
     await saveCharacter(env, key, character);
