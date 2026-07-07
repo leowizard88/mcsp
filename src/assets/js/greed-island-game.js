@@ -57,7 +57,7 @@
     body.has-param-setup .creation-card{display:none!important}body.has-param-setup .param-card{display:block}body.has-param-setup .greed-game,body.has-param-setup .delete-character{display:none!important}
     .param-card h1{margin:0 0 18px;text-align:center;font-family:Impact,Haettenschweiler,'Arial Black',serif;font-size:clamp(30px,5vw,62px);line-height:.95;text-transform:uppercase;color:#ffe16a;text-shadow:0 3px 0 #7c2d00,0 6px 0 #1a0700}
     .param-note{margin:0 0 16px;text-align:center;font:900 14px/1.35 'Courier New',monospace;color:#eaffd7;text-transform:uppercase}.param-note strong{color:#dfff73}
-    .stat-list{display:grid;gap:8px}.stat-row{display:grid;grid-template-columns:minmax(120px,1fr) 54px 38px;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.48);padding:9px 10px}.stat-row span:first-child{font-weight:900;text-transform:uppercase;color:#f4ffe8}.stat-value{text-align:center;color:#ffe16a;font-weight:900}.stat-plus{border:1px solid #dfff73;background:#1a5300;color:#dfff73;font:900 18px/1 'Courier New',monospace;cursor:pointer;padding:5px 0}.stat-plus:disabled{opacity:.25;cursor:not-allowed;background:#111;color:#777;border-color:#555}
+    .stat-list{display:grid;gap:8px}.stat-row{display:grid;grid-template-columns:minmax(120px,1fr) 38px 54px 38px;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.48);padding:9px 10px}.stat-row span:first-child{font-weight:900;text-transform:uppercase;color:#f4ffe8}.stat-value{text-align:center;color:#ffe16a;font-weight:900}.stat-plus,.stat-minus{border:1px solid #dfff73;background:#1a5300;color:#dfff73;font:900 18px/1 'Courier New',monospace;cursor:pointer;padding:5px 0}.stat-minus{background:#551111;color:#ffd0d0;border-color:#ffd0d0}.stat-plus:disabled,.stat-minus:disabled{opacity:.25;cursor:not-allowed;background:#111;color:#777;border-color:#555}
     .stat-section{margin:0 0 16px}.stat-section h3{margin:0 0 8px;color:#dfff73;font:900 17px/1 'Courier New',monospace;text-transform:uppercase;letter-spacing:.06em}.stat-mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat-tile{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.46);padding:9px}.stat-tile strong{display:block;color:#ffe16a;text-transform:uppercase;font-size:11px;margin-bottom:4px}.stat-tile span{font-weight:900}.stat-error{margin-top:10px;color:#ffb0b0;font-weight:900;text-align:center}
     @media(max-width:760px){.hxh-welcome{top:146px;width:calc(100vw - var(--side,38px) - 42px);text-align:center}.test-levelup{top:190px}.level-display{top:104px;left:calc(var(--side,38px) + 14px)}.param-card{width:calc(100vw - var(--side,38px) - 28px)}.stat-mini-grid{grid-template-columns:1fr}}
   `;
@@ -73,7 +73,11 @@
     statBtn.textContent = 'STAT';
     nav.insertBefore(statBtn, nav.querySelector('[data-panel="guide"]'));
   }
-  const statRows = (points, setup = false) => `<div class="stat-list">${Object.entries(paramLabels).map(([k,label]) => `<div class="stat-row"><span>${label}</span><span class="stat-value">${state.character?.params?.[k] || 0}</span><button class="stat-plus" type="button" data-add-param="${k}" ${points > 0 ? '' : 'disabled'}>+</button></div>`).join('')}</div>${setup ? `<p class="param-note">Devi spendere tutti i punti iniziali per entrare nella mappa.</p>` : ''}`;
+  const statRows = (points, setup = false) => `<div class="stat-list">${Object.entries(paramLabels).map(([k,label]) => {
+    const value = state.character?.params?.[k] || 0;
+    const minus = setup ? `<button class="stat-minus" type="button" data-sub-param="${k}" ${value > 0 ? '' : 'disabled'}>-</button>` : '<span></span>';
+    return `<div class="stat-row"><span>${label}</span>${minus}<span class="stat-value">${value}</span><button class="stat-plus" type="button" data-add-param="${k}" ${points > 0 ? '' : 'disabled'}>+</button></div>`;
+  }).join('')}</div>${setup ? `<p class="param-note">Devi spendere tutti i punti iniziali per entrare nella mappa.</p>` : ''}`;
   const generalHtml = c => {
     const g = c.stats?.generali || {};
     return `<div class="stat-section"><h3>Statistiche generali</h3><div class="stat-mini-grid"><div class="stat-tile"><strong>Livello</strong><span>${g.livello ?? c.level}</span></div><div class="stat-tile"><strong>Esperienza</strong><span>${g.esperienza ?? c.xp} / ${g.prossimoLivello ?? c.nextXp}</span></div><div class="stat-tile"><strong>Punti parametro</strong><span>${g.puntiParametro ?? c.paramPoints}</span></div><div class="stat-tile"><strong>Energia</strong><span>${g.energia}</span></div><div class="stat-tile"><strong>Salute generale</strong><span>${g.saluteGenerale}</span></div><div class="stat-tile"><strong>Nen</strong><span>${g.nen}</span></div></div></div>`;
@@ -83,17 +87,29 @@
     const points = state.character?.setupPoints || 0;
     paramCard.innerHTML = `<h1>Scheda parametri</h1><p class="param-note">Punti iniziali rimasti: <strong>${points}</strong> / 10</p>${statRows(points, true)}<p class="stat-error" data-stat-error></p>`;
   };
-  const bindAddButtons = root => root.querySelectorAll('[data-add-param]').forEach(btn => btn.addEventListener('click', async () => {
-    try {
-      const data = await api('', { method:'POST', body:JSON.stringify({ action:'allocate', param:btn.dataset.addParam, amount:1 }) });
-      state.character = data.character;
-      renderState();
-      if (state.character.setupPoints > 0) renderParamSetup(); else openPanel('stat');
-    } catch (err) {
-      const error = root.querySelector('[data-stat-error]');
-      if (error) error.textContent = err.message; else alert(err.message);
-    }
-  }));
+  const bindAddButtons = root => {
+    root.querySelectorAll('[data-add-param]').forEach(btn => btn.addEventListener('click', async () => {
+      try {
+        const data = await api('', { method:'POST', body:JSON.stringify({ action:'allocate', param:btn.dataset.addParam, amount:1 }) });
+        state.character = data.character;
+        renderState();
+        if (state.character.setupPoints <= 0) openPanel('stat');
+      } catch (err) {
+        const error = root.querySelector('[data-stat-error]');
+        if (error) error.textContent = err.message; else alert(err.message);
+      }
+    }));
+    root.querySelectorAll('[data-sub-param]').forEach(btn => btn.addEventListener('click', async () => {
+      try {
+        const data = await api('', { method:'POST', body:JSON.stringify({ action:'deallocate', param:btn.dataset.subParam, amount:1 }) });
+        state.character = data.character;
+        renderState();
+      } catch (err) {
+        const error = root.querySelector('[data-stat-error]');
+        if (error) error.textContent = err.message; else alert(err.message);
+      }
+    }));
+  };
   const refreshMap = () => {
     const loc = location();
     if (locationLabel) locationLabel.textContent = loc;
