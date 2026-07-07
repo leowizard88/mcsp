@@ -2,7 +2,7 @@ const HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-cont
 const MAX_QUOTES = 200;
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: HEADERS });
-const clean = value => String(value || '').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim();
+const clean = value => String(value || '').trim().replaceAll('\n', ' ').replaceAll('\r', ' ').replaceAll('\t', ' ');
 const keyOf = value => clean(value).toLowerCase();
 const bearer = request => {
   const auth = request.headers.get('authorization') || '';
@@ -57,4 +57,18 @@ export async function onRequestPost({ request, env }) {
   const next = quotes.slice(0, MAX_QUOTES);
   await env.CHAT_MESSAGES.put(boardKey(self.id), JSON.stringify(next));
   return json({ ok: true, quote: item, quotes: next }, 201);
+}
+
+export async function onRequestDelete({ request, env }) {
+  if (!env.CHAT_MESSAGES) return json({ error: 'CHAT_MESSAGES KV binding mancante' }, 500);
+  const self = await getUserByToken(env, bearer(request));
+  if (!self) return json({ error: 'Login richiesto' }, 401);
+  const url = new URL(request.url);
+  const id = clean(url.searchParams.get('id'));
+  if (!id) return json({ error: 'Citazione mancante' }, 400);
+  const quotes = await loadQuotes(env, self.id);
+  const next = quotes.filter(item => item && item.id !== id);
+  if (next.length === quotes.length) return json({ error: 'Citazione non trovata' }, 404);
+  await env.CHAT_MESSAGES.put(boardKey(self.id), JSON.stringify(next));
+  return json({ ok: true, quotes: next });
 }
