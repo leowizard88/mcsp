@@ -25,7 +25,7 @@ export async function onRequestPost({ request, env }) {
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ model: env.CHROLLO_MODEL || env.SIGNORA9_MODEL || 'gpt-5.2-mini', instructions: persona, input, max_output_tokens: 650 })
+    body: JSON.stringify({ model: env.CHROLLO_MODEL || env.SIGNORA9_MODEL || 'gpt-5.4-mini', instructions: persona, input, max_output_tokens: 650 })
   });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) return out({ error: data?.error?.message || 'Guasto.' }, response.status);
