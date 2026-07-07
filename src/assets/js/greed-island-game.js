@@ -21,6 +21,17 @@
     locationLabel.closest('.location-display')?.after(box);
     levelLabel = box.querySelector('[data-level-label]');
   }
+  const game = document.querySelector('[data-greed-game]');
+  const welcome = document.createElement('div');
+  welcome.className = 'hxh-welcome';
+  welcome.innerHTML = 'Benvenuto <strong data-hxh-name>giocatore</strong>!';
+  const testLevel = document.createElement('button');
+  testLevel.type = 'button';
+  testLevel.className = 'test-levelup';
+  testLevel.textContent = 'Level-up test';
+  game?.appendChild(welcome);
+  game?.appendChild(testLevel);
+  const welcomeName = welcome.querySelector('[data-hxh-name]');
   let state = { user: null, character: null };
   let selectedPlace = '';
   const paramLabels = { forza:'Forza', robustezza:'Robustezza', nen:'Nen', intelligenza:'Intelligenza', malizia:'Malizia', agilita:'Agilità', oratoria:'Oratoria', percezione:'Percezione' };
@@ -39,6 +50,8 @@
   };
   const style = document.createElement('style');
   style.textContent = `
+    .hxh-welcome{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:30;color:#f4ffe8;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.52);padding:10px 14px;font:500 15px/1.1 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:.01em;box-shadow:3px 3px 0 rgba(0,0,0,.72)}.hxh-welcome strong{font-weight:800;color:#dfff73}
+    .test-levelup{position:fixed;top:58px;left:50%;transform:translateX(-50%);z-index:30;border:1px solid #dfff73;background:rgba(22,75,0,.82);color:#dfff73;font:800 12px/1 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;text-transform:uppercase;letter-spacing:.06em;padding:8px 11px;cursor:pointer;box-shadow:3px 3px 0 rgba(0,0,0,.72)}.test-levelup:hover{background:rgba(45,120,0,.92)}
     .level-display{position:fixed;top:18px;left:calc(var(--side,44px) + 316px);z-index:30;border:2px solid rgba(255,255,255,.7);background:rgba(0,0,0,.58);color:#eaffd7;font:900 13px/1 'Courier New',monospace;text-transform:uppercase;letter-spacing:.05em;padding:11px 12px;box-shadow:4px 4px 0 #000}.level-display strong{color:#dfff73}
     .param-card{display:none;width:min(720px,calc(100vw - var(--side,44px) - 36px));border:3px solid rgba(255,226,104,.95);background:rgba(9,20,18,.86);box-shadow:0 0 0 4px rgba(82,42,0,.8),10px 10px 0 rgba(0,0,0,.62),0 0 34px rgba(255,214,82,.32);backdrop-filter:blur(3px) saturate(1.25);padding:clamp(22px,4vw,42px);color:#fff}
     body.has-param-setup .creation-card{display:none!important}body.has-param-setup .param-card{display:block}body.has-param-setup .greed-game,body.has-param-setup .delete-character{display:none!important}
@@ -46,7 +59,7 @@
     .param-note{margin:0 0 16px;text-align:center;font:900 14px/1.35 'Courier New',monospace;color:#eaffd7;text-transform:uppercase}.param-note strong{color:#dfff73}
     .stat-list{display:grid;gap:8px}.stat-row{display:grid;grid-template-columns:minmax(120px,1fr) 54px 38px;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.48);padding:9px 10px}.stat-row span:first-child{font-weight:900;text-transform:uppercase;color:#f4ffe8}.stat-value{text-align:center;color:#ffe16a;font-weight:900}.stat-plus{border:1px solid #dfff73;background:#1a5300;color:#dfff73;font:900 18px/1 'Courier New',monospace;cursor:pointer;padding:5px 0}.stat-plus:disabled{opacity:.25;cursor:not-allowed;background:#111;color:#777;border-color:#555}
     .stat-section{margin:0 0 16px}.stat-section h3{margin:0 0 8px;color:#dfff73;font:900 17px/1 'Courier New',monospace;text-transform:uppercase;letter-spacing:.06em}.stat-mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat-tile{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.46);padding:9px}.stat-tile strong{display:block;color:#ffe16a;text-transform:uppercase;font-size:11px;margin-bottom:4px}.stat-tile span{font-weight:900}.stat-error{margin-top:10px;color:#ffb0b0;font-weight:900;text-align:center}
-    @media(max-width:760px){.level-display{top:104px;left:calc(var(--side,38px) + 14px)}.param-card{width:calc(100vw - var(--side,38px) - 28px)}.stat-mini-grid{grid-template-columns:1fr}}
+    @media(max-width:760px){.hxh-welcome{top:146px;width:calc(100vw - var(--side,38px) - 42px);text-align:center}.test-levelup{top:190px}.level-display{top:104px;left:calc(var(--side,38px) + 14px)}.param-card{width:calc(100vw - var(--side,38px) - 28px)}.stat-mini-grid{grid-template-columns:1fr}}
   `;
   document.head.appendChild(style);
   const paramCard = document.createElement('section');
@@ -85,6 +98,7 @@
     const loc = location();
     if (locationLabel) locationLabel.textContent = loc;
     if (levelLabel) levelLabel.textContent = state.character?.level || 1;
+    if (welcomeName) welcomeName.textContent = state.character?.nome || 'giocatore';
     document.querySelectorAll('[data-place]').forEach(btn => {
       const place = btn.dataset.place;
       btn.classList.toggle('is-here', place === loc);
@@ -142,6 +156,15 @@
       state.character = data.character;
       renderState();
       history.pushState(null, '', '/greed-island/parametri/');
+    } catch (err) { alert(err.message); }
+  });
+  testLevel.addEventListener('click', async () => {
+    if (!state.character) return;
+    try {
+      const data = await api('', { method:'POST', body:JSON.stringify({ action:'levelup' }) });
+      state.character = data.character;
+      renderState();
+      if (panel?.classList.contains('is-active')) openPanel('stat');
     } catch (err) { alert(err.message); }
   });
   toggle?.addEventListener('click', () => document.body.classList.toggle('menu-open'));
