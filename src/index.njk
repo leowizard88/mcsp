@@ -71,16 +71,16 @@ title: MANCUSPIE
   </article>
 </section>
 
-<section id="testi" class="panel content-panel testi-panel">
+<section id="notizie" class="panel content-panel testi-panel">
   <div class="bg-layer bg-tree"></div>
   <article class="section-block list-block">
     <p class="section-kicker">02</p>
-    <h2>Testi in primo piano</h2>
+    <h2>Notizie</h2>
     <div class="item-list">
       {% set shown = 0 %}
       {% for post in collections.testi | reverse %}
-        {% if post.data.tipo != 'manifesto' and shown < 4 %}
-          <a class="item" href="{{ post.url }}"><span>{{ post.data.title }}</span><em>{% if post.data.tipo %}{{ post.data.tipo }}{% endif %}{% if post.data.author %} / <strong>di {{ post.data.author }}</strong>{% endif %}</em></a>
+        {% if post.data.tipo == 'Notizia' and shown < 4 %}
+          <a class="item" href="{{ post.url }}"><span>{{ post.data.title }}</span><em>Notizia{% if post.data.author %} / <strong>di {{ post.data.author }}</strong>{% endif %}</em></a>
           {% set shown = shown + 1 %}
         {% endif %}
       {% endfor %}
