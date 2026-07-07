@@ -5,13 +5,13 @@ eleventyExcludeFromCollections: true
 [
 {% for post in collections.testi | reverse %}
   {
-    "title": {{ post.data.title | json }},
-    "author": {{ post.data.author | json }},
-    "rubrica": {{ post.data.rubrica | json }},
-    "tipo": {{ post.data.tipo | json }},
-    "date": {{ post.data.date | dateISO | json }},
-    "url": {{ post.url | json }},
-    "sourcePath": {{ post.inputPath | json }}
+    "title": {{ post.data.title | json | safe }},
+    "author": {{ post.data.author | json | safe }},
+    "rubrica": {{ post.data.rubrica | json | safe }},
+    "tipo": {{ post.data.tipo | json | safe }},
+    "date": {{ post.data.date | dateISO | json | safe }},
+    "url": {{ post.url | json | safe }},
+    "sourcePath": {{ post.inputPath | json | safe }}
   }{% if not loop.last %},{% endif %}
 {% endfor %}
 ]
