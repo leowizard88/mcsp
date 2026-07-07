@@ -10,7 +10,7 @@ eleventyExcludeFromCollections: true
     "rubrica": {{ post.data.rubrica | json }},
     "tipo": {{ post.data.tipo | json }},
     "date": {{ post.data.date | dateISO | json }},
-    "url": {{ post.url | json }},
+    "url": {{ ('/' ~ post.fileSlug ~ '/') | json }},
     "sourcePath": {{ post.inputPath | json }}
   }{% if not loop.last %},{% endif %}
 {% endfor %}
