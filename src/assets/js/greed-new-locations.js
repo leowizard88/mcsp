@@ -29,21 +29,21 @@
   const places = [
     ['Soufrabi',14,42,'city',0,'Città portuale a ovest. Punto di passaggio verso Bunzen e la costa.'],
     ['Bunzen',25,49,'city',0,'Città nebbiosa e periferica. Collega Soufrabi, Foresta Oscura e Casa senile.'],
-    ['Limeiro',61,33,'city',0,'Capitale di Greed Island. Da Masadora si entra solo con tutte le carte.'],
-    ['Masadora',53,52,'city',0,'Magic Town. Qui si comprano carte incantesimo e si raggiungono Shiso tree, Foresta Oscura e Limeiro.'],
+    ['Limeiro',61,33,'city',0,'Capitale di Greed Island. Off limits finché non possiedi tutte le carte.'],
+    ['Masadora',53,52,'city',0,'Magic Town. Qui si comprano carte incantesimo e si raggiungono Shiso tree e Foresta Oscura.'],
     ['Antokiba',62,59,'city',0,'Città dei premi e punto centrale per muoversi verso Rubicuta, Isola sul lago e Accampamento misterioso.'],
     ['Rubicuta',73,70,'city',0,'Città di passaggio verso Dorias e le Rovine infestate.'],
     ['Dorias',63,80,'city',0,'Zona urbana meridionale vicina a Rubicuta e alle Rovine infestate.'],
     ['Aiai',89,48,'city',0,"La città dell'amore. Collegata ad Accampamento misterioso e Plateau Bye Bye."],
-    ['Foresta Oscura',39,49,'wild',1,'Zona selvaggia. Difficoltà 1/5, livello nabbo. Collegata a Masadora, Villaggio di banditi e Bunzen.'],
-    ['Badlands',41,23,'wild',3,'Zona selvaggia. Difficoltà 3/5, media. Area dura a nord, tra Villaggio di banditi e Limeiro.'],
-    ['Villaggio di banditi',41,39,'wild',2,'Zona selvaggia. Difficoltà 2/5, facile. Insediamento ostile tra Foresta Oscura, Badlands e Limeiro.'],
-    ['Rovine infestate',79,78,'wild',4,'Zona selvaggia. Difficoltà 4/5, impegnativa. Rovine pericolose tra Rubicuta, Dorias e Plateau Bye Bye.'],
-    ['Plateau Bye Bye',88,61,'wild',5,'Zona selvaggia. Difficoltà 5/5, hardcore. Plateau estremo collegato a Rovine infestate e Aiai.'],
+    ['Foresta Oscura',39,49,'wild',1,'Zona selvaggia. Difficoltà 1/5, livello nabbo.'],
+    ['Badlands',41,23,'wild',3,'Zona selvaggia. Difficoltà 3/5, media. Area dura a nord.'],
+    ['Villaggio di banditi',41,39,'wild',2,'Zona selvaggia. Difficoltà 2/5, facile. Insediamento ostile.'],
+    ['Rovine infestate',79,78,'wild',4,'Zona selvaggia. Difficoltà 4/5, impegnativa. Rovine pericolose.'],
+    ['Plateau Bye Bye',88,61,'wild',5,'Zona selvaggia. Difficoltà 5/5, hardcore. Plateau estremo.'],
     ['Shiso tree',57,54,'neutral',0,'Zona neutra. Albero speciale vicino a Masadora e Antokiba.'],
     ['Accampamento misterioso',76,48,'neutral',0,'Zona neutra. Accampamento enigmatico tra Antokiba e Aiai.'],
     ['Isola sul lago',54,71,'neutral',0,'Zona neutra. Piccola isola raggiungibile da Antokiba.'],
-    ['Farlands',90,10,'neutral',0,'Zona neutra remota. Per ora non collegata: dimmi tu come vuoi renderla raggiungibile.'],
+    ['Farlands',90,10,'neutral',0,'Zona neutra remota. Per ora non collegata.'],
     ['Casa senile',24,66,'neutral',0,'Zona neutra. Casa isolata raggiungibile da Bunzen.']
   ];
   const routes = {
@@ -73,7 +73,7 @@
   const blockReason = place => {
     const loc = current();
     if (loc === place) return 'Sei già qui.';
-    if (loc === 'Masadora' && place === 'Limeiro' && !hasAllCards()) return 'Limeiro è accessibile da Masadora solo se possiedi tutte le carte.';
+    if (place === 'Limeiro' && !hasAllCards()) return 'Limeiro è off limits finché non possiedi tutte le carte.';
     if ((routes[loc] || []).includes(place)) return '';
     return 'Non puoi arrivare qua a piedi da dove sei ora.';
   };
@@ -127,6 +127,7 @@
     try {
       const updated = await apiMove(place);
       if (updated?.location && locationLabel) locationLabel.textContent = updated.location;
+      window.dispatchEvent(new CustomEvent('greed-character-updated', { detail:updated }));
       cityPopup.classList.remove('is-open');
       refresh();
     } catch (err) {
