@@ -12,11 +12,11 @@
   box.appendChild(img);
 
   const gap = document.createElement('span');
-  gap.style.cssText = 'position:absolute;left:37%;top:62%;width:26%;height:0;background:#000;border-radius:999px;opacity:0;transform:translateY(0);filter:blur(.2px)';
+  gap.style.cssText = 'position:absolute;left:31%;top:72%;width:38%;height:0;background:#000;border-radius:999px;opacity:0;transform:translateY(0);filter:blur(.2px)';
   box.appendChild(gap);
 
   const part = img.cloneNode(false);
-  part.style.cssText = 'position:absolute;inset:0;width:100%;height:auto;clip-path:inset(61% 0 0 0);transform-origin:50% 62%;opacity:1;transition:none';
+  part.style.cssText = 'position:absolute;inset:0;width:100%;height:auto;clip-path:inset(69% 0 0 0);transform-origin:50% 72%;opacity:1;transition:none';
   box.appendChild(part);
 
   const resize = () => { if (innerWidth <= 760) { box.style.width = '220px'; box.style.maxWidth = '58vw'; } else { box.style.width = '280px'; box.style.maxWidth = '26vw'; } };
@@ -26,12 +26,12 @@
   const frame = y => {
     part.style.transform = `translateY(${y}px)`;
     gap.style.opacity = y ? '1' : '0';
-    gap.style.height = y ? `${Math.max(3, y)}px` : '0';
+    gap.style.height = y ? `${Math.max(6, Math.floor(y * 1.35))}px` : '0';
     gap.style.transform = `translateY(${Math.floor(y / 2)}px)`;
   };
 
   const move = () => {
-    [0,9,0,11,0,8,0].forEach((y,i)=>setTimeout(()=>frame(y), i*95));
+    [0,14,0,16,0,13,0].forEach((y,i)=>setTimeout(()=>frame(y), i*95));
     setTimeout(()=>frame(0), 760);
   };
 
