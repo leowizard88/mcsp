@@ -35,7 +35,7 @@ permalink: /profilo/
     const path = String(item?.sourcePath || '').trim();
     const file = path.split('/').pop() || '';
     const slug = file.replace(/\.md$/i, '');
-    return slug ? `/testi/${slug}/` : '/archivio/';
+    return slug ? `/content/testi/${slug}/` : '/archivio/';
   };
   const loadArticles = async username => {
     try {
@@ -48,8 +48,9 @@ permalink: /profilo/
   const articlesHtml = username => {
     const items = ARTICLES.filter(item => norm(item.author) === norm(username));
     const list = items.map(item => `<li><a href="${esc(fixedUrl(item))}"><strong>${esc(item.title)}</strong><span>${esc(item.tipo || '')}${item.rubrica ? ' / ' + esc(item.rubrica) : ''}${item.date ? ' / ' + esc(item.date) : ''}</span></a></li>`).join('');
-    return `<section class="profile-articles"><h2>Articoli scritti:</h2>${items.length ? `<ul class="profile-articles-list">${list}</ul>` : '<p class="profile-status">Nessun articolo pubblicato.</p>'}</section>`;
+    return `<section class="profile-articles"><h2>Articoli scritti:</h2>${items.length ? `<ul class="profile-articles-list">${list}</ul>` : '<p class="profile-status">Articoli in caricamento...</p>'}</section>`;
   };
+  const refreshArticles = username => { const block = root.querySelector('.profile-articles'); if (block) block.outerHTML = articlesHtml(username); };
   const loggedOut = message => { root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">${esc(message || 'Non risulti loggato su questo browser.')}</p><div class="profile-actions"><a class="profile-login-link" href="/">Torna alla home e accedi dall’icona</a></div></div></div>`; };
   const renderPublicUser = user => { root.innerHTML = `<p class="profile-kicker">Profilo pubblico</p><h1>Profilo</h1><div class="profile-card profile-public-card"><div class="profile-left"><img class="profile-avatar" src="${esc(user.avatar || '')}" alt="Foto profilo"><p class="profile-role">${esc(roleLabel(user))}</p></div><div class="profile-right"><p class="profile-username">${esc(user.username)}</p><p class="profile-bio-public">${esc(user.bio || 'Nessuna descrizione pubblicata.')}</p><div class="profile-actions"><a class="quote-link" href="${quoteUrl(user.username)}">Quoteboard</a><a href="/">Home</a></div></div>${articlesHtml(user.username)}</div>`; };
   const renderOwnUser = user => {
@@ -73,8 +74,8 @@ permalink: /profilo/
     const data = await response.json().catch(() => ({}));
     if (!response.ok) { root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">${esc(data.error || 'Profilo non trovato.')}</p><div class="profile-actions"><a href="/">Home</a></div></div></div>`; return; }
     if (!data.user) { loggedOut('Sessione assente o scaduta. Rifai il login dalla home.'); return; }
-    await loadArticles(data.user.username);
     if (data.user.canEdit) renderOwnUser(data.user); else renderPublicUser(data.user);
+    loadArticles(data.user.username).then(() => refreshArticles(data.user.username));
   };
   load().catch(error => { root.innerHTML = `<p class="profile-kicker">Account</p><h1>Profilo</h1><div class="profile-card"><div class="profile-right"><p class="profile-status">Profilo non disponibile: ${esc(error.message)}</p><div class="profile-actions"><a href="/">Home</a></div></div></div>`; });
 })();
