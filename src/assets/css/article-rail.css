@@ -1,48 +1,16 @@
-/* Visible CSS article ornament rail.
-   The JS column can still run, but this CSS rail guarantees the column exists immediately. */
+/* Article ornament rail is handled by article-ornament-column.js.
+   Do not create a competing layered background here. */
 
 .article-ornament-column,
 .article-ornament-track,
 .article-ornament-block,
 [data-article-ornament-column] {
-  display: none !important;
-  visibility: hidden !important;
+  display: block !important;
+  visibility: visible !important;
 }
 
 body:has(.article-format-inner)::after,
 body:has(.article-page-format)::after {
-  content: "" !important;
-  position: fixed !important;
-  top: -120vh !important;
-  right: 0 !important;
-  width: var(--article-ornament-width, 150px) !important;
-  height: 240vh !important;
-  z-index: 8 !important;
-  pointer-events: none !important;
-  background-color: #050000 !important;
-  background-image:
-    url('/assets/img/m1.png?v=20260707-rail-m1'),
-    url('/assets/img/m2.png?v=20260707-rail-m2') !important;
-  background-repeat: repeat-y, repeat-y !important;
-  background-size: 100% auto, 100% auto !important;
-  background-position: 0 -38vh, 0 0 !important;
-  animation: mRailDrop 8.5s linear infinite !important;
-  transform: translate3d(0,0,0) !important;
-  backface-visibility: hidden !important;
-  will-change: transform !important;
-}
-
-@keyframes mRailDrop {
-  from { transform: translate3d(0, -60vh, 0); }
-  to { transform: translate3d(0, 0, 0); }
-}
-
-@media(max-width:760px) {
-  body:has(.article-format-inner)::after,
-  body:has(.article-page-format)::after {
-    width: var(--article-ornament-width, 52px) !important;
-    top: -120vh !important;
-    height: 240vh !important;
-    animation-duration: 7s !important;
-  }
+  content: none !important;
+  display: none !important;
 }
