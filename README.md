@@ -51,3 +51,4 @@ Dopo il primo deploy riuscito:
 - `src/content/note`: note modificabili.
 - `src/content/call`: call modificabili.
 - `src/content/progetti`: progetti modificabili.
+
