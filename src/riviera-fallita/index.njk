@@ -13,8 +13,9 @@ title: Riviera Fallita
     margin: 0;
     padding: clamp(18px, 4vw, 42px) 16px;
     display: flex;
-    align-items: flex-start;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(24px, 5vw, 54px);
     background: url('/assets/img/lol.jpg') center center / cover no-repeat;
     overflow: hidden;
   }
@@ -40,23 +41,154 @@ title: Riviera Fallita
     animation: rivieraTextWaves 1.4s linear infinite;
   }
 
+  .signora9-box {
+    width: min(620px, calc(100vw - var(--side, 44px) - 42px));
+    border: 2px solid rgba(255,255,255,.85);
+    background: rgba(0,0,0,.68);
+    box-shadow: 6px 6px 0 rgba(0,0,0,.72), 0 0 22px rgba(0, 210, 255, .26);
+    color: #eaffff;
+    font-family: 'Courier New', monospace;
+    backdrop-filter: blur(2px) saturate(1.2);
+  }
+
+  .signora9-head {
+    padding: 8px 10px;
+    border-bottom: 2px solid rgba(255,255,255,.85);
+    background: linear-gradient(90deg, rgba(0,70,140,.92), rgba(0,180,220,.78));
+    font: 700 13px/1.1 'Courier New', monospace;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0 #000;
+  }
+
+  .signora9-log {
+    height: min(300px, 34vh);
+    overflow: auto;
+    padding: 12px;
+    display: grid;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .signora9-message {
+    max-width: 92%;
+    padding: 8px 9px;
+    border: 1px solid rgba(255,255,255,.38);
+    background: rgba(0,0,0,.52);
+    white-space: pre-wrap;
+  }
+
+  .signora9-message.user {
+    margin-left: auto;
+    color: #00131c;
+    background: rgba(180,245,255,.88);
+  }
+
+  .signora9-message.bot {
+    margin-right: auto;
+    color: #eaffff;
+  }
+
+  .signora9-form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    padding: 10px;
+    border-top: 2px solid rgba(255,255,255,.85);
+    background: rgba(0,0,0,.48);
+  }
+
+  .signora9-form input {
+    min-width: 0;
+    border: 1px solid rgba(255,255,255,.72);
+    background: rgba(0,0,0,.72);
+    color: #eaffff;
+    font: 14px/1.2 'Courier New', monospace;
+    padding: 9px 10px;
+    outline: none;
+  }
+
+  .signora9-form button {
+    border: 1px solid #fff;
+    background: #eaffff;
+    color: #00131c;
+    font: 700 12px/1 'Courier New', monospace;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 0 12px;
+    cursor: pointer;
+  }
+
   @keyframes rivieraTextWaves {
     from { background-position: 0 0, 0 0; }
     to { background-position: 0 32px, 0 42px; }
   }
 
   @media(max-width:760px) {
-    .riviera-fallita-page {
-      padding-top: 26px;
-    }
-
-    .riviera-title {
-      font-size: clamp(38px, 14vw, 82px);
-      -webkit-text-stroke: 1px rgba(255,255,255,.92);
-    }
+    .riviera-fallita-page { padding-top: 26px; }
+    .riviera-title { font-size: clamp(38px, 14vw, 82px); -webkit-text-stroke: 1px rgba(255,255,255,.92); }
+    .signora9-box { width: calc(100vw - var(--side, 38px) - 28px); }
+    .signora9-form { grid-template-columns: 1fr; }
+    .signora9-form button { min-height: 34px; }
   }
 </style>
 
 <section class="riviera-fallita-page" aria-label="Riviera Fallita">
   <h1 class="riviera-title">RIVIERA FALLITA</h1>
+
+  <section class="signora9-box" aria-label="Chat con Signora 9">
+    <div class="signora9-head">Signora 9 // consulenza non richiesta</div>
+    <div class="signora9-log" data-signora9-log>
+      <div class="signora9-message bot">Sono Signora 9. Formula una domanda, se proprio ritieni necessario aggiungere rumore al mondo.</div>
+    </div>
+    <form class="signora9-form" data-signora9-form>
+      <input name="message" autocomplete="off" placeholder="Scrivi a Signora 9...">
+      <button type="submit">Invia</button>
+    </form>
+  </section>
 </section>
+
+<script>
+(() => {
+  const form = document.querySelector('[data-signora9-form]');
+  const log = document.querySelector('[data-signora9-log]');
+  if (!form || !log) return;
+
+  const history = [];
+  const add = (role, text) => {
+    const node = document.createElement('div');
+    node.className = `signora9-message ${role === 'user' ? 'user' : 'bot'}`;
+    node.textContent = text;
+    log.appendChild(node);
+    log.scrollTop = log.scrollHeight;
+  };
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    const input = form.elements.message;
+    const text = String(input.value || '').trim();
+    if (!text) return;
+    input.value = '';
+    add('user', text);
+    history.push({ role: 'user', content: text });
+    const waiting = 'Sto pensando, purtroppo.';
+    add('bot', waiting);
+    const waitingNode = log.lastElementChild;
+
+    try {
+      const response = await fetch('/api/signora9', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ messages: history.slice(-10) })
+      });
+      const data = await response.json().catch(() => ({}));
+      const reply = data.reply || data.error || 'Errore. Anche il fallimento, a volte, fallisce.';
+      waitingNode.textContent = reply;
+      history.push({ role: 'assistant', content: reply });
+    } catch {
+      waitingNode.textContent = 'Connessione fallita. Il mare non risponde.';
+    }
+  });
+})();
+</script>
