@@ -1,0 +1,189 @@
+---
+layout: base.njk
+title: Riviera Fallita
+---
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+  body:has(.riviera-fallita-page),
+  .site-main:has(.riviera-fallita-page) {
+    background: #001b32 !important;
+  }
+
+  .riviera-fallita-page {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    padding: clamp(24px, 5vw, 56px) clamp(18px, 5vw, 64px);
+    background:
+      linear-gradient(180deg, rgba(0, 18, 48, .12), rgba(0, 0, 0, .76)),
+      url('/assets/img/lol.jpg') center center / cover no-repeat,
+      radial-gradient(circle at 50% 18%, #018ed0 0, #001b32 42%, #000 100%);
+    font-family: 'VT323', 'Courier New', monospace;
+    color: #eaffff;
+  }
+
+  .riviera-fallita-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.10) 0 1px, transparent 1px 4px),
+      repeating-linear-gradient(90deg, rgba(0,255,255,.10) 0 1px, transparent 1px 18px);
+    mix-blend-mode: screen;
+    opacity: .42;
+  }
+
+  .riviera-fallita-page::after {
+    content: "RIVIERA FALLITA 98  RIVIERA FALLITA 98  RIVIERA FALLITA 98";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 5px 10px 6px;
+    font: 400 20px/1 'VT323', monospace;
+    letter-spacing: .08em;
+    color: #001b32;
+    background: linear-gradient(90deg, #00f0ff, #fcff00, #ff3ab7, #00f0ff);
+    border-top: 2px solid #fff;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .riviera-window {
+    position: relative;
+    z-index: 3;
+    width: min(980px, calc(100vw - var(--side, 44px) - 42px));
+    min-height: min(660px, 82vh);
+    margin: 0 auto;
+    border: 3px solid #d7e5ef;
+    outline: 2px solid #162d6e;
+    background: rgba(0, 20, 55, .70);
+    box-shadow: 8px 8px 0 #000, inset 3px 3px 0 rgba(255,255,255,.55), inset -3px -3px 0 rgba(0,0,0,.6);
+    backdrop-filter: saturate(1.4) contrast(1.1);
+  }
+
+  .riviera-titlebar {
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+    border-bottom: 3px solid #d7e5ef;
+    background: linear-gradient(90deg, #061a8d, #0087ff, #00e5ff);
+    color: #fff;
+    text-shadow: 2px 2px 0 #000;
+    font: 400 24px/1 'VT323', monospace;
+  }
+
+  .riviera-buttons { display: flex; gap: 4px; }
+  .riviera-buttons span { width: 18px; height: 18px; display: block; border: 2px solid #fff; background: #c0c0c0; box-shadow: inset -2px -2px 0 #777, inset 2px 2px 0 #fff; }
+
+  .riviera-content {
+    position: relative;
+    min-height: calc(min(660px, 82vh) - 34px);
+    padding: clamp(26px, 5vw, 62px) 18px 84px;
+    overflow: hidden;
+  }
+
+  .riviera-title {
+    position: relative;
+    z-index: 2;
+    margin: 0 auto;
+    text-align: center;
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    font-size: clamp(25px, 5.5vw, 72px);
+    line-height: 1.14;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 2px #eaffff;
+    background:
+      repeating-radial-gradient(ellipse at 50% 80%, #00f0ff 0 8px, #0057ff 9px 18px, #fff 19px 22px, #00f0ff 23px 32px),
+      linear-gradient(180deg, #fff, #00e5ff 38%, #001bff 62%, #fff);
+    background-size: 100% 22px, 100% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: drop-shadow(4px 4px 0 #000) drop-shadow(-2px 0 0 #ff3ab7);
+    animation: rivieraWaves 1.8s linear infinite;
+  }
+
+  .riviera-title::before {
+    content: "RIVIERA FALLITA";
+    position: absolute;
+    inset: 5px 0 auto 0;
+    z-index: -1;
+    color: #ff3ab7;
+    -webkit-text-fill-color: #ff3ab7;
+    -webkit-text-stroke: 0;
+    opacity: .75;
+    transform: translate(7px, 7px);
+  }
+
+  .riviera-console {
+    max-width: 620px;
+    margin: clamp(34px, 7vw, 86px) auto 0;
+    border: 2px solid #a8f6ff;
+    background: rgba(0,0,0,.64);
+    box-shadow: 0 0 0 3px rgba(0,255,255,.18), inset 0 0 24px rgba(0, 240, 255, .16);
+    padding: 16px 18px 18px;
+    font-size: clamp(22px, 2.6vw, 34px);
+    line-height: 1.02;
+    color: #a8f6ff;
+    text-shadow: 0 0 8px rgba(0,255,255,.9);
+  }
+
+  .riviera-console p { margin: 0 0 9px; }
+  .riviera-console p::before { content: "> "; color: #fcff00; }
+
+  .riviera-back {
+    position: absolute;
+    left: 18px;
+    bottom: 48px;
+    z-index: 4;
+    display: inline-block;
+    padding: 8px 12px 10px;
+    border: 2px solid #fff;
+    background: #c0c0c0;
+    color: #001b32;
+    box-shadow: inset -3px -3px 0 #777, inset 3px 3px 0 #fff, 4px 4px 0 #000;
+    font: 400 25px/1 'VT323', monospace;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  @keyframes rivieraWaves {
+    from { background-position: 0 0, 0 0; }
+    to { background-position: 0 22px, 0 0; }
+  }
+
+  @media(max-width:760px) {
+    .riviera-fallita-page { padding: 16px 12px 34px; }
+    .riviera-window { width: calc(100vw - var(--side, 38px) - 24px); min-height: 78vh; margin-left: 0; }
+    .riviera-titlebar { height: 30px; font-size: 20px; }
+    .riviera-title { -webkit-text-stroke: 1px #eaffff; }
+  }
+</style>
+
+<section class="riviera-fallita-page" aria-label="Riviera Fallita">
+  <div class="riviera-window">
+    <div class="riviera-titlebar">
+      <span>RIVIERA.EXE</span>
+      <div class="riviera-buttons" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+    <div class="riviera-content">
+      <h1 class="riviera-title">RIVIERA FALLITA</h1>
+      <div class="riviera-console">
+        <p>caricamento onde fallite</p>
+        <p>stabilimenti non trovati</p>
+        <p>sole.exe ha smesso di funzionare</p>
+      </div>
+      <a class="riviera-back" href="/#progetti">Torna ai progetti</a>
+    </div>
+  </div>
+</section>
