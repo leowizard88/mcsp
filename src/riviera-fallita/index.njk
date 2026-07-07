@@ -27,39 +27,4 @@ title: Riviera Fallita
     <form class="chrollo-form" data-chrollo-form><input name="message" autocomplete="off" placeholder="Scrivi a Chrollo..."><button type="submit">Invia</button></form>
   </section>
 </section>
-
-<script>
-(() => {
-  const form = document.querySelector('[data-chrollo-form]');
-  const log = document.querySelector('[data-chrollo-log]');
-  if (!form || !log) return;
-  const history = [];
-  const add = (role, text) => {
-    const node = document.createElement('div');
-    node.className = `chrollo-message ${role === 'user' ? 'user' : 'bot'}`;
-    node.textContent = text;
-    log.appendChild(node);
-    log.scrollTop = log.scrollHeight;
-  };
-  form.addEventListener('submit', async event => {
-    event.preventDefault();
-    const input = form.elements.message;
-    const text = String(input.value || '').trim();
-    if (!text) return;
-    input.value = '';
-    add('user', text);
-    history.push({ role: 'user', content: text });
-    add('bot', 'Chrollo osserva in silenzio.');
-    const waitingNode = log.lastElementChild;
-    try {
-      const response = await fetch('/api/signora9', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages: history.slice(-10) }) });
-      const data = await response.json().catch(() => ({}));
-      const reply = data.reply || data.error || 'Errore. Anche il vuoto, stavolta, è mal costruito.';
-      waitingNode.textContent = reply;
-      history.push({ role: 'assistant', content: reply });
-    } catch {
-      waitingNode.textContent = 'Connessione fallita.';
-    }
-  });
-})();
-</script>
+<script src="/assets/js/riviera-offline-chat.js?v=20260707-free-1"></script>
