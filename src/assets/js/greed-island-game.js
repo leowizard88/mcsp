@@ -2,9 +2,12 @@
   const token = () => localStorage.getItem('mancuspieAuthToken') || '';
   const authHeaders = () => ({ 'content-type': 'application/json', authorization: `Bearer ${token()}` });
   const form = document.querySelector('[data-greed-form]');
+  const creationCard = form?.closest('.greed-card');
+  creationCard?.classList.add('creation-card');
   const del = document.querySelector('[data-delete-character]');
   const toggle = document.querySelector('[data-menu-toggle]');
   const panel = document.querySelector('[data-menu-panel]');
+  const nav = document.querySelector('.side-menu');
   const cityPopup = document.querySelector('[data-city-popup]');
   const cityTitle = document.querySelector('[data-city-title]');
   const cityInfo = document.querySelector('[data-city-info]');
@@ -12,6 +15,8 @@
   const locationLabel = document.querySelector('[data-location-label]');
   let state = { user: null, character: null };
   let selectedPlace = '';
+  const paramLabels = { forza:'Forza', robustezza:'Robustezza', nen:'Nen', intelligenza:'Intelligenza', malizia:'Malizia', agilita:'Agilità', oratoria:'Oratoria', percezione:'Percezione' };
+  const healthLabels = { testa:'Testa', corpo:'Corpo', braccioDx:'Braccio dx', braccioSx:'Braccio sx', gambaDx:'Gamba dx', gambaSx:'Gamba sx' };
   const info = { Masadora:'Magic Town! Solo qui puoi comprare le carte incantesimo!', Aiai:"La città dell'amore... piena di amanti e di emozioni.", Soufrabi:'Piccola città portuale controllata dai pirati di Razor... brrr', Antokiba:'Città dei premi!! Concorsi diversi ogni settimana! Città iniziale per ogni player.', Dorias:"Gioco d'azzardo, prostitute, criminali e tanti soldi, ma anche tante carte.", Rubicuta:'Vicino a Antokiba, città tranquilla dove riposarsi.', Limeiro:'La capitale è accessibile solo con tutte le carte collezionate!', Bunzen:'Città piena di nebbia e mostri strani.', 'Foresta Oscura':'Prima location in cui di solito i giocatori cercano di fare soldi e carte' };
   const routes = { Sperduto:['Masadora'], Masadora:['Antokiba','Foresta Oscura'], Antokiba:['Masadora','Rubicuta','Dorias'], Rubicuta:['Dorias','Antokiba','Aiai'], Dorias:['Rubicuta','Antokiba'], Aiai:['Rubicuta'], 'Foresta Oscura':['Bunzen','Masadora'], Bunzen:['Foresta Oscura','Soufrabi'], Soufrabi:['Bunzen'], Limeiro:[] };
   const labels = { nome:'Nome', cognome:'Cognome', eta:'Età', sesso:'Sesso', storia:'Storia', nen:'Abilità Nen', autore:'Autore preferito' };
@@ -24,9 +29,54 @@
     if (!res.ok) throw new Error(data.error || 'Errore Greed Island');
     return data;
   };
+  const style = document.createElement('style');
+  style.textContent = `
+    .param-card{display:none;width:min(720px,calc(100vw - var(--side,44px) - 36px));border:3px solid rgba(255,226,104,.95);background:rgba(9,20,18,.86);box-shadow:0 0 0 4px rgba(82,42,0,.8),10px 10px 0 rgba(0,0,0,.62),0 0 34px rgba(255,214,82,.32);backdrop-filter:blur(3px) saturate(1.25);padding:clamp(22px,4vw,42px);color:#fff}
+    body.has-param-setup .creation-card{display:none!important}body.has-param-setup .param-card{display:block}body.has-param-setup .greed-game,body.has-param-setup .delete-character{display:none!important}
+    .param-card h1{margin:0 0 18px;text-align:center;font-family:Impact,Haettenschweiler,'Arial Black',serif;font-size:clamp(30px,5vw,62px);line-height:.95;text-transform:uppercase;color:#ffe16a;text-shadow:0 3px 0 #7c2d00,0 6px 0 #1a0700}
+    .param-note{margin:0 0 16px;text-align:center;font:900 14px/1.35 'Courier New',monospace;color:#eaffd7;text-transform:uppercase}.param-note strong{color:#dfff73}
+    .stat-list{display:grid;gap:8px}.stat-row{display:grid;grid-template-columns:minmax(120px,1fr) 54px 38px;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.48);padding:9px 10px}.stat-row span:first-child{font-weight:900;text-transform:uppercase;color:#f4ffe8}.stat-value{text-align:center;color:#ffe16a;font-weight:900}.stat-plus{border:1px solid #dfff73;background:#1a5300;color:#dfff73;font:900 18px/1 'Courier New',monospace;cursor:pointer;padding:5px 0}.stat-plus:disabled{opacity:.25;cursor:not-allowed;background:#111;color:#777;border-color:#555}
+    .stat-section{margin:0 0 16px}.stat-section h3{margin:0 0 8px;color:#dfff73;font:900 17px/1 'Courier New',monospace;text-transform:uppercase;letter-spacing:.06em}.stat-mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat-tile{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.46);padding:9px}.stat-tile strong{display:block;color:#ffe16a;text-transform:uppercase;font-size:11px;margin-bottom:4px}.stat-tile span{font-weight:900}.stat-error{margin-top:10px;color:#ffb0b0;font-weight:900;text-align:center}
+    @media(max-width:760px){.param-card{width:calc(100vw - var(--side,38px) - 28px)}.stat-mini-grid{grid-template-columns:1fr}}
+  `;
+  document.head.appendChild(style);
+  const paramCard = document.createElement('section');
+  paramCard.className = 'param-card';
+  paramCard.setAttribute('aria-label', 'Scheda parametri');
+  document.querySelector('.greed-island-page')?.insertBefore(paramCard, document.querySelector('[data-greed-game]'));
+  if (nav && !nav.querySelector('[data-panel="stat"]')) {
+    const statBtn = document.createElement('button');
+    statBtn.type = 'button';
+    statBtn.dataset.panel = 'stat';
+    statBtn.textContent = 'STAT';
+    nav.insertBefore(statBtn, nav.querySelector('[data-panel="guide"]'));
+  }
+  const statRows = (points, setup = false) => `<div class="stat-list">${Object.entries(paramLabels).map(([k,label]) => `<div class="stat-row"><span>${label}</span><span class="stat-value">${state.character?.params?.[k] || 0}</span><button class="stat-plus" type="button" data-add-param="${k}" ${points > 0 ? '' : 'disabled'}>+</button></div>`).join('')}</div>${setup ? `<p class="param-note">Devi spendere tutti i punti iniziali per entrare nella mappa.</p>` : ''}`;
+  const generalHtml = c => {
+    const g = c.stats?.generali || {};
+    return `<div class="stat-section"><h3>Statistiche generali</h3><div class="stat-mini-grid"><div class="stat-tile"><strong>Livello</strong><span>${g.livello ?? c.level}</span></div><div class="stat-tile"><strong>Esperienza</strong><span>${g.esperienza ?? c.xp} / ${g.prossimoLivello ?? c.nextXp}</span></div><div class="stat-tile"><strong>Punti parametro</strong><span>${g.puntiParametro ?? c.paramPoints}</span></div><div class="stat-tile"><strong>Energia</strong><span>${g.energia}</span></div><div class="stat-tile"><strong>Salute generale</strong><span>${g.saluteGenerale}</span></div><div class="stat-tile"><strong>Nen</strong><span>${g.nen}</span></div></div></div>`;
+  };
+  const healthHtml = c => `<div class="stat-section"><h3>Statistiche salute</h3><div class="stat-mini-grid">${Object.entries(healthLabels).map(([k,label]) => `<div class="stat-tile"><strong>${label}</strong><span>${c.stats?.salute?.[k] ?? 0}</span></div>`).join('')}</div></div>`;
+  const renderParamSetup = () => {
+    const points = state.character?.setupPoints || 0;
+    paramCard.innerHTML = `<h1>Scheda parametri</h1><p class="param-note">Punti iniziali rimasti: <strong>${points}</strong> / 10</p>${statRows(points, true)}<p class="stat-error" data-stat-error></p>`;
+  };
+  const bindAddButtons = root => root.querySelectorAll('[data-add-param]').forEach(btn => btn.addEventListener('click', async () => {
+    try {
+      const data = await api('', { method:'POST', body:JSON.stringify({ action:'allocate', param:btn.dataset.addParam, amount:1 }) });
+      state.character = data.character;
+      renderState();
+      if (state.character.setupPoints > 0) renderParamSetup(); else openPanel('stat');
+    } catch (err) {
+      const error = root.querySelector('[data-stat-error]');
+      if (error) error.textContent = err.message; else alert(err.message);
+    }
+  }));
   const refreshMap = () => {
     const loc = location();
     if (locationLabel) locationLabel.textContent = loc;
+    const levelBox = document.querySelector('[data-level-label]');
+    if (levelBox) levelBox.textContent = state.character?.level || 1;
     document.querySelectorAll('[data-place]').forEach(btn => {
       const place = btn.dataset.place;
       btn.classList.toggle('is-here', place === loc);
@@ -36,27 +86,35 @@
   };
   const renderState = () => {
     document.body.classList.remove('greed-not-logged');
-    document.body.classList.toggle('has-greed-profile', !!state.character);
+    const hasChar = !!state.character;
+    const setup = hasChar && (state.character.setupPoints || 0) > 0;
+    document.body.classList.toggle('has-param-setup', setup);
+    document.body.classList.toggle('has-greed-profile', hasChar && !setup);
+    if (setup) { renderParamSetup(); bindAddButtons(paramCard); }
     refreshMap();
   };
   const blockLogin = () => {
     document.body.classList.add('greed-not-logged');
-    document.body.classList.remove('has-greed-profile', 'menu-open');
+    document.body.classList.remove('has-greed-profile', 'has-param-setup', 'menu-open');
   };
   const infoHtml = data => `<h2>Info</h2><div class="info-grid">${Object.keys(labels).map(k => `<div class="info-item ${k === 'storia' || k === 'nen' ? 'wide' : ''}"><strong>${labels[k]}</strong><span>${esc(data[k])}</span></div>`).join('')}</div>`;
+  const statHtml = c => `<h2>STAT</h2>${generalHtml(c)}<div class="stat-section"><h3>Parametri</h3><p class="param-note">Punti disponibili: <strong>${c.paramPoints || 0}</strong></p>${statRows(c.paramPoints || 0)}</div>${healthHtml(c)}<p class="stat-error" data-stat-error></p>`;
   const openPanel = async name => {
     if (!state.character) return;
+    if ((state.character.setupPoints || 0) > 0 && name !== 'stat') return;
     if (name === 'players') {
       try {
         const data = await api('?list=1');
-        const list = (data.characters || []).map(pg => `<li>${esc(pg.nome || pg.username)}</li>`).join('') || '<li>Nessun giocatore</li>';
+        const list = (data.characters || []).map(pg => `<li>${esc(pg.nome || pg.username)}${pg.level ? ` · LV ${pg.level}` : ''}</li>`).join('') || '<li>Nessun giocatore</li>';
         panel.innerHTML = `<h2>Giocatori</h2><ul class="player-list">${list}</ul>`;
       } catch (err) { panel.innerHTML = `<h2>Giocatori</h2><p>${esc(err.message)}</p>`; }
     }
     if (name === 'explore') panel.innerHTML = '<h2>Esplora</h2><p>Modulo esplorazione da costruire.</p>';
     if (name === 'info') panel.innerHTML = infoHtml(state.character);
+    if (name === 'stat') panel.innerHTML = statHtml(state.character);
     if (name === 'guide') panel.innerHTML = '<h2>Guida</h2><p>Guida del gioco da scrivere.</p>';
     panel.classList.add('is-active');
+    bindAddButtons(panel);
   };
   const init = async () => {
     if (!token()) return blockLogin();
@@ -75,12 +133,13 @@
       const data = await api('', { method:'POST', body:JSON.stringify({ action:'save', ...payload }) });
       state.character = data.character;
       renderState();
-      history.pushState(null, '', '/greed-island/profilo/');
+      history.pushState(null, '', '/greed-island/parametri/');
     } catch (err) { alert(err.message); }
   });
   toggle?.addEventListener('click', () => document.body.classList.toggle('menu-open'));
   document.querySelectorAll('[data-panel]').forEach(btn => btn.addEventListener('click', () => openPanel(btn.dataset.panel)));
   document.querySelectorAll('[data-place]').forEach(btn => btn.addEventListener('click', () => {
+    if ((state.character?.setupPoints || 0) > 0) return;
     const name = btn.dataset.place;
     selectedPlace = '';
     cityTitle.textContent = name;
@@ -110,7 +169,7 @@
     form?.reset();
     panel?.classList.remove('is-active');
     cityPopup?.classList.remove('is-open');
-    document.body.classList.remove('menu-open');
+    document.body.classList.remove('menu-open', 'has-param-setup');
     renderState();
     history.pushState(null, '', '/greed-island/');
   });
