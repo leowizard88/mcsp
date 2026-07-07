@@ -27,7 +27,8 @@
   const hash = s => Math.abs([...s].reduce((n, c) => ((n << 5) - n + c.charCodeAt(0)) | 0, 31));
   const one = (arr, seed) => arr[hash(seed) % arr.length];
 
-  const random = ['THE POWER TO OVERCOME!', 'gasa', 'hard', 'duro', 'ci sta', 'cartesio cosa risponderebbe...', 'non saprei che dirti', 'per ora io voto partito comunista zingaro', 'risposta breve no', 'ok ma non basta', 'questa e una cosa da corridoio universitario', 'frase troppo pulita sospetta', 'molto male ma interessante', 'si pero piano', 'qua serve un bicchiere d acqua e marx sotto il tavolo'];
+  const extras = Array.isArray(window.RF_EXTRA_LINES) ? window.RF_EXTRA_LINES : [];
+  const random = ['THE POWER TO OVERCOME!', 'gasa', 'hard', 'duro', 'ci sta', 'cartesio cosa risponderebbe...', 'non saprei che dirti', 'per ora io voto partito comunista zingaro', 'risposta breve no', 'ok ma non basta', 'questa e una cosa da corridoio universitario', 'frase troppo pulita sospetta', 'molto male ma interessante', 'si pero piano', 'qua serve un bicchiere d acqua e marx sotto il tavolo', ...extras];
   const parens = ['(novecento proprio: soggetto rotto e tutti che fanno finta)', '(Heidegger qui avrebbe dissentito)', '(Adorno avrebbe parlato di forma amministrata)', '(Wittgenstein qui avrebbe chiesto come usi la parola)', '(Deleuze avrebbe visto una linea di fuga)', '(Freud non la chiamerebbe coincidenza)', '(Benjamin avrebbe cercato il frammento storico)', '(fenomenologia ma fatta male sul divano)', '(Cartesio qui sospenderebbe il giudizio)', '(Nietzsche forse direbbe di non chiedere permesso)'];
 
   const generic = [
@@ -58,6 +59,7 @@
 
   const reply = text => {
     const t = norm(text);
+    if (extras.length && hash(t + Date.now()) % 3 === 0) return one(extras, t + Date.now());
     if (hash(t + Date.now()) % 7 === 0) return one(random, t + 'r');
     const topic = topics.find(x => x.r.test(t));
     if (topic) return damage(`${one(topic.a,t)} ${one(topic.b,t+'b')} ${one(topic.c,t+'c')}`, t + Date.now());
