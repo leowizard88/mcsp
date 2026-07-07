@@ -27,58 +27,45 @@
   const hash = s => Math.abs([...s].reduce((n, c) => ((n << 5) - n + c.charCodeAt(0)) | 0, 31));
   const one = (arr, seed) => arr[hash(seed) % arr.length];
 
-  const parens = [
-    '(questa cosa nel novecento la chiamavano crisi del soggetto ma vabe)',
-    '(tipo fenomenologia ma senza fare il professore)',
-    '(qui heidegger avrebbe fatto casino pero il punto resta)',
-    '(deleuze ci avrebbe visto una macchina desiderante, forse troppo comodo)',
-    '(adorno direbbe che pure il gusto e gia amministrato)',
-    '(wittgenstein qui starebbe zitto e avrebbe quasi ragione)',
-    '(il novecento e tutto qui: forma rotta e bisogno di ordine)',
-    '(non e nichilismo, e manutenzione del vuoto)',
-    '(benjamin avrebbe cercato le rovine, non la morale)',
-    '(freud entra sempre quando qualcuno dice io so cosa voglio)'
-  ];
+  const random = ['THE POWER TO OVERCOME!', 'gasa', 'hard', 'duro', 'ci sta', 'cartesio cosa risponderebbe...', 'non saprei che dirti', 'per ora io voto partito comunista zingaro', 'risposta breve no', 'ok ma non basta', 'questa e una cosa da corridoio universitario', 'frase troppo pulita sospetta', 'molto male ma interessante', 'si pero piano', 'qua serve un bicchiere d acqua e marx sotto il tavolo'];
+  const parens = ['(novecento proprio: soggetto rotto e tutti che fanno finta)', '(heidegger qui si metteva il cappotto e spariva)', '(adorno avrebbe detto industria culturale anche al tostapane)', '(wittgenstein zitto nell angolo secondo me)', '(deleuze direbbe flusso ma non pagava lui)', '(freud entra sempre quando dici non e niente)', '(benjamin cercava rovine pure nel posacenere)', '(fenomenologia ma fatta male sul divano)', '(cartesio qua avrebbe dubitato pure del citofono)', '(nietzsche direbbe si ma urlando meglio)'];
 
-  const genericOpen = ['la domanda e imprecisa ma una direzione ce l ha', 'il centro non e dove lo hai messo', 'prima separerei il fatto dal desiderio', 'la risposta semplice sarebbe povera', 'la premessa conta piu della conclusione'];
-  const genericMid = ['ogni scelta mostra cosa sei disposto a perdere', 'il valore appare quando una cosa smette di essere garantita', 'il controllo migliore sembra naturale', 'la memoria taglia prima ancora di raccontare', 'il vuoto non e assenza e spazio non ancora disciplinato'];
-  const genericEnd = ['da qui si puo pensare meglio', 'non e consolazione e diagnosi', 'il resto e decorazione', 'tienilo fermo e guarda cosa cambia', 'forse cercavi permesso non risposta'];
+  const generic = [
+    ['boh il punto forse non e quello', 'stai chiedendo una cosa ma ne vuoi un altra', 'la domanda sembra semplice solo perche e vestita male', 'non saprei che dirti ma la direzione c e'],
+    ['qui conta il gesto piu della teoria', 'se togli la posa resta una paura piccola', 'il desiderio fa sempre finta di essere ragione', 'sta cosa ha odore di scelta rinviata'],
+    ['ci sta ma non chiamarla verita', 'duro pero utile', 'gasa in modo sbagliato', 'io la lascerei marcire ancora un po']
+  ];
 
   const topics = [
-    { r:/amore|ama|innamor|relazione|fidanz|gelosia|tradimento|desiderio/i, a:['sull amore non mi fiderei delle parole dolci', 'l amore diventa serio quando smette di dichiararsi innocente'], b:['non rivela una verita pura ma una gerarchia cosa scegli cosa sacrifichi cosa fai finta di non vedere', 'e attenzione selettiva illumina un punto e lascia il resto nell ombra'], c:['quindi chiediti cosa perdi senza chiamarlo martirio', 'il sentimento conta meno della forma che prende contro un limite'] },
-    { r:/paura|ansia|panico|spavento|temo|terrore|preoccup/i, a:['la paura raramente e stupida', 'l ansia non e un oracolo ma nemmeno rumore puro'], b:['sta proteggendo qualcosa reputazione corpo futuro immagine di te il punto e capire cosa sorveglia', 'esagera le forme ma non inventa sempre il contenuto ti mostra dove sei esposto'], c:['nomina l oggetto e perde prestigio', 'non devi obbedirle devi interrogarla senza inginocchiarti'] },
-    { r:/soldi|denaro|povero|ricco|lavoro|stipendio|comprare|costo|pagare/i, a:['il denaro ha il pregio della brutalita', 'sul lavoro conviene essere meno romantici'], b:['traduce desideri tempo e dipendenze in cifre non dice tutto ma svela parecchie menzogne', 'non misura il valore di una persona misura pero quanto spazio le viene concesso per sbagliare'], c:['la domanda vera e quale liberta vendi e a quale prezzo', 'non moralizzarlo troppo guarda chi puo farne a meno e chi no'] },
-    { r:/scuola|studio|universit|esame|tesi|leggere|prof|lezione/i, a:['studiare non significa accumulare frasi', 'un esame e spesso una piccola macchina di obbedienza'], b:['il punto e trasformare cio che leggi in strumenti non in decorazioni', 'la conoscenza vale quando cambia il modo in cui tagli un problema'], c:['se dopo aver studiato pensi uguale hai solo archiviato carta', 'comincia da una distinzione chiara poi il resto segue'] },
-    { r:/morte|morire|morto|fine|funerale|uccid|sparire/i, a:['la morte rende tutto piu netto ma troppo tardi', 'parlare della fine obbliga a togliere ornamenti'], b:['rivela cosa credevi necessario cosa era abitudine cosa era possesso', 'il problema non e che tutto finisca ma che molti vivono come se non li riguardasse'], c:['da li nasce disciplina non per forza disperazione', 'non serve venerarla basta non mentire davanti alla sua ombra'] },
-    { r:/amici|amicizia|gruppo|compagn|solitudine|solo/i, a:['un gruppo non elimina la solitudine', 'l amicizia e meno pura di come viene raccontata'], b:['la distribuisce la organizza a volte la rende sopportabile pero non la cancella', 'tiene insieme cura utilita abitudine e una quota di cecita volontaria'], c:['guarda cosa resta quando non c e piu vantaggio', 'non chiedere se e vera chiedi cosa regge alla prova'] },
-    { r:/futuro|destino|caso|scelta|decidere|domani|vita/i, a:['il futuro non e profondo solo perche e nascosto', 'il destino e spesso una parola troppo elegante'], b:['molte cose che chiami caso sono traiettorie viste troppo da vicino', 'decidere significa tagliare possibilita non celebrarle tutte'], c:['non cercare garanzie cerca un taglio che riconosci tuo', 'la liberta comincia quando smetti di travestire l esitazione da prudenza'] },
-    { r:/politica|stato|governo|potere|legge|destra|sinistra|fasc|capital/i, a:['la politica non e il teatro delle opinioni', 'il potere va visto nei meccanismi non negli slogan'], b:['conta chi decide il quadro entro cui gli altri discutono', 'le idee diventano serie quando trovano corpi denaro istituzioni e paura'], c:['diffida delle parole che non indicano mai un costo', 'chiedi sempre chi paga la coerenza degli altri'] },
-    { r:/corpo|fisico|dieta|peso|muscolo|pancia|mangiare|allen/i, a:['il corpo non e un progetto morale', 'sul corpo mentono quasi tutti specialmente quando sembrano sinceri'], b:['e materia abitudine disciplina vanita e paura della forma separarle e gia qualcosa', 'volerlo cambiare non e vergognoso diventa ridicolo quando finge di essere pura salute'], c:['misura il gesto non la fantasia', 'la costanza e meno teatrale del desiderio ma lascia piu tracce'] },
-    { r:/arte|film|libro|musica|scrivere|stile|immagine|poesia/i, a:['l arte non serve a rendere le cose belle', 'uno stile non e una decorazione'], b:['serve a rendere percepibile una forma di esperienza che prima restava confusa', 'e un metodo di selezione decide cosa appare e cosa resta fuori campo'], c:['quando funziona non consola cambia la temperatura della stanza', 'la domanda giusta non e se piace ma cosa costringe a vedere'] }
+    { r:/amore|ama|innamor|relazione|fidanz|gelosia|tradimento|desiderio/i, p:['amore'], a:['amore hard ma spesso e solo amministrazione della mancanza', 'sull amore cartesio cosa risponderebbe... forse dubiterei anche del buongiorno', 'ci sta amare pero poi devi vedere cosa ti mangia'], b:['non e una verita pura e tipo una torcia puntata male illumina una cosa e ne brucia tre', 'se diventa gelosia non e profondita e proprieta col profumo addosso', 'desiderio vuol dire che qualcosa ti comanda sorridendo'], c:['gasa solo se non ti inginocchia', 'duro dirlo ma meglio saperlo prima', 'non saprei che dirti ma non chiamarlo destino'] },
+    { r:/paura|ansia|panico|spavento|temo|terrore|preoccup/i, p:['paura'], a:['la paura non e scema e solo vestita da mostro', 'ansia hard proprio ma almeno indica un punto', 'panico gasa zero pero informa'], b:['sta proteggendo reputazione corpo futuro o qualche immagine miserabile di te', 'la paura esagera ma non inventa sempre il contenuto', 'se la nomini perde un po di teatro'], c:['THE POWER TO OVERCOME!', 'duro ma fattibile', 'respira e non fare il martire'] },
+    { r:/soldi|denaro|povero|ricco|lavoro|stipendio|comprare|costo|pagare/i, p:['soldi'], a:['soldi duro argomento senza poesia', 'il lavoro e quella cosa dove la metafisica timbra il cartellino', 'per ora io voto partito comunista zingaro'], b:['il denaro traduce tempo paura desideri e umiliazioni in cifre piccole', 'non dice quanto vali ma quanto margine hai per sbagliare', 'se non puoi rifiutare allora non stai scegliendo stai gestendo'], c:['ci sta volerli ma almeno non farne religione', 'hard ma vero', 'cartesio cosa risponderebbe... penso fattura elettronica'] },
+    { r:/scuola|studio|universit|esame|tesi|leggere|prof|lezione/i, p:['studio'], a:['studiare non e collezionare frasi belle', 'tesi duro ma anche gasa se non la fai diventare arredamento', 'universita cioe parcheggio spirituale con bibliografia'], b:['se dopo aver letto pensi uguale hai solo spostato pdf da una cartella all altra', 'il sapere serve se taglia meglio i problemi non se fa rumore in bocca', 'un esame spesso misura obbedienza con qualche citazione sopra'], c:['ci sta ma scrivi', 'non saprei che dirti apri il file', 'cartesio cosa risponderebbe... metodo e panico'] },
+    { r:/morte|morire|morto|fine|funerale|uccid|sparire/i, p:['fine'], a:['la morte toglie i fronzoli purtroppo anche male', 'argomento duro non facciamo teatro', 'la fine e una maestra senza tatto'], b:['fa vedere cosa chiamavi necessario e cosa era solo abitudine con cappotto elegante', 'il punto non e che tutto finisce ma che vivi come se fosse una nota a pie pagina', 'davanti alla fine le frasi educate diventano cartone bagnato'], c:['non e nichilismo e manutenzione del vuoto', 'ci sta avere paura', 'THE POWER TO OVERCOME! ma sottovoce'] },
+    { r:/amici|amicizia|gruppo|compagn|solitudine|solo/i, p:['amici'], a:['amicizia bella pero non santificarla', 'un gruppo non cancella la solitudine la mette in comune tipo bolletta', 'essere soli hard ma almeno preciso'], b:['guarda cosa resta quando non c e vantaggio li si vede qualcosa', 'molta compagnia e solo panico organizzato bene', 'la lealta senza prova e arredamento verbale'], c:['ci sta volergli bene ma verifica', 'non saprei che dirti dipende chi paga il prezzo', 'gasa se regge al brutto'] },
+    { r:/futuro|destino|caso|scelta|decidere|domani|vita/i, p:['futuro'], a:['il futuro non e profondo solo perche non si vede', 'destino parola elegante per non firmare certe conseguenze', 'decidere e tagliare non fare buffet delle possibilita'], b:['molte cose che chiami caso sono traiettorie viste troppo da vicino', 'se aspetti garanzie stai gia scegliendo di non scegliere', 'la prudenza ogni tanto e solo vigliaccheria con giacca buona'], c:['duro ma libera', 'THE POWER TO OVERCOME!', 'cartesio cosa risponderebbe... intanto dubita poi compila'] },
+    { r:/politica|stato|governo|potere|legge|destra|sinistra|fasc|capital/i, p:['politica'], a:['politica hard perche tutti parlano e pochi pagano', 'il potere non urla sempre a volte fa modulistica', 'per ora io voto partito comunista zingaro'], b:['conta chi decide il quadro entro cui gli altri litigano', 'le idee diventano vere quando trovano corpi soldi istituzioni paura', 'la morale senza costo e solo merchandising'], c:['ci sta ma segui i soldi', 'duro e abbastanza ovvio', 'non saprei che dirti ma diffida degli slogan belli'] },
+    { r:/corpo|fisico|dieta|peso|muscolo|pancia|mangiare|allen/i, p:['corpo'], a:['il corpo non e un progetto morale pero insiste', 'dieta hard argomento da monaco nervoso', 'muscolo gasa ma non salva'], b:['e materia abitudine disciplina vanita e paura della forma tutto insieme nel frullatore', 'voler cambiare corpo ci sta farne una religione no', 'la costanza e brutta da vedere ma lascia tracce'], c:['duro ma semplice ripeti il gesto', 'THE POWER TO OVERCOME!', 'non saprei che dirti pesa meno la fantasia'] },
+    { r:/arte|film|libro|musica|scrivere|stile|immagine|poesia/i, p:['arte'], a:['arte non vuol dire bello vuol dire taglio', 'stile e quando una ferita impara la grammatica', 'scrivere gasa ma solo se non fai il museo di te stesso'], b:['una forma riuscita cambia cosa riesci a vedere non solo cosa ti piace', 'il brutto fatto bene spesso dice piu del bello educato', 'ogni immagine sceglie cosa lasciare fuori'], c:['ci sta ma togli ornamenti', 'hard ma vero', 'cartesio cosa risponderebbe... penso una brutta recensione'] }
   ];
 
-  const breakIt = (s, seed) => {
-    let out = s.replace(/[.]/g, '').replace(/è/g, 'e').replace(/é/g, 'e').replace(/ò/g, 'o').replace(/à/g, 'a').replace(/ù/g, 'u').replace(/ì/g, 'i');
-    if (hash(seed) % 2 === 0) out += ' ' + one(parens, seed + 'p');
-    if (hash(seed) % 5 === 0) out = out.replace(/perché/g, 'perche').replace(/cio/g, 'cioe');
-    if (hash(seed) % 7 === 0) out = out.replace(/,/g, '');
+  const damage = (s, seed) => {
+    let out = s.replace(/[.]/g,'').replace(/è|é/g,'e').replace(/ò/g,'o').replace(/à/g,'a').replace(/ù/g,'u').replace(/ì/g,'i');
+    if (hash(seed) % 3 === 0) out += ' ' + one(parens, seed + 'p');
+    if (hash(seed) % 4 === 0) out = out.replace(/,/g, '');
     return out;
   };
 
   const reply = text => {
     const t = norm(text);
+    if (hash(t + Date.now()) % 7 === 0) return one(random, t + 'r');
     const topic = topics.find(x => x.r.test(t));
-    const raw = topic ? `${one(topic.a, t)} ${one(topic.b, t + 'b')} ${one(topic.c, t + 'c')}` : `${one(genericOpen, t)} ${one(genericMid, t + 'b')} ${one(genericEnd, t + 'c')}`;
-    return breakIt(raw, t + Date.now());
+    if (topic) return damage(`${one(topic.a,t)} ${one(topic.b,t+'b')} ${one(topic.c,t+'c')}`, t + Date.now());
+    if (hash(t) % 5 === 0) return one(random, t + 'rr');
+    return damage(`${one(generic[0],t)} ${one(generic[1],t+'b')} ${one(generic[2],t+'c')}`, t + Date.now());
   };
 
-  const add = (role, text) => {
-    const node = document.createElement('div');
-    node.className = `chrollo-message ${role === 'user' ? 'user' : 'bot'}`;
-    node.textContent = text;
-    log.appendChild(node);
-    log.scrollTop = log.scrollHeight;
-  };
+  const add = (role, text) => { const node = document.createElement('div'); node.className = `chrollo-message ${role === 'user' ? 'user' : 'bot'}`; node.textContent = text; log.appendChild(node); log.scrollTop = log.scrollHeight; };
 
   form.addEventListener('submit', e => {
     e.preventDefault();
