@@ -57,13 +57,12 @@ function validatePayload(data) {
   const tipo = clean(data.tipo).toLowerCase();
   const body = String(data.body || '').replace(/\r\n/g, '\n').slice(0, MAX_BODY);
   if (!title) return { error: 'Titolo richiesto' };
-  if (!rubrica) return { error: 'Rubrica richiesta' };
   if (!TYPES.has(tipo)) return { error: 'Tipo non valido' };
   if (!body.trim()) return { error: 'Corpo articolo richiesto' };
   return { title, subtitle, rubrica, tipo, body };
 }
 function articleFile(user, data, date) {
-  const frontmatter = ['---', `title: "${yaml(data.title)}"`, data.subtitle ? `subtitle: "${yaml(data.subtitle)}"` : '', `author: "${yaml(user.username)}"`, `rubrica: "${yaml(data.rubrica)}"`, `tipo: "${yaml(data.tipo)}"`, `date: "${date}"`, 'tags: testi', '---'].filter(Boolean).join('\n');
+  const frontmatter = ['---', `title: "${yaml(data.title)}"`, data.subtitle ? `subtitle: "${yaml(data.subtitle)}"` : '', `author: "${yaml(user.username)}"`, data.rubrica ? `rubrica: "${yaml(data.rubrica)}"` : '', `tipo: "${yaml(data.tipo)}"`, `date: "${date}"`, 'tags: testi', '---'].filter(Boolean).join('\n');
   return `${frontmatter}\n\n${data.body.trim()}\n`;
 }
 
