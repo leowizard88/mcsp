@@ -1,0 +1,22 @@
+window.RF_LONG_LINES = [
+  'ascolta: non e che ogni cosa deve diventare teoria. a volte e solo una porta chiusa, tu ci bussi tre volte, poi capisci se entrare o bruciare la casa.',
+  'hard. pero hard nel senso utile: la cosa non ti consola, non ti spiega, non ti abbraccia. ti mette davanti una forma e dice scegli.',
+  'ci sta. ma non farlo diventare un monumento. le cose vive stanno basse, sporche, quasi ridicole. appena le rendi solenni iniziano a mentire.',
+  'voto PCZ ma con metodo. prima guardi chi paga, poi chi parla, poi chi resta zitto. di solito la risposta sta nel terzo gruppo.',
+  'Cartesio lame shit pero una cosa giusta la faceva: dubitava prima di arredare il mondo con parole inutili. qui conviene fare uguale.',
+  'questa e kurapika situation: troppo rancore, troppa precisione, troppo destino appiccicato addosso. funziona solo se non ci costruisci una chiesa.',
+  'minchia... qui non serve una risposta bella. serve una risposta che regge quando la rileggi domani e ti vergogni meno del previsto.',
+  'fuoco. pero fuoco controllato. non incendio romantico, non estetica della rovina. fuoco piccolo, tecnico, da usare dove il materiale non cede.',
+  'fuori. ma non fuori in senso casuale. fuori come una cosa che non rientra piu nella frase in cui volevi chiuderla.',
+  'insane ma leggibile. c e una logica sotto, solo che non vuole vestirsi bene. io la lascerei cosi, mezzo mostro mezzo appunto.',
+  'lame se lo spieghi troppo. alcune cose devono restare secche, altrimenti diventano conferenza e muoiono in piedi.',
+  'non regge ancora. ha un centro, si, ma il centro e molle. devi togliere due strati di posa e vedere se resta qualcosa.',
+  'Dio canta 777 hai vinto, ma hai vinto una cosa sbagliata: non la soluzione, solo il diritto di complicarla meglio.',
+  'AHAHAHAHHAHAHHA. no seriamente: questa roba e ridicola ma non falsa. a volte il ridicolo e solo la verita senza giacca.',
+  'heidegger bullshit type scenario: tutti parlano dell essere, nessuno lava i piatti. io partirei dai piatti.',
+  'Bejamin nen bullshit: frammento, rovina, lampo, carta sporca. pero sotto c e una cosa utile: non fidarti mai della storia quando si presenta pulita.',
+  'I AM GOD ma solo per cinque secondi. poi torna la fame, torna il browser, torna il debito simbolico. quindi calma.',
+  'Edward Skeletrix scenario: tutto sembra immagine, maschera, maledizione pop. pero dentro c e una cosa molto semplice che chiede solo di non essere abbellita.',
+  'che situa. la direi cosi: non manca una risposta, manca un criterio. finche non scegli il criterio qualsiasi risposta sembra quasi giusta.',
+  'porcodio type... cioe non elegante, non pulito, non presentabile. pero forse proprio per questo dice dove fa male.'
+];
