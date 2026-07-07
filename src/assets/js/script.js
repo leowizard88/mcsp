@@ -36,7 +36,7 @@ body .movimento-card span{background:rgba(234,215,179,.36)!important}
 document.head.appendChild(homeFix);
 
 const escapeHtml = value => String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
-const selectorEscape = value => String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+const selectorEscape = value => String(value).replace(/\/g, '\\').replace(/"/g, '\"');
 const nameKey = 'mancuspiePublicName';
 const apiUrl = '/api/chat';
 
@@ -59,7 +59,7 @@ const installPublicChat = () => {
     <div class="chat-board" data-chat-board>
       <p class="section-kicker">06</p>
       <h2>Bacheca</h2>
-      <p>Prima scegli un nickname, poi lascia un messaggio pubblico.</p>
+      <p>Scrivi un consiglio, una bestemmia, un piccolo segreto, una richiesta di aiuto, il nome del tuo cane, il tuo nome, il vero motivo, una bugia, una teoria sulla logica preposizionale ecc</p>
       <form class="chat-form" data-chat-form>
         <input data-chat-name type="text" maxlength="24" placeholder="nickname" autocomplete="nickname" required>
         <textarea data-chat-text maxlength="260" placeholder="scrivi qui" required></textarea>
@@ -86,7 +86,7 @@ const installPublicChat = () => {
   }
 
   const lockName = name => {
-    if (!localStorage.getItem(nameKey)) localStorage.setItem(name);
+    if (!localStorage.getItem(nameKey)) localStorage.setItem(nameKey, name);
     nameInput.value = name;
     nameInput.readOnly = true;
     nameInput.classList.add('is-locked');
