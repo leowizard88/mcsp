@@ -12,7 +12,7 @@ export async function onRequestPost({ request, env }) {
   const messages = Array.isArray(body.messages) ? body.messages.slice(-6) : [];
   if (!messages.length) return out({ error: 'Scrivi qualcosa.' }, 400);
 
-  const model = env.GEMINI_MODEL || 'gemini-1.5-flash';
+  const model = env.GEMINI_MODEL || 'gemini-2.0-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 12000);
