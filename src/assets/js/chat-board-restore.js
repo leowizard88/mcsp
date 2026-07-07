@@ -1,4 +1,7 @@
 (() => {
+  const isHome = () => !!document.querySelector('#home') || location.pathname === '/' || location.pathname === '/index.html';
+  if (!isHome()) return;
+
   const apiUrl = '/api/chat';
   const nameKey = 'mancuspiePublicName';
   const esc = value => String(value || '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
@@ -9,6 +12,7 @@
   };
 
   const ensurePanel = () => {
+    if (!isHome()) return null;
     let panel = document.querySelector('#chat');
     if (panel) return panel;
 
@@ -39,6 +43,7 @@
   };
 
   const start = () => {
+    if (!isHome()) return;
     if (window.MANCUSPIE_CHAT_READY) return;
     const panel = ensurePanel();
     if (!panel) return;
