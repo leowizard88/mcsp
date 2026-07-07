@@ -3,149 +3,28 @@ layout: base.njk
 title: Riviera Fallita
 ---
 <style>
-  body:has(.riviera-fallita-page),
-  .site-main:has(.riviera-fallita-page) {
-    background: #000 !important;
-  }
-
-  .riviera-fallita-page {
-    min-height: 100vh;
-    margin: 0;
-    padding: clamp(18px, 4vw, 42px) 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: clamp(24px, 5vw, 54px);
-    background: url('/assets/img/lol.jpg') center center / cover no-repeat;
-    overflow: hidden;
-  }
-
-  .riviera-title {
-    margin: 0;
-    text-align: center;
-    font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif;
-    font-size: clamp(38px, 9vw, 132px);
-    line-height: .9;
-    letter-spacing: .02em;
-    text-transform: uppercase;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: clamp(1px, .18vw, 3px) rgba(255,255,255,.92);
-    background:
-      repeating-radial-gradient(ellipse at 50% 120%, #ffffff 0 6px, #00d8ff 7px 15px, #006bff 16px 25px, #001a88 26px 35px, #ffffff 36px 42px),
-      repeating-linear-gradient(180deg, #ffffff 0 6px, #00e5ff 7px 14px, #0057ff 15px 23px, #ffffff 24px 30px);
-    background-size: 100% 32px, 100% 42px;
-    -webkit-background-clip: text;
-    background-clip: text;
-    filter: drop-shadow(4px 4px 0 #000) drop-shadow(0 0 10px rgba(0,220,255,.75));
-    animation: rivieraTextWaves 1.4s linear infinite;
-  }
-
-  .chrollo-box {
-    width: min(620px, calc(100vw - var(--side, 44px) - 42px));
-    border: 2px solid rgba(255,255,255,.85);
-    background: rgba(0,0,0,.68);
-    box-shadow: 6px 6px 0 rgba(0,0,0,.72), 0 0 22px rgba(0, 210, 255, .26);
-    color: #eaffff;
-    font-family: 'Courier New', monospace;
-    backdrop-filter: blur(2px) saturate(1.2);
-  }
-
-  .chrollo-head {
-    padding: 8px 10px;
-    border-bottom: 2px solid rgba(255,255,255,.85);
-    background: linear-gradient(90deg, rgba(20,20,26,.96), rgba(0,80,120,.82));
-    font: 700 13px/1.1 'Courier New', monospace;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    text-shadow: 2px 2px 0 #000;
-  }
-
-  .chrollo-log {
-    height: min(300px, 34vh);
-    overflow: auto;
-    padding: 12px;
-    display: grid;
-    gap: 10px;
-    font-size: 13px;
-    line-height: 1.35;
-  }
-
-  .chrollo-message {
-    max-width: 92%;
-    padding: 8px 9px;
-    border: 1px solid rgba(255,255,255,.38);
-    background: rgba(0,0,0,.52);
-    white-space: pre-wrap;
-  }
-
-  .chrollo-message.user {
-    margin-left: auto;
-    color: #00131c;
-    background: rgba(180,245,255,.88);
-  }
-
-  .chrollo-message.bot {
-    margin-right: auto;
-    color: #eaffff;
-  }
-
-  .chrollo-form {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 8px;
-    padding: 10px;
-    border-top: 2px solid rgba(255,255,255,.85);
-    background: rgba(0,0,0,.48);
-  }
-
-  .chrollo-form input {
-    min-width: 0;
-    border: 1px solid rgba(255,255,255,.72);
-    background: rgba(0,0,0,.72);
-    color: #eaffff;
-    font: 14px/1.2 'Courier New', monospace;
-    padding: 9px 10px;
-    outline: none;
-  }
-
-  .chrollo-form button {
-    border: 1px solid #fff;
-    background: #eaffff;
-    color: #00131c;
-    font: 700 12px/1 'Courier New', monospace;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    padding: 0 12px;
-    cursor: pointer;
-  }
-
-  @keyframes rivieraTextWaves {
-    from { background-position: 0 0, 0 0; }
-    to { background-position: 0 32px, 0 42px; }
-  }
-
-  @media(max-width:760px) {
-    .riviera-fallita-page { padding-top: 26px; }
-    .riviera-title { font-size: clamp(38px, 14vw, 82px); -webkit-text-stroke: 1px rgba(255,255,255,.92); }
-    .chrollo-box { width: calc(100vw - var(--side, 38px) - 28px); }
-    .chrollo-form { grid-template-columns: 1fr; }
-    .chrollo-form button { min-height: 34px; }
-  }
+  body:has(.riviera-fallita-page), .site-main:has(.riviera-fallita-page){background:#000!important}
+  .riviera-fallita-page{min-height:100vh;margin:0;padding:clamp(18px,4vw,42px) 16px;display:flex;flex-direction:column;align-items:center;gap:clamp(24px,5vw,54px);background:url('/assets/img/lol.jpg') center/cover no-repeat;overflow:hidden}
+  .riviera-title{margin:0;text-align:center;font-family:Impact,Haettenschweiler,'Arial Black',sans-serif;font-size:clamp(38px,9vw,132px);line-height:.9;letter-spacing:.02em;text-transform:uppercase;color:transparent;-webkit-text-fill-color:transparent;-webkit-text-stroke:clamp(1px,.18vw,3px) rgba(255,255,255,.92);background:repeating-radial-gradient(ellipse at 50% 120%,#fff 0 6px,#00d8ff 7px 15px,#006bff 16px 25px,#001a88 26px 35px,#fff 36px 42px),repeating-linear-gradient(180deg,#fff 0 6px,#00e5ff 7px 14px,#0057ff 15px 23px,#fff 24px 30px);background-size:100% 32px,100% 42px;-webkit-background-clip:text;background-clip:text;filter:drop-shadow(4px 4px 0 #000) drop-shadow(0 0 10px rgba(0,220,255,.75));animation:rivieraTextWaves 1.4s linear infinite}
+  .chrollo-box{width:min(620px,calc(100vw - var(--side,44px) - 42px));border:2px solid rgba(255,255,255,.85);background:rgba(0,0,0,.68);box-shadow:6px 6px 0 rgba(0,0,0,.72),0 0 22px rgba(0,210,255,.26);color:#eaffff;font-family:'Courier New',monospace;backdrop-filter:blur(2px) saturate(1.2)}
+  .chrollo-head{padding:8px 10px;border-bottom:2px solid rgba(255,255,255,.85);background:linear-gradient(90deg,rgba(20,20,26,.96),rgba(0,80,120,.82));font:700 13px/1.1 'Courier New',monospace;letter-spacing:.08em;text-transform:uppercase;text-shadow:2px 2px 0 #000}
+  .chrollo-log{height:min(300px,34vh);overflow:auto;padding:12px;display:grid;gap:10px;font-size:13px;line-height:1.35}
+  .chrollo-message{max-width:92%;padding:8px 9px;border:1px solid rgba(255,255,255,.38);background:rgba(0,0,0,.52);white-space:pre-wrap}
+  .chrollo-message.user{margin-left:auto;color:#00131c;background:rgba(180,245,255,.88)}
+  .chrollo-message.bot{margin-right:auto;color:#eaffff}
+  .chrollo-form{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px;border-top:2px solid rgba(255,255,255,.85);background:rgba(0,0,0,.48)}
+  .chrollo-form input{min-width:0;border:1px solid rgba(255,255,255,.72);background:rgba(0,0,0,.72);color:#eaffff;font:14px/1.2 'Courier New',monospace;padding:9px 10px;outline:none}
+  .chrollo-form button{border:1px solid #fff;background:#eaffff;color:#00131c;font:700 12px/1 'Courier New',monospace;letter-spacing:.08em;text-transform:uppercase;padding:0 12px;cursor:pointer}
+  @keyframes rivieraTextWaves{from{background-position:0 0,0 0}to{background-position:0 32px,0 42px}}
+  @media(max-width:760px){.riviera-fallita-page{padding-top:26px}.riviera-title{font-size:clamp(38px,14vw,82px);-webkit-text-stroke:1px rgba(255,255,255,.92)}.chrollo-box{width:calc(100vw - var(--side,38px) - 28px)}.chrollo-form{grid-template-columns:1fr}.chrollo-form button{min-height:34px}}
 </style>
 
 <section class="riviera-fallita-page" aria-label="Riviera Fallita">
   <h1 class="riviera-title">RIVIERA FALLITA</h1>
-
   <section class="chrollo-box" aria-label="Chatta con Chrollo">
     <div class="chrollo-head">CHATTA CON CHROLLO!</div>
-    <div class="chrollo-log" data-chrollo-log>
-      <div class="chrollo-message bot">Sono Chrollo Lucifer. Parla con precisione: le domande vaghe rubano tempo peggio degli oggetti senza valore.</div>
-    </div>
-    <form class="chrollo-form" data-chrollo-form>
-      <input name="message" autocomplete="off" placeholder="Scrivi a Chrollo...">
-      <button type="submit">Invia</button>
-    </form>
+    <div class="chrollo-log" data-chrollo-log><div class="chrollo-message bot">Parla con precisione. Le domande vaghe non hanno molto valore.</div></div>
+    <form class="chrollo-form" data-chrollo-form><input name="message" autocomplete="off" placeholder="Scrivi a Chrollo..."><button type="submit">Invia</button></form>
   </section>
 </section>
 
@@ -154,7 +33,6 @@ title: Riviera Fallita
   const form = document.querySelector('[data-chrollo-form]');
   const log = document.querySelector('[data-chrollo-log]');
   if (!form || !log) return;
-
   const history = [];
   const add = (role, text) => {
     const node = document.createElement('div');
@@ -163,7 +41,6 @@ title: Riviera Fallita
     log.appendChild(node);
     log.scrollTop = log.scrollHeight;
   };
-
   form.addEventListener('submit', async event => {
     event.preventDefault();
     const input = form.elements.message;
@@ -174,19 +51,14 @@ title: Riviera Fallita
     history.push({ role: 'user', content: text });
     add('bot', 'Chrollo osserva in silenzio.');
     const waitingNode = log.lastElementChild;
-
     try {
-      const response = await fetch('/api/chrollo', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ messages: history.slice(-10) })
-      });
+      const response = await fetch('/api/signora9', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages: history.slice(-10) }) });
       const data = await response.json().catch(() => ({}));
       const reply = data.reply || data.error || 'Errore. Anche il vuoto, stavolta, è mal costruito.';
       waitingNode.textContent = reply;
       history.push({ role: 'assistant', content: reply });
     } catch {
-      waitingNode.textContent = 'Connessione fallita. Il ragno non riceve il filo.';
+      waitingNode.textContent = 'Connessione fallita.';
     }
   });
 })();
