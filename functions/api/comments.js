@@ -14,6 +14,8 @@ const keyFor = value => {
   if (!path || !path.startsWith('/')) return null;
   return `comments:${path}`;
 };
+const aliasPaths = value => clean(value).split(',').map(item => clean(item)).filter(item => item.startsWith('/')).slice(0, 8);
+const unique = values => [...new Set(values.filter(Boolean))];
 const bearer = request => {
   const auth = request.headers.get('authorization') || '';
   if (auth.toLowerCase().startsWith('bearer ')) return auth.slice(7).trim();
@@ -64,6 +66,21 @@ async function readComments(env, key) {
   }
 }
 
+async function readMany(env, keys) {
+  const items = [];
+  const seen = new Set();
+  for (const key of unique(keys)) {
+    const comments = await readComments(env, key);
+    for (const comment of comments) {
+      const id = comment?.id || `${comment?.name || ''}:${comment?.time || ''}:${comment?.text || ''}`;
+      if (seen.has(id)) continue;
+      seen.add(id);
+      items.push(comment);
+    }
+  }
+  return items.sort((a, b) => String(a.time || '').localeCompare(String(b.time || ''))).slice(-MAX_COMMENTS);
+}
+
 async function writeComments(env, key, comments) {
   if (!env.CHAT_MESSAGES) return false;
   await env.CHAT_MESSAGES.put(key, JSON.stringify(comments.slice(-MAX_COMMENTS)));
@@ -73,8 +90,9 @@ async function writeComments(env, key, comments) {
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
   const key = keyFor(url.searchParams.get('path'));
+  const aliases = aliasPaths(url.searchParams.get('aliases')).map(keyFor).filter(Boolean);
   if (!key) return json({ error: 'Percorso articolo non valido' }, 400);
-  const comments = await hydrateProfiles(env, await readComments(env, key));
+  const comments = await hydrateProfiles(env, await readMany(env, [key, ...aliases]));
   return json({ comments });
 }
 
@@ -85,6 +103,8 @@ export async function onRequestPost({ request, env }) {
   try { data = await request.json(); } catch { return json({ error: 'JSON non valido' }, 400); }
 
   const key = keyFor(data.path);
+  const aliases = Array.isArray(data.aliases) ? data.aliases.map(keyFor).filter(Boolean) : [];
+  const keys = unique([key, ...aliases]);
   const user = await userFromSession(env, request);
   const text = clean(data.text).slice(0, MAX_TEXT);
   const parentId = clean(data.parentId).slice(0, 80) || null;
@@ -92,7 +112,7 @@ export async function onRequestPost({ request, env }) {
   if (!key) return json({ error: 'Percorso articolo non valido' }, 400);
   if (!text) return json({ error: 'Commento richiesto' }, 400);
 
-  const comments = await readComments(env, key);
+  const comments = await readMany(env, keys);
   if (parentId && !comments.some(comment => comment.id === parentId)) {
     return json({ error: 'Commento padre non trovato' }, 400);
   }
