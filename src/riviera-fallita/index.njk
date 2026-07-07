@@ -15,8 +15,10 @@ title: Riviera Fallita
   .chrollo-form{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px;border-top:2px solid rgba(255,255,255,.85);background:rgba(0,0,0,.48)}
   .chrollo-form input{min-width:0;border:1px solid rgba(255,255,255,.72);background:rgba(0,0,0,.72);color:#eaffff;font:14px/1.2 'Courier New',monospace;padding:9px 10px;outline:none}
   .chrollo-form button{border:1px solid #fff;background:#eaffff;color:#00131c;font:700 12px/1 'Courier New',monospace;letter-spacing:.08em;text-transform:uppercase;padding:0 12px;cursor:pointer}
+  .greed-entry{margin:clamp(22px,6vh,70px) auto 8px;text-align:center;text-decoration:none;font-family:Impact,Haettenschweiler,'Arial Black',serif;font-size:clamp(34px,7vw,94px);line-height:.9;text-transform:uppercase;letter-spacing:.035em;color:#ffe16a;-webkit-text-stroke:clamp(1px,.14vw,2px) #3a1400;text-shadow:0 4px 0 #7c2d00,0 8px 0 #1a0700,0 0 22px rgba(255,212,72,.75);filter:drop-shadow(0 0 14px rgba(62,236,255,.35));transform:skew(-6deg);display:block}
+  .greed-entry:hover{color:#fff3a6;transform:skew(-6deg) scale(1.035)}
   @keyframes rivieraTextWaves{from{background-position:0 0,0 0}to{background-position:0 32px,0 42px}}
-  @media(max-width:760px){.riviera-fallita-page{padding-top:26px}.riviera-title{font-size:clamp(38px,14vw,82px);-webkit-text-stroke:1px rgba(255,255,255,.92)}.chrollo-box{width:calc(100vw - var(--side,38px) - 28px)}.chrollo-form{grid-template-columns:1fr}.chrollo-form button{min-height:34px}}
+  @media(max-width:760px){.riviera-fallita-page{padding-top:26px}.riviera-title{font-size:clamp(38px,14vw,82px);-webkit-text-stroke:1px rgba(255,255,255,.92)}.chrollo-box{width:calc(100vw - var(--side,38px) - 28px)}.chrollo-form{grid-template-columns:1fr}.chrollo-form button{min-height:34px}.greed-entry{font-size:clamp(32px,12vw,66px)}}
 </style>
 
 <section class="riviera-fallita-page" aria-label="Riviera Fallita">
@@ -26,6 +28,7 @@ title: Riviera Fallita
     <div class="chrollo-log" data-chrollo-log><div class="chrollo-message bot">Parla con precisione. Le domande vaghe non hanno molto valore.</div></div>
     <form class="chrollo-form" data-chrollo-form><input name="message" autocomplete="off" placeholder="Scrivi a Chrollo..."><button type="submit">Invia</button></form>
   </section>
+  <a class="greed-entry" href="/greed-island/">ENTRA IN GREED ISLAND</a>
 </section>
 <script src="/assets/js/riviera-extra-lines.js?v=20260707-1"></script>
 <script src="/assets/js/riviera-offline-chat.js?v=20260707-extra-1"></script>
