@@ -13,6 +13,14 @@
   const cityInfo = document.querySelector('[data-city-info]');
   const cityEnter = document.querySelector('[data-city-enter]');
   const locationLabel = document.querySelector('[data-location-label]');
+  let levelLabel = document.querySelector('[data-level-label]');
+  if (!levelLabel && locationLabel) {
+    const box = document.createElement('div');
+    box.className = 'level-display';
+    box.innerHTML = 'Livello: <strong data-level-label>1</strong>';
+    locationLabel.closest('.location-display')?.after(box);
+    levelLabel = box.querySelector('[data-level-label]');
+  }
   let state = { user: null, character: null };
   let selectedPlace = '';
   const paramLabels = { forza:'Forza', robustezza:'Robustezza', nen:'Nen', intelligenza:'Intelligenza', malizia:'Malizia', agilita:'Agilità', oratoria:'Oratoria', percezione:'Percezione' };
@@ -31,13 +39,14 @@
   };
   const style = document.createElement('style');
   style.textContent = `
+    .level-display{position:fixed;top:18px;left:calc(var(--side,44px) + 316px);z-index:30;border:2px solid rgba(255,255,255,.7);background:rgba(0,0,0,.58);color:#eaffd7;font:900 13px/1 'Courier New',monospace;text-transform:uppercase;letter-spacing:.05em;padding:11px 12px;box-shadow:4px 4px 0 #000}.level-display strong{color:#dfff73}
     .param-card{display:none;width:min(720px,calc(100vw - var(--side,44px) - 36px));border:3px solid rgba(255,226,104,.95);background:rgba(9,20,18,.86);box-shadow:0 0 0 4px rgba(82,42,0,.8),10px 10px 0 rgba(0,0,0,.62),0 0 34px rgba(255,214,82,.32);backdrop-filter:blur(3px) saturate(1.25);padding:clamp(22px,4vw,42px);color:#fff}
     body.has-param-setup .creation-card{display:none!important}body.has-param-setup .param-card{display:block}body.has-param-setup .greed-game,body.has-param-setup .delete-character{display:none!important}
     .param-card h1{margin:0 0 18px;text-align:center;font-family:Impact,Haettenschweiler,'Arial Black',serif;font-size:clamp(30px,5vw,62px);line-height:.95;text-transform:uppercase;color:#ffe16a;text-shadow:0 3px 0 #7c2d00,0 6px 0 #1a0700}
     .param-note{margin:0 0 16px;text-align:center;font:900 14px/1.35 'Courier New',monospace;color:#eaffd7;text-transform:uppercase}.param-note strong{color:#dfff73}
     .stat-list{display:grid;gap:8px}.stat-row{display:grid;grid-template-columns:minmax(120px,1fr) 54px 38px;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.48);padding:9px 10px}.stat-row span:first-child{font-weight:900;text-transform:uppercase;color:#f4ffe8}.stat-value{text-align:center;color:#ffe16a;font-weight:900}.stat-plus{border:1px solid #dfff73;background:#1a5300;color:#dfff73;font:900 18px/1 'Courier New',monospace;cursor:pointer;padding:5px 0}.stat-plus:disabled{opacity:.25;cursor:not-allowed;background:#111;color:#777;border-color:#555}
     .stat-section{margin:0 0 16px}.stat-section h3{margin:0 0 8px;color:#dfff73;font:900 17px/1 'Courier New',monospace;text-transform:uppercase;letter-spacing:.06em}.stat-mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat-tile{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.46);padding:9px}.stat-tile strong{display:block;color:#ffe16a;text-transform:uppercase;font-size:11px;margin-bottom:4px}.stat-tile span{font-weight:900}.stat-error{margin-top:10px;color:#ffb0b0;font-weight:900;text-align:center}
-    @media(max-width:760px){.param-card{width:calc(100vw - var(--side,38px) - 28px)}.stat-mini-grid{grid-template-columns:1fr}}
+    @media(max-width:760px){.level-display{top:104px;left:calc(var(--side,38px) + 14px)}.param-card{width:calc(100vw - var(--side,38px) - 28px)}.stat-mini-grid{grid-template-columns:1fr}}
   `;
   document.head.appendChild(style);
   const paramCard = document.createElement('section');
@@ -75,8 +84,7 @@
   const refreshMap = () => {
     const loc = location();
     if (locationLabel) locationLabel.textContent = loc;
-    const levelBox = document.querySelector('[data-level-label]');
-    if (levelBox) levelBox.textContent = state.character?.level || 1;
+    if (levelLabel) levelLabel.textContent = state.character?.level || 1;
     document.querySelectorAll('[data-place]').forEach(btn => {
       const place = btn.dataset.place;
       btn.classList.toggle('is-here', place === loc);
