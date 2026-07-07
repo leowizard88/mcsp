@@ -1,4 +1,6 @@
 (() => {
+  if (window.MANCUSPIE_CHAT_READY || document.querySelector('#chat[data-chat-restored="true"]')) return;
+
   const apiUrl = '/api/chat';
   const nameKey = 'mancuspiePublicName';
   const esc = value => String(value || '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
@@ -16,6 +18,7 @@
   };
 
   const ensurePanel = () => {
+    if (window.MANCUSPIE_CHAT_READY || document.querySelector('#chat[data-chat-restored="true"]')) return null;
     if (!document.querySelector('#home')) return null;
     let panel = document.querySelector('#chat');
     if (panel) return panel;
@@ -32,6 +35,7 @@
   };
 
   const start = () => {
+    if (window.MANCUSPIE_CHAT_READY || document.querySelector('#chat[data-chat-restored="true"]')) return;
     addStyles();
     const panel = ensurePanel();
     if (!panel || panel.dataset.bachecaFailsafe === 'true') return;
