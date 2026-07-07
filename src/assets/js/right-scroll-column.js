@@ -1,10 +1,13 @@
 (() => {
-  const v = '20260707-c-rail-1';
+  const v = '20260707-c-rail-2';
   const exts = ['png', 'webp', 'jpg', 'jpeg', 'gif'];
 
   const isArticle = () => {
+    const p = location.pathname || '/';
+    if (p === '/' || p === '/index.html') return false;
+    if (p.startsWith('/admin') || p.startsWith('/archivio') || p.startsWith('/ultimi')) return false;
     if (document.querySelector('#home, .archive-page, .archive-system-page, .ultimi-page')) return false;
-    return !!document.querySelector('.single-page:not(.archive-page), .article-format-inner, .article-page-format, [data-article-head]');
+    return true;
   };
 
   const test = url => new Promise(resolve => {
