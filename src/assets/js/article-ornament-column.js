@@ -1,5 +1,6 @@
 (() => {
-  const cache = '20260707-force-1';
+  const cache = '20260707-force-2';
+  const extensions = ['webp', 'png', 'jpg', 'jpeg', 'gif'];
 
   const isArticlePage = () => {
     const path = location.pathname || '/';
@@ -65,13 +66,24 @@
     document.head.appendChild(style);
   };
 
+  const setSrc = (node, name, index = 0) => {
+    if (index >= extensions.length) {
+      node.remove();
+      return;
+    }
+    node.dataset.extIndex = String(index);
+    node.src = `/assets/img/${name}.${extensions[index]}?v=${cache}`;
+  };
+
   const img = name => {
     const node = document.createElement('img');
-    node.src = `/assets/img/${name}.png?v=${cache}`;
     node.alt = '';
     node.decoding = 'async';
     node.loading = 'eager';
     node.draggable = false;
+    node.dataset.railImageName = name;
+    node.onerror = () => setSrc(node, name, Number(node.dataset.extIndex || 0) + 1);
+    setSrc(node, name, 0);
     return node;
   };
 
