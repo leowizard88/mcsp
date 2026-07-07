@@ -31,11 +31,7 @@ permalink: /profilo/
   const quoteUrl = username => `/quoteboard/?u=${encodeURIComponent(username || '')}`;
   const fixedUrl = item => {
     const url = String(item?.url || '').trim();
-    if (url && url !== '/') return url;
-    const path = String(item?.sourcePath || '').trim();
-    const file = path.split('/').pop() || '';
-    const slug = file.replace(/\.md$/i, '');
-    return slug ? `/content/testi/${slug}/` : '/archivio/';
+    return url && url !== '/' ? url : '/archivio/';
   };
   const loadArticles = async username => {
     try {
