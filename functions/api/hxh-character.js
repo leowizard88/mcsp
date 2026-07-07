@@ -121,6 +121,17 @@ export async function onRequestPost({ request, env }) {
     return json({ character: ownCharacter(character) });
   }
 
+  if (action === 'levelup') {
+    const character = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
+    if (!character) return json({ error: 'Crea prima un personaggio HxH' }, 404);
+    character.level = clampInt(character.level, 1) + 1;
+    character.paramPoints = clampInt(character.paramPoints) + 3;
+    character.xp = 0;
+    character.updatedAt = new Date().toISOString();
+    await saveCharacter(env, key, character);
+    return json({ character: ownCharacter(character) });
+  }
+
   if (action === 'move') {
     const character = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
     if (!character) return json({ error: 'Crea prima un personaggio HxH' }, 404);
