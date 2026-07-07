@@ -1,7 +1,6 @@
 (() => {
   const game = document.querySelector('[data-greed-game]');
   const world = document.querySelector('.map-world') || game;
-  const panel = document.querySelector('[data-menu-panel]');
   const cityPopup = document.querySelector('[data-city-popup]');
   const cityTitle = document.querySelector('[data-city-title]');
   const cityInfo = document.querySelector('[data-city-info]');
@@ -10,7 +9,16 @@
   if (!game || !world) return;
 
   const token = () => localStorage.getItem('mancuspieAuthToken') || '';
-  const esc = s => String(s || '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const style = document.createElement('style');
+  style.textContent = `
+    .map-label[data-type="city"]::before{content:'●'!important;color:#fff!important;-webkit-text-stroke:1px #000!important}
+    .map-label[data-type="wild"]::before{content:'♣ ' attr(data-danger)!important;color:inherit!important;-webkit-text-stroke:1px #000!important}
+    .map-label[data-type="neutral"]::before{content:'★'!important;color:inherit!important;-webkit-text-stroke:1px #000!important}
+    .city-blocked{display:block;margin-top:10px;color:#ff4b4b;font-weight:800}
+    .city-actions button:disabled{opacity:.45;filter:grayscale(1);cursor:not-allowed;background:#777!important;color:#ddd!important}
+  `;
+  document.head.appendChild(style);
+
   const apiMove = async place => {
     const res = await fetch('/api/hxh-character', { method:'POST', headers:{ 'content-type':'application/json', authorization:`Bearer ${token()}` }, body:JSON.stringify({ action:'move', place }), cache:'no-store' });
     const data = await res.json().catch(() => ({}));
@@ -18,21 +26,61 @@
     return data.character;
   };
 
-  const types = { city:'⌂', wild:'♣', neutral:'★' };
   const places = [
-    ['Soufrabi',14,42,'city',''],['Bunzen',25,49,'city',''],['Limeiro',61,33,'city',''],['Masadora',53,52,'city',''],['Antokiba',62,59,'city',''],['Rubicuta',73,70,'city',''],['Dorias',63,80,'city',''],['Aiai',89,48,'city',''],
-    ['Foresta Oscura',39,49,'wild','Zona selvaggia · difficoltà nabbo'],['Badlands',41,23,'wild','Zona selvaggia · difficoltà media'],['Villaggio di banditi',41,39,'wild','Zona selvaggia · difficoltà facile'],['Rovine infestate',79,78,'wild','Zona selvaggia · difficoltà impegnativo'],['Plateau Bye Bye',88,61,'wild','Zona selvaggia · difficoltà hardcore'],
-    ['Shiso tree',57,54,'neutral','Zona neutra'],['Accampamento misterioso',76,48,'neutral','Zona neutra'],['Isola sul lago',54,71,'neutral','Zona neutra'],['Farlands',90,10,'neutral','Zona neutra'],['Casa senile',24,66,'neutral','Zona neutra']
+    ['Soufrabi',14,42,'city',0,'Città portuale a ovest. Punto di passaggio verso Bunzen e la costa.'],
+    ['Bunzen',25,49,'city',0,'Città nebbiosa e periferica. Collega Soufrabi, Foresta Oscura e Casa senile.'],
+    ['Limeiro',61,33,'city',0,'Capitale di Greed Island. Da Masadora si entra solo con tutte le carte.'],
+    ['Masadora',53,52,'city',0,'Magic Town. Qui si comprano carte incantesimo e si raggiungono Shiso tree, Foresta Oscura e Limeiro.'],
+    ['Antokiba',62,59,'city',0,'Città dei premi e punto centrale per muoversi verso Rubicuta, Isola sul lago e Accampamento misterioso.'],
+    ['Rubicuta',73,70,'city',0,'Città di passaggio verso Dorias e le Rovine infestate.'],
+    ['Dorias',63,80,'city',0,'Zona urbana meridionale vicina a Rubicuta e alle Rovine infestate.'],
+    ['Aiai',89,48,'city',0,"La città dell'amore. Collegata ad Accampamento misterioso e Plateau Bye Bye."],
+    ['Foresta Oscura',39,49,'wild',1,'Zona selvaggia. Difficoltà 1/5, livello nabbo. Collegata a Masadora, Villaggio di banditi e Bunzen.'],
+    ['Badlands',41,23,'wild',3,'Zona selvaggia. Difficoltà 3/5, media. Area dura a nord, tra Villaggio di banditi e Limeiro.'],
+    ['Villaggio di banditi',41,39,'wild',2,'Zona selvaggia. Difficoltà 2/5, facile. Insediamento ostile tra Foresta Oscura, Badlands e Limeiro.'],
+    ['Rovine infestate',79,78,'wild',4,'Zona selvaggia. Difficoltà 4/5, impegnativa. Rovine pericolose tra Rubicuta, Dorias e Plateau Bye Bye.'],
+    ['Plateau Bye Bye',88,61,'wild',5,'Zona selvaggia. Difficoltà 5/5, hardcore. Plateau estremo collegato a Rovine infestate e Aiai.'],
+    ['Shiso tree',57,54,'neutral',0,'Zona neutra. Albero speciale vicino a Masadora e Antokiba.'],
+    ['Accampamento misterioso',76,48,'neutral',0,'Zona neutra. Accampamento enigmatico tra Antokiba e Aiai.'],
+    ['Isola sul lago',54,71,'neutral',0,'Zona neutra. Piccola isola raggiungibile da Antokiba.'],
+    ['Farlands',90,10,'neutral',0,'Zona neutra remota. Per ora non collegata: dimmi tu come vuoi renderla raggiungibile.'],
+    ['Casa senile',24,66,'neutral',0,'Zona neutra. Casa isolata raggiungibile da Bunzen.']
   ];
   const routes = {
-    Sperduto:['Masadora'],Soufrabi:['Bunzen','Casa senile'],Bunzen:['Soufrabi','Foresta Oscura','Casa senile','Villaggio di banditi'],'Casa senile':['Soufrabi','Bunzen','Dorias','Isola sul lago'],'Foresta Oscura':['Bunzen','Masadora','Villaggio di banditi','Badlands'],'Villaggio di banditi':['Bunzen','Foresta Oscura','Badlands','Limeiro'],Badlands:['Villaggio di banditi','Foresta Oscura','Limeiro'],Limeiro:['Badlands','Villaggio di banditi','Masadora','Accampamento misterioso'],Masadora:['Limeiro','Foresta Oscura','Antokiba','Shiso tree','Accampamento misterioso','Isola sul lago'],'Shiso tree':['Masadora','Antokiba'],Antokiba:['Masadora','Shiso tree','Rubicuta','Dorias','Isola sul lago'],'Isola sul lago':['Casa senile','Masadora','Antokiba','Dorias'],Dorias:['Isola sul lago','Antokiba','Rubicuta','Casa senile'],Rubicuta:['Antokiba','Dorias','Rovine infestate','Aiai','Accampamento misterioso'],'Rovine infestate':['Rubicuta','Dorias','Plateau Bye Bye'],'Plateau Bye Bye':['Rovine infestate','Aiai'],Aiai:['Plateau Bye Bye','Rubicuta','Accampamento misterioso','Farlands'],'Accampamento misterioso':['Masadora','Limeiro','Rubicuta','Aiai'],Farlands:['Aiai']
+    Masadora:['Shiso tree','Foresta Oscura','Limeiro'],
+    'Shiso tree':['Masadora','Antokiba'],
+    'Foresta Oscura':['Masadora','Villaggio di banditi','Bunzen'],
+    Antokiba:['Shiso tree','Rubicuta','Isola sul lago','Accampamento misterioso'],
+    Bunzen:['Foresta Oscura','Soufrabi','Casa senile'],
+    'Villaggio di banditi':['Badlands','Foresta Oscura','Limeiro'],
+    Badlands:['Villaggio di banditi','Limeiro'],
+    'Casa senile':['Bunzen'],
+    'Isola sul lago':['Antokiba'],
+    Rubicuta:['Antokiba','Rovine infestate','Dorias'],
+    'Rovine infestate':['Rubicuta','Dorias','Plateau Bye Bye'],
+    Dorias:['Rubicuta','Rovine infestate'],
+    'Plateau Bye Bye':['Rovine infestate','Aiai'],
+    'Accampamento misterioso':['Antokiba','Aiai'],
+    Aiai:['Accampamento misterioso','Plateau Bye Bye'],
+    Limeiro:['Masadora','Badlands'],
+    Soufrabi:['Bunzen'],
+    Farlands:[],
+    Sperduto:['Masadora']
   };
-  const info = Object.fromEntries(places.map(p => [p[0], p[4] || p[0]]));
+  const byName = Object.fromEntries(places.map(p => [p[0], p]));
   const current = () => locationLabel?.textContent?.trim() || 'Sperduto';
-  const canGo = place => (routes[current()] || []).includes(place);
+  const hasAllCards = () => false;
+  const blockReason = place => {
+    const loc = current();
+    if (loc === place) return 'Sei già qui.';
+    if (loc === 'Masadora' && place === 'Limeiro' && !hasAllCards()) return 'Limeiro è accessibile da Masadora solo se possiedi tutte le carte.';
+    if ((routes[loc] || []).includes(place)) return '';
+    return 'Non puoi arrivare qua a piedi da dove sei ora.';
+  };
+  const canGo = place => !blockReason(place);
 
   document.querySelectorAll('.map-label').forEach(el => el.remove());
-  places.forEach(([name,x,y,type]) => {
+  places.forEach(([name,x,y,type,danger]) => {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'map-label';
@@ -40,7 +88,7 @@
     b.style.top = y + '%';
     b.dataset.place = name;
     b.dataset.type = type;
-    b.dataset.icon = types[type] || '★';
+    b.dataset.danger = danger || '';
     b.textContent = name;
     world.appendChild(b);
   });
@@ -61,16 +109,19 @@
     e.preventDefault();
     e.stopImmediatePropagation();
     const name = btn.dataset.place;
+    const place = byName[name];
+    const reason = blockReason(name);
     cityTitle.textContent = name;
-    cityInfo.textContent = name === current() ? (info[name] || '') : canGo(name) ? (info[name] || '') : 'non puoi arrivare qua a piedi da dove sei ora!';
-    cityEnter.hidden = name === current() || !canGo(name);
+    cityInfo.innerHTML = `${place?.[5] || name}${reason ? `<span class="city-blocked">${reason}</span>` : ''}`;
+    cityEnter.hidden = false;
+    cityEnter.disabled = !!reason;
     cityEnter.dataset.nextPlace = name;
     cityPopup.classList.add('is-open');
   }, true);
 
   cityEnter?.addEventListener('click', async e => {
     const place = cityEnter.dataset.nextPlace;
-    if (!place) return;
+    if (!place || cityEnter.disabled) return;
     e.preventDefault();
     e.stopImmediatePropagation();
     try {
@@ -79,8 +130,8 @@
       cityPopup.classList.remove('is-open');
       refresh();
     } catch (err) {
-      cityInfo.textContent = err.message;
-      cityEnter.hidden = true;
+      cityInfo.innerHTML += `<span class="city-blocked">${err.message}</span>`;
+      cityEnter.disabled = true;
     }
   }, true);
 
