@@ -1,13 +1,15 @@
 (() => {
-  const v = '20260707-c-rail-3';
+  const v = '20260707-c-rail-4';
   const exts = ['png', 'webp', 'jpg', 'jpeg', 'gif'];
 
+  const clean = p => p.endsWith('/') ? p : `${p}/`;
   const isArticle = () => {
     const p = location.pathname || '/';
     if (p === '/' || p === '/index.html') return false;
     if (p.startsWith('/admin') || p.startsWith('/archivio') || p.startsWith('/ultimi')) return false;
     if (document.querySelector('#home, .archive-page, .archive-system-page, .ultimi-page')) return false;
-    return true;
+    if ((window.MANCUSPIE_ARTICOLI || []).some(a => a.url === p || a.url === clean(p))) return true;
+    return !!document.querySelector('.article-format-head');
   };
 
   const test = url => new Promise(resolve => {
@@ -46,21 +48,16 @@
   const build = async () => {
     if (!isArticle()) return;
     if (document.querySelector('[data-c-rail]')) return;
-
     const c1 = await find('c1');
     if (!c1) return;
     const c2 = await find('c2');
-
     css();
-
     const rail = document.createElement('div');
     rail.className = 'c-rail';
     rail.dataset.cRail = '1';
     rail.setAttribute('aria-hidden', 'true');
-
     const track = document.createElement('div');
     track.className = 'c-rail-track';
-
     const c2At = new Set([9, 23, 38, 57, 79, 96]);
     const urls = [];
     for (let i = 0; i < 110; i += 1) {
@@ -68,7 +65,6 @@
       if (c2 && c2At.has(i)) urls.push(c2);
     }
     urls.concat(urls).forEach(url => track.appendChild(image(url)));
-
     rail.appendChild(track);
     document.body.appendChild(rail);
   };
