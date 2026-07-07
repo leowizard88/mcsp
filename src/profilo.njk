@@ -31,12 +31,16 @@ permalink: /profilo/
   const quoteUrl = username => `/quoteboard/?u=${encodeURIComponent(username || '')}`;
   const loadArticles = async username => {
     try {
+      const response = await fetch(`/articoli.json?v=${Date.now()}`, { cache:'no-store' });
+      const data = response.ok ? await response.json() : [];
+      ARTICLES = Array.isArray(data) ? data : [];
+      if (ARTICLES.length) return;
+    } catch { ARTICLES = []; }
+    try {
       const response = await fetch(`/api/articles?author=${encodeURIComponent(username)}&v=${Date.now()}`, { cache:'no-store' });
       const data = await response.json().catch(() => ({}));
       ARTICLES = response.ok && Array.isArray(data.articles) ? data.articles : [];
-      if (ARTICLES.length) return;
     } catch { ARTICLES = []; }
-    try { const response = await fetch(`/articoli.json?v=${Date.now()}`, { cache:'no-store' }); ARTICLES = response.ok ? await response.json() : []; } catch { ARTICLES = []; }
     if (!ARTICLES.length && Array.isArray(window.MANCUSPIE_ARTICOLI)) ARTICLES = window.MANCUSPIE_ARTICOLI;
   };
   const articlesHtml = username => {
