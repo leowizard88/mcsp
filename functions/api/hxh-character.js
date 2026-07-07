@@ -35,13 +35,13 @@ const derivedStats = character => {
   const level = clampInt(character.level, 1);
   const salute = Object.fromEntries(Object.entries(healthBase).map(([k, base]) => [k, healthPart(base, params.robustezza, level)]));
   const saluteGenerale = Math.ceil(Object.values(salute).reduce((a,b) => a + b, 0) / Object.values(salute).length);
-  return { generali:{ livello:level, esperienza:clampInt(character.xp), prossimoLivello:nextXpFor(level), puntiParametro:clampInt(character.paramPoints), puntiSetup:clampInt(character.setupPoints), energia:3 + ((level - 1) * 2), saluteGenerale, nen:1 + (clampInt(params.nen) * 4) }, salute };
+  return { generali:{ livello:level, esperienza:clampInt(character.xp), prossimoLivello:nextXpFor(level), puntiParametro:clampInt(character.paramPoints), puntiSetup:clampInt(character.setupPoints), energia:3 + ((level - 1) * 2), saluteGenerale, nen:1 + (clampInt(params.nen) * 4), jenny:clampInt(character.jenny) }, salute };
 };
 const normalizeCharacter = value => {
   if (!value) return null;
   const level = clampInt(value.level || 1, 1);
   const params = { ...blankParams(), ...(value.params || {}) };
-  const character = { ...value, level, xp:clampInt(value.xp), nextXp:nextXpFor(level), paramPoints:clampInt(value.paramPoints), setupPoints:clampInt(value.setupPoints), params, location:value.location || 'Sperduto' };
+  const character = { ...value, level, xp:clampInt(value.xp), nextXp:nextXpFor(level), paramPoints:clampInt(value.paramPoints), setupPoints:clampInt(value.setupPoints), params, location:value.location || 'Sperduto', jenny:clampInt(value.jenny) };
   character.ready = character.setupPoints <= 0;
   character.stats = derivedStats(character);
   return character;
@@ -52,7 +52,7 @@ const publicCharacter = value => {
 };
 const ownCharacter = value => {
   const c = normalizeCharacter(value);
-  return c ? { userId:c.userId, username:c.username, nome:c.nome, cognome:c.cognome, eta:c.eta, sesso:c.sesso, storia:c.storia, nen:c.nen, autore:c.autore, location:c.location, level:c.level, xp:c.xp, nextXp:c.nextXp, paramPoints:c.paramPoints, setupPoints:c.setupPoints, ready:c.ready, params:c.params, stats:c.stats, createdAt:c.createdAt, updatedAt:c.updatedAt } : null;
+  return c ? { userId:c.userId, username:c.username, nome:c.nome, cognome:c.cognome, eta:c.eta, sesso:c.sesso, storia:c.storia, nen:c.nen, autore:c.autore, location:c.location, level:c.level, xp:c.xp, nextXp:c.nextXp, paramPoints:c.paramPoints, setupPoints:c.setupPoints, jenny:c.jenny, ready:c.ready, params:c.params, stats:c.stats, createdAt:c.createdAt, updatedAt:c.updatedAt } : null;
 };
 const saveCharacter = (env, key, character) => env.CHAT_MESSAGES.put(key, JSON.stringify(normalizeCharacter(character)));
 
@@ -95,6 +95,7 @@ export async function onRequestPost({ request, env }) {
       location: existing?.location || 'Sperduto',
       level: existing?.level || 1,
       xp: existing?.xp || 0,
+      jenny: existing?.jenny || 0,
       paramPoints: existing?.paramPoints || 0,
       setupPoints: existing ? existing.setupPoints : 10,
       params: existing?.params || blankParams(),
