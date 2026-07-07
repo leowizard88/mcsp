@@ -1,7 +1,7 @@
 (() => {
   const articleSelector = '.article-page-format, .single-page .article-format-inner, [data-article-head]';
   const extensions = ['webp', 'png', 'jpg', 'jpeg', 'gif'];
-  const cache = '20260707-solid3';
+  const cache = '20260707-solid4';
   const candidates = name => extensions.map(ext => `/assets/img/${name}.${ext}`);
   const test = src => new Promise(resolve => {
     const img = new Image();
@@ -104,7 +104,7 @@
       const delta = Math.min(48, now - last);
       last = now;
       offset = (offset + speed * delta / 1000) % blockHeight;
-      track.style.setProperty('transform', `translate3d(0, ${-blockHeight + offset}px, 0)`, 'important');
+      track.style.setProperty('transform', `translate3d(0, ${-offset}px, 0)`, 'important');
       requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
@@ -129,7 +129,7 @@
     document.body.appendChild(column);
     await waitImages(track);
     const blockHeight = Math.max(1, Math.round(track.scrollHeight / 3));
-    track.style.setProperty('transform', `translate3d(0, ${-blockHeight}px, 0)`, 'important');
+    track.style.setProperty('transform', 'translate3d(0, 0, 0)', 'important');
     column.classList.add('is-ready');
     run(track, blockHeight);
   };
