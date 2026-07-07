@@ -1,22 +1,11 @@
 (() => {
-  const articleSelector = '.article-page-format, .single-page .article-format-inner, [data-article-head]';
-  const extensions = ['webp', 'png', 'jpg', 'jpeg', 'gif'];
-  const cache = '20260707-scroll-2';
-  const candidates = name => extensions.map(ext => `/assets/img/${name}.${ext}`);
+  const cache = '20260707-scroll-3';
 
-  const test = src => new Promise(resolve => {
-    const img = new Image();
-    img.onload = () => resolve(src);
-    img.onerror = () => resolve('');
-    img.src = `${src}?v=${cache}`;
-  });
-
-  const find = async name => {
-    for (const src of candidates(name)) {
-      const ok = await test(src);
-      if (ok) return ok;
-    }
-    return '';
+  const isArticlePage = () => {
+    if (document.querySelector('#home')) return false;
+    if (document.querySelector('.archive-system-page, .ultimi-page')) return false;
+    if (document.querySelector('.article-page-format, .article-format-inner, [data-article-head]')) return true;
+    return /^\/[^#?]+\/$/.test(location.pathname) && location.pathname !== '/';
   };
 
   const addStyle = () => {
@@ -42,10 +31,6 @@
         backface-visibility: hidden !important;
       }
 
-      .article-ornament-column:not(.is-ready) {
-        visibility: hidden !important;
-      }
-
       .article-ornament-track {
         position: absolute !important;
         left: 0 !important;
@@ -56,7 +41,7 @@
         will-change: transform !important;
         backface-visibility: hidden !important;
         transform: translate3d(0, -50%, 0) !important;
-        animation: articleOrnamentFall 30s linear infinite !important;
+        animation: articleOrnamentFall 28s linear infinite !important;
       }
 
       .article-ornament-track img {
@@ -72,10 +57,6 @@
         user-select: none !important;
       }
 
-      .article-ornament-track img.is-m1 {
-        opacity: .96 !important;
-      }
-
       @keyframes articleOrnamentFall {
         from { transform: translate3d(0, -50%, 0); }
         to { transform: translate3d(0, 0, 0); }
@@ -86,75 +67,60 @@
           width: var(--article-ornament-width, 52px) !important;
         }
       }
-
-      @media (prefers-reduced-motion: reduce) {
-        .article-ornament-track {
-          animation-duration: 120s !important;
-        }
-      }
     `;
     document.head.appendChild(style);
   };
 
-  const pattern = (m2, m1) => {
-    const rows = [];
-    const m1Slots = new Set([6, 17, 31, 48, 67]);
-    for (let i = 0; i < 84; i += 1) {
-      rows.push({ src: m2, kind: 'm2' });
-      if (m1 && m1Slots.has(i)) rows.push({ src: m1, kind: 'm1' });
-    }
-    return rows;
-  };
+  const src = name => `/assets/img/${name}.png?v=${cache}`;
 
-  const makeImg = item => {
+  const makeImg = name => {
     const img = document.createElement('img');
-    img.src = `${item.src}?v=${cache}`;
+    img.src = src(name);
     img.alt = '';
     img.loading = 'eager';
     img.decoding = 'async';
     img.draggable = false;
-    img.className = item.kind === 'm1' ? 'is-m1' : 'is-m2';
+    img.className = name === 'm1' ? 'is-m1' : 'is-m2';
     return img;
   };
 
-  const waitImages = root => Promise.all([...root.querySelectorAll('img')].map(img => {
-    if (img.complete && img.naturalWidth) return Promise.resolve(true);
-    return new Promise(resolve => {
-      img.onload = () => resolve(true);
-      img.onerror = () => resolve(false);
-    });
-  }));
+  const buildSequence = () => {
+    const seq = [];
+    const m1Slots = new Set([7, 19, 34, 52, 73]);
+    for (let i = 0; i < 90; i += 1) {
+      seq.push('m2');
+      if (m1Slots.has(i)) seq.push('m1');
+    }
+    return seq;
+  };
 
-  const build = async () => {
-    if (!document.querySelector(articleSelector)) return;
+  const build = () => {
+    if (!isArticlePage()) return;
     if (document.querySelector('[data-article-ornament-column]')) return;
 
     addStyle();
 
-    const m2 = await find('m2');
-    if (!m2) return;
-    const m1 = await find('m1');
-    const seq = pattern(m2, m1);
-
     const column = document.createElement('aside');
-    column.className = 'article-ornament-column';
+    column.className = 'article-ornament-column is-ready';
     column.dataset.articleOrnamentColumn = '1';
     column.setAttribute('aria-hidden', 'true');
 
     const track = document.createElement('div');
     track.className = 'article-ornament-track';
 
-    seq.concat(seq).forEach(item => track.appendChild(makeImg(item)));
+    const seq = buildSequence();
+    seq.concat(seq).forEach(name => track.appendChild(makeImg(name)));
 
     column.appendChild(track);
     document.body.appendChild(column);
-    await waitImages(track);
-    column.classList.add('is-ready');
   };
 
-  const start = () => build().catch(() => {});
+  const start = () => {
+    try { build(); } catch {}
+  };
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
   else start();
-  setTimeout(start, 500);
-  setTimeout(start, 1300);
+  setTimeout(start, 400);
+  setTimeout(start, 1200);
 })();
