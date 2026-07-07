@@ -79,7 +79,7 @@ title: MANCUSPIE
     <div class="item-list">
       {% set shown = 0 %}
       {% for post in collections.testi | reverse %}
-        {% if post.data.tipo == 'Notizia' and shown < 4 %}
+        {% if post.data.tipo == 'notizie' and shown < 4 %}
           <a class="item" href="{{ post.url }}"><span>{{ post.data.title }}</span><em>Notizia{% if post.data.author %} / <strong>di {{ post.data.author }}</strong>{% endif %}</em></a>
           {% set shown = shown + 1 %}
         {% endif %}
