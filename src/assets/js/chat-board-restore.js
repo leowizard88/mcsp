@@ -11,9 +11,11 @@
   const ensurePanel = () => {
     let panel = document.querySelector('#chat');
     if (panel) return panel;
+
     const main = document.querySelector('.site-main');
     const projects = document.querySelector('#progetti');
-    if (!main || !projects) return null;
+    if (!main) return null;
+
     panel = document.createElement('section');
     panel.id = 'chat';
     panel.className = 'panel content-panel chat-panel';
@@ -30,7 +32,9 @@
         <div class="chat-messages" data-chat-messages aria-live="polite"></div>
       </div>
       <footer class="footer"><span>© MANCUSPIE</span><span></span><span></span></footer>`;
-    main.appendChild(panel);
+
+    if (projects && projects.parentNode === main) main.insertBefore(panel, projects.nextSibling);
+    else main.appendChild(panel);
     return panel;
   };
 
@@ -47,7 +51,6 @@
     const list = panel.querySelector('[data-chat-messages]');
     if (!form || !nameInput || !textInput || !list) return;
 
-    const openReplies = new Set();
     const openBranches = new Set();
     const savedName = localStorage.getItem(nameKey) || '';
     if (savedName) {
@@ -66,7 +69,7 @@
     };
 
     const replyForm = id => `
-      <form class="chat-reply${openReplies.has(id) ? ' is-open' : ''}" data-chat-reply-form="${esc(id)}">
+      <form class="chat-reply is-open" data-chat-reply-form="${esc(id)}">
         <input data-chat-reply-name type="text" maxlength="24" placeholder="nickname" value="${esc(localStorage.getItem(nameKey) || '')}" ${localStorage.getItem(nameKey) ? 'readonly class="is-locked"' : ''} required>
         <textarea data-chat-reply-text maxlength="260" placeholder="rispondi qui" required></textarea>
         <button type="submit">Rispondi</button>
@@ -80,7 +83,7 @@
       const childHtml = collapsed ? '' : children.map(child => renderMessage(child, childrenByParent, depth + 1)).join('');
       const branchButton = children.length && depth >= 4 ? `<button class="chat-branch-toggle" type="button" data-chat-branch-toggle="${esc(item.id)}">${openBranches.has(item.id) ? 'Chiudi ramo' : `Mostra ${children.length} risposte`}</button>` : '';
       const avatar = item.avatar ? `<img class="chat-avatar" src="${esc(item.avatar)}" alt="">` : '';
-      return `<article class="chat-message${depth ? ' is-reply' : ''}" style="${depth ? `margin-left:${margin}px` : ''}"><div class="chat-author">${avatar}<strong>${esc(item.name || 'Anonimo')}</strong><time>${esc(formatTime(item.time))}</time></div><p>${esc(item.text || '')}</p><button class="chat-reply-toggle" type="button" data-chat-reply-toggle="${esc(item.id)}">Rispondi</button>${branchButton}${replyForm(item.id)}</article>${childHtml}`;
+      return `<article class="chat-message${depth ? ' is-reply' : ''}" style="${depth ? `margin-left:${margin}px` : ''}"><div class="chat-author">${avatar}<strong>${esc(item.name || 'Anonimo')}</strong><time>${esc(formatTime(item.time))}</time></div><p>${esc(item.text || '')}</p>${branchButton}${replyForm(item.id)}</article>${childHtml}`;
     };
 
     const render = messages => {
@@ -130,12 +133,10 @@
 
     panel.addEventListener('click', event => {
       const branchButton = event.target.closest('[data-chat-branch-toggle]');
-      if (branchButton) { const id = branchButton.dataset.chatBranchToggle; openBranches.has(id) ? openBranches.delete(id) : openBranches.add(id); load(); return; }
-      const button = event.target.closest('[data-chat-reply-toggle]');
-      if (!button) return;
-      const id = button.dataset.chatReplyToggle;
-      openReplies.has(id) ? openReplies.delete(id) : openReplies.add(id);
-      panel.querySelector(`[data-chat-reply-form="${cssEsc(id)}"]`)?.classList.toggle('is-open', openReplies.has(id));
+      if (!branchButton) return;
+      const id = branchButton.dataset.chatBranchToggle;
+      openBranches.has(id) ? openBranches.delete(id) : openBranches.add(id);
+      load();
     });
 
     panel.addEventListener('submit', async event => {
@@ -150,7 +151,7 @@
       const parentId = reply.dataset.chatReplyForm;
       if (!name || !text || !parentId) return;
       if (!lockedName) lockName(name);
-      try { openReplies.delete(parentId); openBranches.add(parentId); await sendMessage({ name, text, parentId }); }
+      try { openBranches.add(parentId); await sendMessage({ name, text, parentId }); }
       catch (error) { list.innerHTML = `<div class="chat-message"><p class="chat-error">Invio fallito: ${esc(error.message)}</p></div>`; }
     });
 
