@@ -41,22 +41,11 @@ title: Greed Island
 </section>
 <script>
 (() => {
-  const readStore = (store, key) => { try { return store.getItem(key); } catch { return null; } };
-  const parseMaybe = value => { try { return JSON.parse(value); } catch { return value; } };
-  const normalizeUser = raw => {
-    if (!raw) return null;
-    if (typeof raw === 'string') return raw.trim() ? { id: raw.trim(), name: raw.trim() } : null;
-    const src = raw.user || raw.account || raw.profile || raw.session || raw;
-    const id = src.id || src.uid || src.userId || src.username || src.handle || src.email || src.name;
-    if (!id) return null;
-    return { id:String(id), name:String(src.username || src.handle || src.name || src.email || id), email:src.email || '' };
-  };
   const getMancuspieUser = () => {
-    if (window.netlifyIdentity && typeof window.netlifyIdentity.currentUser === 'function') return normalizeUser(window.netlifyIdentity.currentUser());
-    const names = ['mancuspieUser','mancuspie:user','mancuspieAccount','mancuspieProfile','mancuspieSession','currentMancuspieUser','mcspUser','mcsp:user','loggedUser','currentUser'];
-    for (const store of [localStorage, sessionStorage]) for (const k of names) { const u = normalizeUser(parseMaybe(readStore(store,k))); if (u) return u; }
-    for (const store of [localStorage, sessionStorage]) for (let i=0;i<store.length;i++) { const k = store.key(i) || ''; if (/mancuspie|mcsp/i.test(k)) { const u = normalizeUser(parseMaybe(readStore(store,k))); if (u) return u; } }
-    return null;
+    const token = localStorage.getItem('mancuspieAuthToken') || '';
+    if (!token) return null;
+    const name = localStorage.getItem('mancuspiePublicName') || 'utente-mancuspie';
+    return { id: token.slice(-32) || token, name };
   };
   const account = getMancuspieUser();
   if (!account) { document.body.classList.add('greed-not-logged'); return; }
@@ -85,7 +74,7 @@ title: Greed Island
   const infoHtml = data => `<h2>Info</h2><div class="info-grid">${Object.keys(labels).map(k => `<div class="info-item ${k === 'storia' || k === 'nen' ? 'wide' : ''}"><strong>${labels[k]}</strong><span>${esc(data[k])}</span></div>`).join('')}</div>`;
   const openPanel = name => { const data = getProfile(); if (!data) return; if (name === 'players') panel.innerHTML = `<h2>Giocatori</h2><ul class="player-list"><li>${esc(data.nome)}</li></ul>`; if (name === 'explore') panel.innerHTML = '<h2>Esplora</h2><p>Modulo esplorazione da costruire.</p>'; if (name === 'info') panel.innerHTML = infoHtml(data); if (name === 'guide') panel.innerHTML = '<h2>Guida</h2><p>Guida del gioco da scrivere.</p>'; panel.classList.add('is-active'); };
   renderState();
-  form.addEventListener('submit', e => { e.preventDefault(); const data = Object.fromEntries(new FormData(form).entries()); if (Object.values(data).some(v => !String(v).trim())) return; data.ownerId = account.id; data.ownerName = account.name; data.ownerEmail = account.email || ''; localStorage.setItem(key, JSON.stringify(data)); if (!localStorage.getItem(locKey)) localStorage.setItem(locKey, 'Sperduto'); renderState(); history.pushState(null, '', '/greed-island/profilo/'); });
+  form.addEventListener('submit', e => { e.preventDefault(); const data = Object.fromEntries(new FormData(form).entries()); if (Object.values(data).some(v => !String(v).trim())) return; data.ownerId = account.id; data.ownerName = account.name; localStorage.setItem(key, JSON.stringify(data)); if (!localStorage.getItem(locKey)) localStorage.setItem(locKey, 'Sperduto'); renderState(); history.pushState(null, '', '/greed-island/profilo/'); });
   toggle.addEventListener('click', () => document.body.classList.toggle('menu-open'));
   document.querySelectorAll('[data-panel]').forEach(btn => btn.addEventListener('click', () => openPanel(btn.dataset.panel)));
   document.querySelectorAll('[data-place]').forEach(btn => btn.addEventListener('click', () => { const name = btn.dataset.place; selectedPlace = ''; cityTitle.textContent = name; cityEnter.hidden = true; if (name === 'Limeiro') { cityInfo.textContent = info.Limeiro; } else if (!canGo(name) && getLoc() !== name) { cityInfo.textContent = 'non puoi arrivare qua a piedi da dove sei ora!'; } else { cityInfo.textContent = info[name] || ''; if (getLoc() !== name) { selectedPlace = name; cityEnter.hidden = false; } } cityPopup.classList.add('is-open'); }));
