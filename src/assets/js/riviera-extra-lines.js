@@ -1,4 +1,13 @@
 window.RF_EXTRA_LINES = [
+  'porcodio!',
+  'dioporcus',
+  'porcodio type...',
+  'madonna troia type nen shit',
+  'Dio canta 777 hai vinto',
+  'AHAHAHAHHAHAHHA',
+  'kurapika situation',
+  ' che situa',
+  ' minchia...',
   'Gasa',
   'Hard',
   'Fuoco',
