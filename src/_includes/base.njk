@@ -54,6 +54,60 @@
 
     .chat-reply {
       display: grid !important;
+      grid-template-columns: minmax(130px, 190px) minmax(220px, 1fr) auto !important;
+      gap: 8px !important;
+      align-items: stretch !important;
+      margin-top: 12px !important;
+      max-width: min(760px, 100%) !important;
+    }
+
+    .chat-reply input,
+    .chat-reply textarea {
+      width: 100% !important;
+      min-height: 44px !important;
+      box-sizing: border-box !important;
+      border: 1px solid rgba(31,28,24,.36) !important;
+      border-radius: 0 !important;
+      background: rgba(234,215,179,.20) !important;
+      color: #120d08 !important;
+      box-shadow: none !important;
+      outline: none !important;
+      font: 300 13px/1.2 var(--font-sans, system-ui, sans-serif) !important;
+      letter-spacing: .045em !important;
+      padding: 11px 12px !important;
+      appearance: none !important;
+    }
+
+    .chat-reply textarea {
+      resize: vertical !important;
+      min-height: 44px !important;
+    }
+
+    .chat-reply input:focus,
+    .chat-reply textarea:focus {
+      border-color: rgba(31,28,24,.72) !important;
+      background: rgba(234,215,179,.32) !important;
+    }
+
+    .chat-reply button[type="submit"] {
+      min-height: 44px !important;
+      border: 1px solid rgba(31,28,24,.48) !important;
+      border-radius: 0 !important;
+      background: rgba(31,28,24,.88) !important;
+      color: #ead7b3 !important;
+      box-shadow: 4px 4px 0 rgba(31,28,24,.18) !important;
+      font: 300 10px/1 var(--font-sans, system-ui, sans-serif) !important;
+      letter-spacing: .18em !important;
+      text-transform: uppercase !important;
+      padding: 0 16px !important;
+      cursor: pointer !important;
+      appearance: none !important;
+    }
+
+    .chat-reply button[type="submit"]:hover,
+    .chat-reply button[type="submit"]:focus {
+      background: rgba(18,13,8,.96) !important;
+      transform: translate(-1px,-1px) !important;
     }
 
     .side-index {
@@ -92,6 +146,14 @@
         max-width: calc(100vw - var(--side)) !important;
         margin-left: var(--side) !important;
         overflow-x: hidden !important;
+      }
+
+      .chat-reply {
+        grid-template-columns: 1fr auto !important;
+      }
+
+      .chat-reply input {
+        grid-column: 1 / -1 !important;
       }
     }
   </style>
