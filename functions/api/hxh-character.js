@@ -12,7 +12,27 @@ const getUserByToken = async (env, token) => {
   if (!session?.userId) return null;
   return await env.CHAT_MESSAGES.get(`auth:user:${session.userId}`, 'json').catch(() => null);
 };
-const routes = { Sperduto:['Masadora'], Masadora:['Antokiba','Foresta Oscura'], Antokiba:['Masadora','Rubicuta','Dorias'], Rubicuta:['Dorias','Antokiba','Aiai'], Dorias:['Rubicuta','Antokiba'], Aiai:['Rubicuta'], 'Foresta Oscura':['Bunzen','Masadora'], Bunzen:['Foresta Oscura','Soufrabi'], Soufrabi:['Bunzen'], Limeiro:[] };
+const routes = {
+  Sperduto:['Masadora'],
+  Masadora:['Shiso tree','Foresta Oscura','Limeiro'],
+  'Shiso tree':['Masadora','Antokiba'],
+  'Foresta Oscura':['Masadora','Villaggio di banditi','Bunzen'],
+  Antokiba:['Shiso tree','Rubicuta','Isola sul lago','Accampamento misterioso'],
+  Bunzen:['Foresta Oscura','Soufrabi','Casa senile'],
+  'Villaggio di banditi':['Badlands','Foresta Oscura','Limeiro'],
+  Badlands:['Villaggio di banditi','Limeiro'],
+  'Casa senile':['Bunzen'],
+  'Isola sul lago':['Antokiba'],
+  Rubicuta:['Antokiba','Rovine infestate','Dorias'],
+  'Rovine infestate':['Rubicuta','Dorias','Plateau Bye Bye'],
+  Dorias:['Rubicuta','Rovine infestate'],
+  'Plateau Bye Bye':['Rovine infestate','Aiai'],
+  'Accampamento misterioso':['Antokiba','Aiai'],
+  Aiai:['Accampamento misterioso','Plateau Bye Bye'],
+  Limeiro:['Masadora','Badlands'],
+  Soufrabi:['Bunzen'],
+  Farlands:[]
+};
 const allowedPlaces = new Set(Object.keys(routes));
 const PARAMS = ['forza','robustezza','nen','intelligenza','malizia','agilita','oratoria','percezione'];
 const healthBase = { testa:5, corpo:8, braccioDx:6, braccioSx:6, gambaDx:7, gambaSx:7 };
@@ -82,26 +102,7 @@ export async function onRequestPost({ request, env }) {
 
   if (action === 'save') {
     const existing = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
-    const character = {
-      userId: user.id,
-      username: user.username,
-      nome: clean(data.nome).slice(0, 40),
-      cognome: clean(data.cognome).slice(0, 40),
-      eta: clean(data.eta).slice(0, 8),
-      sesso: clean(data.sesso).slice(0, 40),
-      storia: clean(data.storia).slice(0, 1400),
-      nen: clean(data.nen).slice(0, 900),
-      autore: clean(data.autore).slice(0, 80),
-      location: existing?.location || 'Sperduto',
-      level: existing?.level || 1,
-      xp: existing?.xp || 0,
-      jenny: existing?.jenny || 0,
-      paramPoints: existing?.paramPoints || 0,
-      setupPoints: existing ? existing.setupPoints : 10,
-      params: existing?.params || blankParams(),
-      createdAt: existing?.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+    const character = { userId:user.id, username:user.username, nome:clean(data.nome).slice(0,40), cognome:clean(data.cognome).slice(0,40), eta:clean(data.eta).slice(0,8), sesso:clean(data.sesso).slice(0,40), storia:clean(data.storia).slice(0,1400), nen:clean(data.nen).slice(0,900), autore:clean(data.autore).slice(0,80), location:existing?.location || 'Sperduto', level:existing?.level || 1, xp:existing?.xp || 0, jenny:existing?.jenny || 0, paramPoints:existing?.paramPoints || 0, setupPoints:existing ? existing.setupPoints : 10, params:existing?.params || blankParams(), createdAt:existing?.createdAt || new Date().toISOString(), updatedAt:new Date().toISOString() };
     if (!character.nome || !character.cognome || !character.eta || !character.sesso || !character.storia || !character.nen || !character.autore) return json({ error: 'Compila tutti i campi' }, 400);
     await saveCharacter(env, key, character);
     return json({ character: ownCharacter(character) });
@@ -154,7 +155,7 @@ export async function onRequestPost({ request, env }) {
     if (!character.ready) return json({ error: 'Distribuisci prima tutti i 10 punti parametro iniziali' }, 403);
     const place = clean(data.place);
     if (!allowedPlaces.has(place)) return json({ error: 'Location non valida' }, 400);
-    if (place === 'Limeiro') return json({ error: 'La capitale è accessibile solo con tutte le carte collezionate!' }, 403);
+    if (character.location === 'Masadora' && place === 'Limeiro') return json({ error: 'Limeiro è accessibile da Masadora solo se possiedi tutte le carte.' }, 403);
     const from = character.location || 'Sperduto';
     if (!(routes[from] || []).includes(place)) return json({ error: 'non puoi arrivare qua a piedi da dove sei ora!' }, 403);
     character.location = place;
