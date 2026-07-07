@@ -1,12 +1,13 @@
 (() => {
   const articleSelector = '.article-page-format, .single-page .article-format-inner, [data-article-head]';
   const extensions = ['webp', 'png', 'jpg', 'jpeg', 'gif'];
+  const cache = '20260707-solid3';
   const candidates = name => extensions.map(ext => `/assets/img/${name}.${ext}`);
   const test = src => new Promise(resolve => {
     const img = new Image();
     img.onload = () => resolve(src);
     img.onerror = () => resolve('');
-    img.src = `${src}?v=20260707-solid2`;
+    img.src = `${src}?v=${cache}`;
   });
   const find = async name => {
     for (const src of candidates(name)) {
@@ -26,13 +27,16 @@
         right: 0 !important;
         bottom: auto !important;
         width: var(--article-ornament-width, 150px) !important;
-        height: 100vh !important;
-        height: 100svh !important;
+        height: 120vh !important;
+        height: 120lvh !important;
         overflow: hidden !important;
         z-index: 6 !important;
         pointer-events: none !important;
-        background: #050505 !important;
-        transform: translateZ(0) !important;
+        background-color: #050505 !important;
+        background-image: var(--ornament-fallback) !important;
+        background-repeat: repeat-y !important;
+        background-size: 100% auto !important;
+        transform: translate3d(0, 0, 0) !important;
         backface-visibility: hidden !important;
         contain: paint !important;
       }
@@ -44,9 +48,8 @@
         width: 100% !important;
         display: flex !important;
         flex-direction: column !important;
-        animation: mancuspieOrnamentSolid 11s linear infinite !important;
+        animation: none !important;
         will-change: transform !important;
-        transform: translate3d(0, -50%, 0) !important;
         backface-visibility: hidden !important;
       }
       .article-ornament-track img {
@@ -60,36 +63,51 @@
         vertical-align: top !important;
         background: #050505 !important;
       }
-      @keyframes mancuspieOrnamentSolid {
-        from { transform: translate3d(0, -50%, 0); }
-        to { transform: translate3d(0, 0, 0); }
-      }
       @media (max-width: 760px) {
         .article-ornament-column {
-          height: 100svh !important;
-          min-height: 100svh !important;
+          height: 140vh !important;
+          height: 140lvh !important;
         }
-        .article-ornament-track { animation-duration: 10s !important; }
       }
     `;
     document.head.appendChild(style);
   };
   const pattern = (m2, m1) => {
     const rows = [];
-    for (let i = 0; i < 48; i += 1) {
+    for (let i = 0; i < 56; i += 1) {
       rows.push(m2);
-      if (m1 && [4, 11, 18, 27, 36, 44].includes(i)) rows.push(m1);
+      if (m1 && [3, 9, 16, 24, 33, 42, 51].includes(i)) rows.push(m1);
     }
     return rows;
   };
   const makeImg = src => {
     const img = document.createElement('img');
-    img.src = `${src}?v=20260707-solid2`;
+    img.src = `${src}?v=${cache}`;
     img.alt = '';
     img.loading = 'eager';
     img.decoding = 'async';
     img.draggable = false;
     return img;
+  };
+  const waitImages = root => Promise.all([...root.querySelectorAll('img')].map(img => {
+    if (img.complete && img.naturalWidth) return Promise.resolve(true);
+    return new Promise(resolve => {
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+    });
+  }));
+  const run = (track, blockHeight) => {
+    let offset = 0;
+    let last = performance.now();
+    const speed = 170;
+    const tick = now => {
+      const delta = Math.min(48, now - last);
+      last = now;
+      offset = (offset + speed * delta / 1000) % blockHeight;
+      track.style.setProperty('transform', `translate3d(0, ${-blockHeight + offset}px, 0)`, 'important');
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
   };
   const build = async () => {
     if (!document.querySelector(articleSelector)) return;
@@ -99,17 +117,21 @@
     if (!m2) return;
     const m1 = await find('m1');
     const seq = pattern(m2, m1);
-    const doubled = seq.concat(seq);
     const column = document.createElement('aside');
     column.className = 'article-ornament-column';
     column.dataset.articleOrnamentColumn = '1';
     column.setAttribute('aria-hidden', 'true');
+    column.style.setProperty('--ornament-fallback', `url("${m2}?v=${cache}")`);
     const track = document.createElement('div');
     track.className = 'article-ornament-track';
-    doubled.forEach(src => track.appendChild(makeImg(src)));
+    seq.concat(seq, seq).forEach(src => track.appendChild(makeImg(src)));
     column.appendChild(track);
     document.body.appendChild(column);
-    requestAnimationFrame(() => column.classList.add('is-ready'));
+    await waitImages(track);
+    const blockHeight = Math.max(1, Math.round(track.scrollHeight / 3));
+    track.style.setProperty('transform', `translate3d(0, ${-blockHeight}px, 0)`, 'important');
+    column.classList.add('is-ready');
+    run(track, blockHeight);
   };
   const start = () => build().catch(() => {});
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
