@@ -54,53 +54,55 @@
 
     .chat-reply {
       display: grid !important;
-      grid-template-columns: minmax(96px, 140px) minmax(160px, 290px) auto !important;
-      gap: 5px !important;
-      align-items: stretch !important;
-      margin-top: 7px !important;
-      max-width: min(500px, 100%) !important;
+      grid-template-columns: minmax(80px, 120px) minmax(130px, 240px) max-content !important;
+      gap: 4px !important;
+      align-items: center !important;
+      margin-top: 5px !important;
+      max-width: min(400px, 100%) !important;
     }
 
     .chat-reply input,
     .chat-reply textarea {
       width: 100% !important;
-      min-height: 28px !important;
+      min-height: 22px !important;
+      height: 22px !important;
       box-sizing: border-box !important;
-      border: 1px solid rgba(31,28,24,.34) !important;
+      border: 1px solid rgba(31,28,24,.30) !important;
       border-radius: 0 !important;
-      background: rgba(234,215,179,.18) !important;
+      background: rgba(234,215,179,.14) !important;
       color: #120d08 !important;
       box-shadow: none !important;
       outline: none !important;
-      font: 300 11px/1.1 var(--font-sans, system-ui, sans-serif) !important;
-      letter-spacing: .035em !important;
-      padding: 6px 7px !important;
+      font: 300 10px/1 var(--font-sans, system-ui, sans-serif) !important;
+      letter-spacing: .02em !important;
+      padding: 3px 5px !important;
       appearance: none !important;
     }
 
     .chat-reply textarea {
       resize: vertical !important;
-      min-height: 28px !important;
-      height: 28px !important;
     }
 
     .chat-reply input:focus,
     .chat-reply textarea:focus {
-      border-color: rgba(31,28,24,.68) !important;
-      background: rgba(234,215,179,.28) !important;
+      border-color: rgba(31,28,24,.62) !important;
+      background: rgba(234,215,179,.24) !important;
     }
 
     .chat-reply button[type="submit"] {
-      min-height: 28px !important;
-      border: 1px solid rgba(31,28,24,.48) !important;
+      width: auto !important;
+      min-width: 42px !important;
+      min-height: 22px !important;
+      height: 22px !important;
+      border: 1px solid rgba(31,28,24,.44) !important;
       border-radius: 0 !important;
       background: rgba(31,28,24,.88) !important;
       color: #ead7b3 !important;
-      box-shadow: 2px 2px 0 rgba(31,28,24,.16) !important;
-      font: 300 8px/1 var(--font-sans, system-ui, sans-serif) !important;
-      letter-spacing: .14em !important;
+      box-shadow: none !important;
+      font: 300 7px/1 var(--font-sans, system-ui, sans-serif) !important;
+      letter-spacing: .08em !important;
       text-transform: uppercase !important;
-      padding: 0 8px !important;
+      padding: 0 5px !important;
       cursor: pointer !important;
       appearance: none !important;
     }
@@ -108,7 +110,7 @@
     .chat-reply button[type="submit"]:hover,
     .chat-reply button[type="submit"]:focus {
       background: rgba(18,13,8,.96) !important;
-      transform: translate(-1px,-1px) !important;
+      transform: none !important;
     }
 
     .side-index {
@@ -150,7 +152,7 @@
       }
 
       .chat-reply {
-        grid-template-columns: minmax(0, 1fr) auto !important;
+        grid-template-columns: minmax(0, 1fr) max-content !important;
         max-width: 100% !important;
       }
 
