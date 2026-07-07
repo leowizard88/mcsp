@@ -55,4 +55,6 @@
     state.scale = next;
     apply();
   }, { capture:true, passive:false });
+
+  import('/assets/js/greed-new-locations.js?v=20260708-expanded-1');
 })();
