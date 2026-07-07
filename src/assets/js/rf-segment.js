@@ -4,6 +4,16 @@
   const log = document.querySelector('[data-chrollo-log]');
   if (!img || !log || img.dataset.cutReady) return;
   img.dataset.cutReady = '1';
+
+  const loadTextPack = () => {
+    if (window.RF_LONG_LINES || window.RF_LONG_LINES_LOADING) return;
+    window.RF_LONG_LINES_LOADING = true;
+    const s = document.createElement('script');
+    s.src = '/assets/js/riviera-long-lines.js?v=20260707-1';
+    document.head.appendChild(s);
+  };
+  loadTextPack();
+
   const parent = img.parentNode;
   const box = document.createElement('span');
   box.style.cssText = 'position:relative;display:block;width:280px;max-width:26vw;flex:0 0 auto;filter:drop-shadow(7px 7px 0 rgba(0,0,0,.72));pointer-events:none';
@@ -35,5 +45,15 @@
     setTimeout(()=>frame(0), 760);
   };
 
-  new MutationObserver(items => { for (const item of items) for (const node of item.addedNodes) if (node.nodeType === 1 && node.classList.contains('bot')) move(); }).observe(log, { childList: true });
+  const maybeLong = node => {
+    const pack = Array.isArray(window.RF_LONG_LINES) ? window.RF_LONG_LINES : [];
+    if (!pack.length || Math.random() > 0.28) return;
+    node.textContent = pack[Math.floor(Math.random() * pack.length)];
+  };
+
+  new MutationObserver(items => {
+    for (const item of items) for (const node of item.addedNodes) {
+      if (node.nodeType === 1 && node.classList.contains('bot')) { maybeLong(node); move(); }
+    }
+  }).observe(log, { childList: true });
 })();
