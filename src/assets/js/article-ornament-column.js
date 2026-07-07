@@ -1,5 +1,5 @@
 (() => {
-  const cache = '20260707-force-3';
+  const cache = '20260707-force-2';
   const extensions = ['webp', 'png', 'jpg', 'jpeg', 'gif'];
 
   const isArticlePage = () => {
