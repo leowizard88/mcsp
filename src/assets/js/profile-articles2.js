@@ -15,13 +15,22 @@
   `;
   document.head.appendChild(style);
 
+  const fixedUrl = item => {
+    const url = String(item?.url || '').trim();
+    if (url && url !== '/') return url;
+    const path = String(item?.sourcePath || '').trim();
+    const file = path.split('/').pop() || '';
+    const slug = file.replace(/\.md$/i, '');
+    return slug ? `/${slug}/` : '/archivio/';
+  };
+
   const getArticles = async () => {
     if (cache) return cache;
     if (Array.isArray(window.MANCUSPIE_ARTICOLI)) {
       cache = window.MANCUSPIE_ARTICOLI;
       return cache;
     }
-    const res = await fetch('/articoli.json', { cache: 'no-store' });
+    const res = await fetch(`/articoli.json?v=${Date.now()}`, { cache: 'no-store' });
     cache = res.ok ? await res.json() : [];
     window.MANCUSPIE_ARTICOLI = cache;
     return cache;
@@ -40,11 +49,17 @@
     card.querySelector('.profile-articles')?.remove();
     const section = document.createElement('section');
     section.className = 'profile-articles';
-    const list = items.map(item => `<li><a href="${escapeHtml(item.url)}"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.tipo || '')}${item.rubrica ? ' / ' + escapeHtml(item.rubrica) : ''}${item.date ? ' / ' + escapeHtml(item.date) : ''}</span></a></li>`).join('');
+    const list = items.map(item => `<li><a href="${escapeHtml(fixedUrl(item))}"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.tipo || '')}${item.rubrica ? ' / ' + escapeHtml(item.rubrica) : ''}${item.date ? ' / ' + escapeHtml(item.date) : ''}</span></a></li>`).join('');
     section.innerHTML = `<h2>Articoli scritti:</h2>${items.length ? `<ul class="profile-articles-list">${list}</ul>` : '<p class="profile-status">Nessun articolo pubblicato.</p>'}`;
     card.appendChild(section);
   };
 
-  setInterval(() => draw().catch(() => {}), 1000);
-  draw().catch(() => {});
+  const start = () => {
+    draw().catch(() => {});
+    setTimeout(() => draw().catch(() => {}), 500);
+    setTimeout(() => draw().catch(() => {}), 1600);
+  };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+  else start();
 })();
