@@ -4,11 +4,11 @@
     if (!isTargetPage() || document.querySelector('[data-koko-page-bg]')) return;
     const img = document.createElement('img');
     img.setAttribute('data-koko-page-bg', '');
-    img.src = '/assets/img/koko-removebg-preview.png?v=20260707-koko-scroll';
+    img.src = '/assets/img/koko-removebg-preview.png?v=20260707-koko-fixed';
     img.alt = '';
     img.setAttribute('aria-hidden', 'true');
     Object.assign(img.style, {
-      position: 'absolute',
+      position: 'fixed',
       top: '0',
       right: '0',
       width: 'min(48vw, 620px)',
