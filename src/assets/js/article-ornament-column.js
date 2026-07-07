@@ -1,5 +1,5 @@
 (() => {
-  const cache = '20260707-force-2';
+  const cache = '20260707-force-3';
   const extensions = ['webp', 'png', 'jpg', 'jpeg', 'gif'];
 
   const isArticlePage = () => {
@@ -38,7 +38,7 @@
         width: 100% !important;
         display: flex !important;
         flex-direction: column !important;
-        animation: mancuspieForceRailDrop 24s linear infinite !important;
+        animation: mancuspieForceRailDrop 48s linear infinite !important;
         will-change: transform !important;
       }
 
