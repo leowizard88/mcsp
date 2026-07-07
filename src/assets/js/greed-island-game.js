@@ -21,6 +21,14 @@
     locationLabel.closest('.location-display')?.after(box);
     levelLabel = box.querySelector('[data-level-label]');
   }
+  let jennyLabel = document.querySelector('[data-jenny-label]');
+  if (!jennyLabel && levelLabel) {
+    const box = document.createElement('div');
+    box.className = 'jenny-display';
+    box.innerHTML = 'Jenny: <strong data-jenny-label>0</strong> Ｊ';
+    levelLabel.closest('.level-display')?.after(box);
+    jennyLabel = box.querySelector('[data-jenny-label]');
+  }
   const game = document.querySelector('[data-greed-game]');
   const welcome = document.createElement('div');
   welcome.className = 'hxh-welcome';
@@ -53,9 +61,10 @@
   };
   const style = document.createElement('style');
   style.textContent = `
+    .greed-game{background:none!important;overflow:hidden;touch-action:none;cursor:grab}.greed-game.is-dragging{cursor:grabbing}.map-world{position:absolute;inset:0;z-index:6;background:linear-gradient(rgba(0,0,0,.04),rgba(0,0,0,.18)),url('/assets/img/greed.jpg') center/cover no-repeat;transform-origin:50% 50%;will-change:transform}.map-hint{position:fixed;right:14px;top:18px;z-index:30;color:#fff;font:700 12px/1.2 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;text-shadow:1px 1px 0 #000;opacity:.72}
     .hxh-welcome{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:30;color:#fff;font:700 24px/1.1 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:.01em;text-shadow:0 1px 0 #000,1px 1px 0 #000,-1px -1px 0 #000}.hxh-welcome strong{font-weight:900;color:#fff}
     .test-levelup{position:fixed;top:58px;left:50%;transform:translateX(-50%);z-index:30;border:1px solid #dfff73;background:rgba(22,75,0,.82);color:#dfff73;font:800 12px/1 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;text-transform:uppercase;letter-spacing:.06em;padding:8px 11px;cursor:pointer;box-shadow:3px 3px 0 rgba(0,0,0,.72)}.test-levelup:hover{background:rgba(45,120,0,.92)}
-    .location-display,.level-display{z-index:30;color:#fff;font:800 14px/1 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;text-transform:none;letter-spacing:.01em;text-shadow:0 1px 0 #000,1px 1px 0 #000,-1px -1px 0 #000;background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}.location-display strong,.level-display strong{color:#fff}.level-display{position:fixed;top:22px;left:calc(var(--side,44px) + 288px)}
+    .location-display,.level-display,.jenny-display{z-index:30;color:#fff;font:800 14px/1 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;text-transform:none;letter-spacing:.01em;text-shadow:0 1px 0 #000,1px 1px 0 #000,-1px -1px 0 #000;background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}.location-display strong,.level-display strong,.jenny-display strong{color:#fff}.level-display{position:fixed;top:22px;left:calc(var(--side,44px) + 288px)}.jenny-display{position:fixed;top:44px;left:calc(var(--side,44px) + 288px)}
     .map-label{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif!important;font-weight:800!important;font-style:normal!important;font-size:clamp(13px,1.65vw,22px)!important;letter-spacing:.01em!important;color:#fff!important;-webkit-text-stroke:1px #000;text-shadow:1px 1px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000!important;text-transform:none!important}.map-label::before{content:attr(data-icon);display:inline-block;margin-right:.24em;-webkit-text-stroke:1px #000;color:inherit}.map-label.is-here{color:#00d12f!important}.map-label.can-go{color:#ffe600!important}.map-label.cant-go{color:#fff!important}.map-label:hover{filter:none!important}
     .param-card{display:none;width:min(720px,calc(100vw - var(--side,44px) - 36px));border:3px solid rgba(255,226,104,.95);background:rgba(9,20,18,.86);box-shadow:0 0 0 4px rgba(82,42,0,.8),10px 10px 0 rgba(0,0,0,.62),0 0 34px rgba(255,214,82,.32);backdrop-filter:blur(3px) saturate(1.25);padding:clamp(22px,4vw,42px);color:#fff}
     body.has-param-setup .creation-card{display:none!important}body.has-param-setup .param-card{display:block}body.has-param-setup .greed-game,body.has-param-setup .delete-character{display:none!important}
@@ -63,14 +72,66 @@
     .param-note{margin:0 0 16px;text-align:center;font:900 14px/1.35 'Courier New',monospace;color:#eaffd7;text-transform:uppercase}.param-note strong{color:#dfff73}
     .stat-list{display:grid;gap:8px}.stat-row{display:grid;grid-template-columns:minmax(120px,1fr) 38px 54px 38px;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.48);padding:9px 10px}.stat-row span:first-child{font-weight:900;text-transform:uppercase;color:#f4ffe8}.stat-value{text-align:center;color:#ffe16a;font-weight:900}.stat-plus,.stat-minus{border:1px solid #dfff73;background:#1a5300;color:#dfff73;font:900 18px/1 'Courier New',monospace;cursor:pointer;padding:5px 0}.stat-minus{background:#551111;color:#ffd0d0;border-color:#ffd0d0}.stat-plus:disabled,.stat-minus:disabled{opacity:.25;cursor:not-allowed;background:#111;color:#777;border-color:#555}
     .stat-section{margin:0 0 16px}.stat-section h3{margin:0 0 8px;color:#dfff73;font:900 17px/1 'Courier New',monospace;text-transform:uppercase;letter-spacing:.06em}.stat-mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat-tile{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.46);padding:9px}.stat-tile strong{display:block;color:#ffe16a;text-transform:uppercase;font-size:11px;margin-bottom:4px}.stat-tile span{font-weight:900}.stat-error{margin-top:10px;color:#ffb0b0;font-weight:900;text-align:center}
-    @media(max-width:760px){.hxh-welcome{top:146px;width:calc(100vw - var(--side,38px) - 42px);text-align:center;font-size:20px}.test-levelup{top:190px}.level-display{top:104px;left:calc(var(--side,38px) + 14px)}.param-card{width:calc(100vw - var(--side,38px) - 28px)}.stat-mini-grid{grid-template-columns:1fr}}
+    @media(max-width:760px){.hxh-welcome{top:146px;width:calc(100vw - var(--side,38px) - 42px);text-align:center;font-size:20px}.test-levelup{top:190px}.level-display{top:104px;left:calc(var(--side,38px) + 14px)}.jenny-display{top:126px;left:calc(var(--side,38px) + 14px)}.param-card{width:calc(100vw - var(--side,38px) - 28px)}.stat-mini-grid{grid-template-columns:1fr}.map-hint{display:none}}
   `;
   document.head.appendChild(style);
+
+  const mapWorld = document.createElement('div');
+  mapWorld.className = 'map-world';
+  game?.prepend(mapWorld);
   document.querySelectorAll('[data-place]').forEach(btn => {
     const type = placeTypes[btn.dataset.place] || 'neutral';
     btn.dataset.type = type;
     btn.dataset.icon = placeIcons[type] || '★';
+    mapWorld.appendChild(btn);
   });
+  const hint = document.createElement('div');
+  hint.className = 'map-hint';
+  hint.textContent = 'rotella: zoom · trascina: sposta';
+  game?.appendChild(hint);
+  const mapState = { x:0, y:0, scale:1, down:false, px:0, py:0, moved:false };
+  const applyMap = () => { mapWorld.style.transform = `translate(${mapState.x}px,${mapState.y}px) scale(${mapState.scale})`; };
+  applyMap();
+  game?.addEventListener('wheel', e => {
+    if (e.target.closest('button,nav,.menu-panel,.city-popup,.test-levelup')) return;
+    e.preventDefault();
+    const old = mapState.scale;
+    const next = Math.max(1, Math.min(3.2, old + (e.deltaY < 0 ? .12 : -.12)));
+    if (next === old) return;
+    const rect = game.getBoundingClientRect();
+    const cx = e.clientX - rect.left - rect.width / 2 - mapState.x;
+    const cy = e.clientY - rect.top - rect.height / 2 - mapState.y;
+    mapState.x -= cx * (next / old - 1);
+    mapState.y -= cy * (next / old - 1);
+    mapState.scale = next;
+    applyMap();
+  }, { passive:false });
+  game?.addEventListener('pointerdown', e => {
+    if (e.target.closest('button,nav,.menu-panel,.city-popup,.test-levelup')) return;
+    mapState.down = true;
+    mapState.moved = false;
+    mapState.px = e.clientX;
+    mapState.py = e.clientY;
+    game.classList.add('is-dragging');
+    game.setPointerCapture?.(e.pointerId);
+  });
+  game?.addEventListener('pointermove', e => {
+    if (!mapState.down) return;
+    const dx = e.clientX - mapState.px;
+    const dy = e.clientY - mapState.py;
+    if (Math.abs(dx) + Math.abs(dy) > 3) mapState.moved = true;
+    mapState.x += dx;
+    mapState.y += dy;
+    mapState.px = e.clientX;
+    mapState.py = e.clientY;
+    applyMap();
+  });
+  game?.addEventListener('pointerup', e => {
+    mapState.down = false;
+    game.classList.remove('is-dragging');
+    game.releasePointerCapture?.(e.pointerId);
+  });
+
   const paramCard = document.createElement('section');
   paramCard.className = 'param-card';
   paramCard.setAttribute('aria-label', 'Scheda parametri');
@@ -89,7 +150,7 @@
   }).join('')}</div>${setup ? `<p class="param-note">Devi spendere tutti i punti iniziali per entrare nella mappa.</p>` : ''}`;
   const generalHtml = c => {
     const g = c.stats?.generali || {};
-    return `<div class="stat-section"><h3>Statistiche generali</h3><div class="stat-mini-grid"><div class="stat-tile"><strong>Livello</strong><span>${g.livello ?? c.level}</span></div><div class="stat-tile"><strong>Esperienza</strong><span>${g.esperienza ?? c.xp} / ${g.prossimoLivello ?? c.nextXp}</span></div><div class="stat-tile"><strong>Punti parametro</strong><span>${g.puntiParametro ?? c.paramPoints}</span></div><div class="stat-tile"><strong>Energia</strong><span>${ratio(g.energia)}</span></div><div class="stat-tile"><strong>Salute generale</strong><span>${ratio(g.saluteGenerale)}</span></div><div class="stat-tile"><strong>Nen</strong><span>${ratio(g.nen)}</span></div></div></div>`;
+    return `<div class="stat-section"><h3>Statistiche generali</h3><div class="stat-mini-grid"><div class="stat-tile"><strong>Livello</strong><span>${g.livello ?? c.level}</span></div><div class="stat-tile"><strong>Esperienza</strong><span>${g.esperienza ?? c.xp} / ${g.prossimoLivello ?? c.nextXp}</span></div><div class="stat-tile"><strong>Punti parametro</strong><span>${g.puntiParametro ?? c.paramPoints}</span></div><div class="stat-tile"><strong>Jenny</strong><span>${c.jenny || 0} Ｊ</span></div><div class="stat-tile"><strong>Energia</strong><span>${ratio(g.energia)}</span></div><div class="stat-tile"><strong>Salute generale</strong><span>${ratio(g.saluteGenerale)}</span></div><div class="stat-tile"><strong>Nen</strong><span>${ratio(g.nen)}</span></div></div></div>`;
   };
   const healthHtml = c => `<div class="stat-section"><h3>Statistiche salute</h3><div class="stat-mini-grid">${Object.entries(healthLabels).map(([k,label]) => `<div class="stat-tile"><strong>${label}</strong><span>${c.stats?.salute?.[k] ?? 0}</span></div>`).join('')}</div></div>`;
   const renderParamSetup = () => {
@@ -123,6 +184,7 @@
     const loc = location();
     if (locationLabel) locationLabel.textContent = loc;
     if (levelLabel) levelLabel.textContent = state.character?.level || 1;
+    if (jennyLabel) jennyLabel.textContent = state.character?.jenny || 0;
     if (welcomeName) welcomeName.textContent = state.character?.nome || 'giocatore';
     document.querySelectorAll('[data-place]').forEach(btn => {
       const place = btn.dataset.place;
@@ -198,7 +260,8 @@
     document.body.classList.toggle('menu-open');
   });
   document.querySelectorAll('[data-panel]').forEach(btn => btn.addEventListener('click', () => openPanel(btn.dataset.panel)));
-  document.querySelectorAll('[data-place]').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('[data-place]').forEach(btn => btn.addEventListener('click', e => {
+    if (mapState.moved) return;
     if ((state.character?.setupPoints || 0) > 0) return;
     const name = btn.dataset.place;
     selectedPlace = '';
