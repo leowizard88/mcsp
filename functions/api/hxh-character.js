@@ -121,6 +121,21 @@ export async function onRequestPost({ request, env }) {
     return json({ character: ownCharacter(character) });
   }
 
+  if (action === 'deallocate') {
+    const character = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
+    if (!character) return json({ error: 'Crea prima un personaggio HxH' }, 404);
+    if (character.setupPoints <= 0) return json({ error: 'Puoi togliere punti solo durante la distribuzione iniziale' }, 403);
+    const param = clean(data.param);
+    if (!PARAMS.includes(param)) return json({ error: 'Parametro non valido' }, 400);
+    const amount = clampInt(data.amount || 1, 1, 50);
+    if (clampInt(character.params[param]) < amount) return json({ error: 'Questo parametro è già a 0' }, 400);
+    character.params[param] = clampInt(character.params[param]) - amount;
+    character.setupPoints += amount;
+    character.updatedAt = new Date().toISOString();
+    await saveCharacter(env, key, character);
+    return json({ character: ownCharacter(character) });
+  }
+
   if (action === 'levelup') {
     const character = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
     if (!character) return json({ error: 'Crea prima un personaggio HxH' }, 404);
