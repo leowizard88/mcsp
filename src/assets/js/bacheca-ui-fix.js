@@ -5,9 +5,13 @@
     const style = document.createElement('style');
     style.setAttribute('data-bacheca-ui-fix-style', '');
     style.textContent = `
-      .chat-message:has(> .chat-reply.is-open) > .chat-reply-toggle {
+      .chat-reply-toggle {
         display: none !important;
         visibility: hidden !important;
+      }
+
+      .chat-reply {
+        display: grid !important;
       }
     `;
     document.head.appendChild(style);
