@@ -1,7 +1,7 @@
 (() => {
   const articleSelector = '.article-page-format, .single-page .article-format-inner, [data-article-head]';
   const extensions = ['webp', 'png', 'jpg', 'jpeg', 'gif'];
-  const cache = '20260707-scroll-1';
+  const cache = '20260707-scroll-2';
   const candidates = name => extensions.map(ext => `/assets/img/${name}.${ext}`);
 
   const test = src => new Promise(resolve => {
@@ -32,9 +32,12 @@
         height: 100vh !important;
         min-height: 100vh !important;
         overflow: hidden !important;
-        z-index: 6 !important;
+        z-index: 10050 !important;
         pointer-events: none !important;
         background: #050000 !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
         transform: none !important;
         backface-visibility: hidden !important;
       }
@@ -53,7 +56,7 @@
         will-change: transform !important;
         backface-visibility: hidden !important;
         transform: translate3d(0, -50%, 0) !important;
-        animation: articleOrnamentFall 42s linear infinite !important;
+        animation: articleOrnamentFall 30s linear infinite !important;
       }
 
       .article-ornament-track img {
@@ -78,9 +81,15 @@
         to { transform: translate3d(0, 0, 0); }
       }
 
+      @media (max-width: 760px) {
+        .article-ornament-column {
+          width: var(--article-ornament-width, 52px) !important;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         .article-ornament-track {
-          animation-duration: 140s !important;
+          animation-duration: 120s !important;
         }
       }
     `;
@@ -89,8 +98,8 @@
 
   const pattern = (m2, m1) => {
     const rows = [];
-    const m1Slots = new Set([5, 14, 26, 39, 53, 70]);
-    for (let i = 0; i < 78; i += 1) {
+    const m1Slots = new Set([6, 17, 31, 48, 67]);
+    for (let i = 0; i < 84; i += 1) {
       rows.push({ src: m2, kind: 'm2' });
       if (m1 && m1Slots.has(i)) rows.push({ src: m1, kind: 'm1' });
     }
