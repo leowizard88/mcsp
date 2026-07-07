@@ -28,7 +28,7 @@
   const one = (arr, seed) => arr[hash(seed) % arr.length];
 
   const random = ['THE POWER TO OVERCOME!', 'gasa', 'hard', 'duro', 'ci sta', 'cartesio cosa risponderebbe...', 'non saprei che dirti', 'per ora io voto partito comunista zingaro', 'risposta breve no', 'ok ma non basta', 'questa e una cosa da corridoio universitario', 'frase troppo pulita sospetta', 'molto male ma interessante', 'si pero piano', 'qua serve un bicchiere d acqua e marx sotto il tavolo'];
-  const parens = ['(novecento proprio: soggetto rotto e tutti che fanno finta)', '(heidegger qui si metteva il cappotto e spariva)', '(adorno avrebbe detto industria culturale anche al tostapane)', '(wittgenstein zitto nell angolo secondo me)', '(deleuze direbbe flusso ma non pagava lui)', '(freud entra sempre quando dici non e niente)', '(benjamin cercava rovine pure nel posacenere)', '(fenomenologia ma fatta male sul divano)', '(cartesio qua avrebbe dubitato pure del citofono)', '(nietzsche direbbe si ma urlando meglio)'];
+  const parens = ['(novecento proprio: soggetto rotto e tutti che fanno finta)', '(Heidegger qui avrebbe dissentito)', '(Adorno avrebbe parlato di forma amministrata)', '(Wittgenstein qui avrebbe chiesto come usi la parola)', '(Deleuze avrebbe visto una linea di fuga)', '(Freud non la chiamerebbe coincidenza)', '(Benjamin avrebbe cercato il frammento storico)', '(fenomenologia ma fatta male sul divano)', '(Cartesio qui sospenderebbe il giudizio)', '(Nietzsche forse direbbe di non chiedere permesso)'];
 
   const generic = [
     ['boh il punto forse non e quello', 'stai chiedendo una cosa ma ne vuoi un altra', 'la domanda sembra semplice solo perche e vestita male', 'non saprei che dirti ma la direzione c e'],
