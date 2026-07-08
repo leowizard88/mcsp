@@ -44,15 +44,22 @@
   let selectedPlace = '';
   const paramLabels = { forza:'Forza', robustezza:'Robustezza', nen:'Nen', intelligenza:'Intelligenza', malizia:'Malizia', agilita:'Agilità', oratoria:'Oratoria', percezione:'Percezione' };
   const healthLabels = { testa:'Testa', corpo:'Corpo', braccioDx:'Braccio dx', braccioSx:'Braccio sx', gambaDx:'Gamba dx', gambaSx:'Gamba sx' };
+  const healthBase = { testa:5, corpo:8, braccioDx:6, braccioSx:6, gambaDx:7, gambaSx:7 };
   const placeTypes = { Masadora:'city', Aiai:'city', Soufrabi:'city', Antokiba:'city', Dorias:'city', Rubicuta:'city', Limeiro:'city', Bunzen:'city', 'Foresta Oscura':'wild' };
   const placeIcons = { city:'⌂', wild:'♣', neutral:'★' };
   const info = { Masadora:'Magic Town! Solo qui puoi comprare le carte incantesimo!', Aiai:"La città dell'amore... piena di amanti e di emozioni.", Soufrabi:'Piccola città portuale controllata dai pirati di Razor... brrr', Antokiba:'Città dei premi!! Concorsi diversi ogni settimana! Città iniziale per ogni player.', Dorias:"Gioco d'azzardo, prostitute, criminali e tanti soldi, ma anche tante carte.", Rubicuta:'Vicino a Antokiba, città tranquilla dove riposarsi.', Limeiro:'La capitale è accessibile solo con tutte le carte collezionate!', Bunzen:'Città piena di nebbia e mostri strani.', 'Foresta Oscura':'Prima location in cui di solito i giocatori cercano di fare soldi e carte' };
   const routes = { Sperduto:['Masadora'], Masadora:['Antokiba','Foresta Oscura'], Antokiba:['Masadora','Rubicuta','Dorias'], Rubicuta:['Dorias','Antokiba','Aiai'], Dorias:['Rubicuta','Antokiba'], Aiai:['Rubicuta'], 'Foresta Oscura':['Bunzen','Masadora'], Bunzen:['Foresta Oscura','Soufrabi'], Soufrabi:['Bunzen'], Limeiro:[] };
   const labels = { nome:'Nome', cognome:'Cognome', eta:'Età', sesso:'Sesso', storia:'Storia', nen:'Abilità Nen', autore:'Autore preferito' };
   const esc = s => String(s || '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const clamp = value => Math.max(0, Math.floor(Number(value) || 0));
   const location = () => state.character?.location || 'Sperduto';
   const canGo = place => place !== 'Limeiro' && (routes[location()] || []).includes(place);
   const ratio = value => `${value ?? 0}/${value ?? 0}`;
+  const healthMax = (c, key) => {
+    const p = c?.paramsEffective || c?.params || {};
+    return (healthBase[key] || 0) + clamp(p.robustezza) * 2 + Math.max(0, clamp(c?.level || 1) - 1);
+  };
+  const healthRatio = (c, key) => `${clamp(c?.stats?.salute?.[key] ?? c?.health?.[key] ?? healthMax(c, key))} / ${healthMax(c, key)}`;
   const api = async (path = '', options = {}) => {
     const res = await fetch('/api/hxh-character' + path, { ...options, headers: { ...authHeaders(), ...(options.headers || {}) }, cache:'no-store' });
     const data = await res.json().catch(() => ({}));
@@ -152,7 +159,7 @@
     const g = c.stats?.generali || {};
     return `<div class="stat-section"><h3>Statistiche generali</h3><div class="stat-mini-grid"><div class="stat-tile"><strong>Livello</strong><span>${g.livello ?? c.level}</span></div><div class="stat-tile"><strong>Esperienza</strong><span>${g.esperienza ?? c.xp} / ${g.prossimoLivello ?? c.nextXp}</span></div><div class="stat-tile"><strong>Punti parametro</strong><span>${g.puntiParametro ?? c.paramPoints}</span></div><div class="stat-tile"><strong>Jenny</strong><span>${c.jenny || 0} Ｊ</span></div><div class="stat-tile"><strong>Energia</strong><span>${ratio(g.energia)}</span></div><div class="stat-tile"><strong>Salute generale</strong><span>${ratio(g.saluteGenerale)}</span></div><div class="stat-tile"><strong>Nen</strong><span>${ratio(g.nen)}</span></div></div></div>`;
   };
-  const healthHtml = c => `<div class="stat-section"><h3>Statistiche salute</h3><div class="stat-mini-grid">${Object.entries(healthLabels).map(([k,label]) => `<div class="stat-tile"><strong>${label}</strong><span>${c.stats?.salute?.[k] ?? 0}</span></div>`).join('')}</div></div>`;
+  const healthHtml = c => `<div class="stat-section"><h3>Statistiche salute</h3><div class="stat-mini-grid">${Object.entries(healthLabels).map(([k,label]) => `<div class="stat-tile"><strong>${label}</strong><span>${healthRatio(c, k)}</span></div>`).join('')}</div></div>`;
   const renderParamSetup = () => {
     const points = state.character?.setupPoints || 0;
     paramCard.innerHTML = `<h1>Scheda parametri</h1><p class="param-note">Punti iniziali rimasti: <strong>${points}</strong> / 10</p>${statRows(points, true)}<p class="stat-error" data-stat-error></p>`;
@@ -171,7 +178,7 @@
     }));
     root.querySelectorAll('[data-sub-param]').forEach(btn => btn.addEventListener('click', async () => {
       try {
-        const data = await api('', { method:'POST', body:JSON.stringify({ action:'deallocate', param:btn.dataset.subParam, amount:1 }) });
+        const data = await api('', { method:'POST', body:JSON.stringify({ action:'deallocate', param:btn.datasetSubParam, amount:1 }) });
         state.character = data.character;
         renderState();
       } catch (err) {
@@ -248,56 +255,42 @@
       history.pushState(null, '', '/greed-island/parametri/');
     } catch (err) { alert(err.message); }
   });
-  testLevel.addEventListener('click', async () => {
-    if (!state.character) return;
-    try {
-      const data = await api('', { method:'POST', body:JSON.stringify({ action:'levelup' }) });
-      state.character = data.character;
-      renderState();
-      if (panel?.classList.contains('is-active')) openPanel('stat');
-    } catch (err) { alert(err.message); }
+  toggle?.addEventListener('click', () => document.body.classList.toggle('menu-open'));
+  nav?.addEventListener('click', e => {
+    const btn = e.target.closest('[data-panel]');
+    if (btn) openPanel(btn.dataset.panel);
   });
-  toggle?.addEventListener('click', () => {
-    const willOpen = !document.body.classList.contains('menu-open');
-    if (willOpen && panel) panel.classList.remove('is-active');
-    document.body.classList.toggle('menu-open');
-  });
-  document.querySelectorAll('[data-panel]').forEach(btn => btn.addEventListener('click', () => openPanel(btn.dataset.panel)));
-  document.querySelectorAll('[data-place]').forEach(btn => btn.addEventListener('click', e => {
+  document.querySelectorAll('[data-place]').forEach(btn => btn.addEventListener('click', () => {
     if (mapState.moved) return;
-    if ((state.character?.setupPoints || 0) > 0) return;
-    const name = btn.dataset.place;
-    selectedPlace = '';
-    cityTitle.textContent = name;
-    cityEnter.hidden = true;
-    if (name === 'Limeiro') cityInfo.textContent = info.Limeiro;
-    else if (!canGo(name) && location() !== name) cityInfo.textContent = 'non puoi arrivare qua a piedi da dove sei ora!';
-    else {
-      cityInfo.textContent = info[name] || '';
-      if (location() !== name) { selectedPlace = name; cityEnter.hidden = false; }
-    }
+    const place = btn.dataset.place;
+    selectedPlace = place;
+    cityTitle.textContent = place;
+    cityInfo.textContent = place === location() ? 'Ti trovi qui.' : canGo(place) ? info[place] : 'Questa location non è raggiungibile da qui.';
+    cityEnter.hidden = !(place !== location() && canGo(place));
     cityPopup.classList.add('is-open');
   }));
-  document.querySelector('[data-city-close]')?.addEventListener('click', () => cityPopup.classList.remove('is-open'));
+  cityPopup?.querySelector('[data-city-close]')?.addEventListener('click', () => cityPopup.classList.remove('is-open'));
   cityEnter?.addEventListener('click', async () => {
-    if (!selectedPlace) return;
+    if (!selectedPlace || !canGo(selectedPlace)) return;
     try {
-      const data = await api('', { method:'POST', body:JSON.stringify({ action:'move', place:selectedPlace }) });
+      const data = await api('', { method:'POST', body:JSON.stringify({ action:'move', location:selectedPlace }) });
       state.character = data.character;
-      selectedPlace = '';
       cityPopup.classList.remove('is-open');
       refreshMap();
-    } catch (err) { cityInfo.textContent = err.message; cityEnter.hidden = true; }
+    } catch (err) { alert(err.message); }
   });
   del?.addEventListener('click', async () => {
-    try { await api('', { method:'DELETE' }); } catch {}
-    state.character = null;
-    form?.reset();
-    panel?.classList.remove('is-active');
-    cityPopup?.classList.remove('is-open');
-    document.body.classList.remove('menu-open', 'has-param-setup');
-    renderState();
-    history.pushState(null, '', '/greed-island/');
+    if (!confirm('Cancellare definitivamente il personaggio?')) return;
+    try { await api('', { method:'POST', body:JSON.stringify({ action:'delete' }) }); location.reload(); }
+    catch (err) { alert(err.message); }
+  });
+  testLevel?.addEventListener('click', async () => {
+    try {
+      const data = await api('', { method:'POST', body:JSON.stringify({ action:'debugLevelUp' }) });
+      state.character = data.character;
+      renderState();
+      alert(`Level up! Livello ${state.character.level}. Punti parametro: ${state.character.paramPoints}.`);
+    } catch (err) { alert(err.message); }
   });
   init();
 })();
