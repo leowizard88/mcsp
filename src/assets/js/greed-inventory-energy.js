@@ -6,14 +6,27 @@
   const token = () => localStorage.getItem('mancuspieAuthToken') || '';
   let currentCharacter = null;
   let lastFetch = 0;
+  let refreshingEnergy = false;
+  const clamp = v => Math.max(0, Math.floor(Number(v) || 0));
+  const maxEnergyFor = level => 3 + ((clamp(level || 1) - 1) * 2);
+  const curEnergyRaw = c => clamp(c?.stats?.generali?.energia ?? c?.energy ?? 0);
+  const maxEnergyRaw = c => clamp(c?.stats?.generali?.energiaMax ?? maxEnergyFor(c?.stats?.generali?.livello ?? c?.level ?? 1));
+  const energyExpired = c => {
+    if (!c) return false;
+    if (curEnergyRaw(c) >= maxEnergyRaw(c)) return false;
+    const base = Date.parse(c?.energyUpdatedAt || c?.updatedAt || c?.createdAt || new Date().toISOString());
+    return Number.isFinite(base) && Date.now() >= base + 600000;
+  };
   const getCharacter = async (force = false) => {
     const now = Date.now();
-    if (!force && currentCharacter && now - lastFetch < 15000) return currentCharacter;
+    const mustRefreshEnergy = currentCharacter && energyExpired(currentCharacter);
+    if (!force && !mustRefreshEnergy && currentCharacter && now - lastFetch < 15000) return currentCharacter;
     const res = await fetch('/api/hxh-character', { headers:{ authorization:`Bearer ${token()}` }, cache:'no-store' });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || 'Errore personaggio');
     currentCharacter = data.character;
     lastFetch = now;
+    window.dispatchEvent(new CustomEvent('greed-character-updated', { detail:data.character }));
     return currentCharacter;
   };
   const postAction = async action => {
@@ -26,7 +39,6 @@
     return data.character;
   };
   const esc = s => String(s || '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-  const clamp = v => Math.max(0, Math.floor(Number(v) || 0));
   const avg = values => values.length ? Math.ceil(values.reduce((a,b) => a + b, 0) / values.length) : 0;
   const healthBase = { testa:5, corpo:8, braccioDx:6, braccioSx:6, gambaDx:7, gambaSx:7 };
   const healthLabels = { testa:'Testa', corpo:'Corpo', braccioDx:'Braccio dx', braccioSx:'Braccio sx', gambaDx:'Gamba dx', gambaSx:'Gamba sx' };
@@ -76,22 +88,26 @@
     const s = secs % 60;
     return h > 0 ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
   };
-  const maxEnergy = c => c?.stats?.generali?.energiaMax ?? c?.stats?.generali?.energia ?? c?.energy ?? 0;
-  const curEnergy = c => c?.stats?.generali?.energia ?? c?.energy ?? 0;
   const timerText = c => {
-    const cur = curEnergy(c);
-    const max = maxEnergy(c);
+    const cur = curEnergyRaw(c);
+    const max = maxEnergyRaw(c);
     if (cur >= max) return 'energia full';
     const base = Date.parse(c?.energyUpdatedAt || c?.updatedAt || c?.createdAt || new Date().toISOString());
     if (!Number.isFinite(base)) return 'prossima energia: --:--';
-    const next = base + 600000;
-    const left = Math.max(0, next - Date.now());
+    const left = base + 600000 - Date.now();
+    if (left <= 0) {
+      if (!refreshingEnergy) {
+        refreshingEnergy = true;
+        setTimeout(() => getCharacter(true).finally(() => { refreshingEnergy = false; }), 20);
+      }
+      return 'aggiornamento energia...';
+    }
     return `prossima energia: ${fmt(Math.ceil(left / 1000))}`;
   };
   const renderEnergyHud = c => {
     if (!energyHud || !c) return;
     placeEnergyHud();
-    energyHud.innerHTML = `Energia ${curEnergy(c)} / ${maxEnergy(c)}<small>${timerText(c)}</small>`;
+    energyHud.innerHTML = `Energia ${curEnergyRaw(c)} / ${maxEnergyRaw(c)}<small>${timerText(c)}</small>`;
   };
 
   if (!nav.querySelector('[data-panel="inventory"]')) {
@@ -122,7 +138,7 @@
       const span = tile?.querySelector('span');
       if (span) span.innerHTML = `${value}${timer ? `<small class="stat-energy-timer">${timer}</small>` : ''}`;
     };
-    setTile('Energia', `${g.energia ?? c.energy ?? 0}/${g.energiaMax ?? g.energia ?? c.energy ?? 0}`, timerText(c));
+    setTile('Energia', `${curEnergyRaw(c)}/${maxEnergyRaw(c)}`, timerText(c));
     setTile('Nen', `${g.nen ?? 0}/${g.nenMax ?? g.nen ?? 0}`);
     setTile('Salute generale', `${healthGeneralCur(c)}/${healthGeneralMax(c)}`);
     Object.entries(healthLabels).forEach(([key, label]) => setTile(label, `${healthCur(c, key)} / ${healthMax(c, key)}`));
