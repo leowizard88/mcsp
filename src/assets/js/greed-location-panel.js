@@ -39,7 +39,7 @@
   css.textContent = `
     .menu-button{background:rgba(14,84,22,.88)!important;border:1px solid rgba(223,255,115,.95)!important;border-radius:8px!important;box-shadow:3px 3px 0 rgba(0,0,0,.65)!important;padding:8px 11px!important;color:#fff!important;font-weight:800!important}
     .location-panel{position:fixed;right:18px;top:92px;z-index:27;width:min(440px,calc(100vw - var(--side,44px) - 38px));max-height:calc(100vh - 118px);overflow:auto;border:2px solid #ffe16a;background:rgba(4,12,9,.88);box-shadow:8px 8px 0 rgba(0,0,0,.72);color:#f7ffe8;font-family:Arial,Helvetica,sans-serif;backdrop-filter:blur(4px)}
-    .location-panel-head{cursor:move;user-select:none;background:linear-gradient(180deg,rgba(62,95,12,.96),rgba(22,48,10,.96));border-bottom:2px solid #ffe16a;padding:10px 12px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+    .location-panel-head{cursor:move;user-select:none;touch-action:none;background:linear-gradient(180deg,rgba(62,95,12,.96),rgba(22,48,10,.96));border-bottom:2px solid #ffe16a;padding:10px 12px;display:flex;justify-content:space-between;gap:12px;align-items:center}
     .location-panel-head strong{color:#ffe16a;font:900 20px/1 Arial,Helvetica,sans-serif;text-shadow:2px 2px 0 #000}.location-panel-head span{font:700 11px/1 Arial,Helvetica,sans-serif;color:#dfff73;text-transform:uppercase;letter-spacing:.08em}
     .location-panel-body{padding:12px}.location-photo{width:100%;aspect-ratio:16/9;object-fit:cover;border:2px solid rgba(255,255,255,.75);background:#111;box-shadow:4px 4px 0 rgba(0,0,0,.55)}
     .location-desc{font:400 14px/1.42 Arial,Helvetica,sans-serif;margin:12px 0;color:#f7ffe8}.location-count{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.42);padding:9px 10px;margin:0 0 11px;font:800 13px/1.2 Arial,Helvetica,sans-serif;color:#fff}.location-count strong{color:#ffe16a}
@@ -101,20 +101,32 @@
   });
 
   let drag = null;
-  panel.querySelector('[data-loc-drag]').addEventListener('pointerdown', e => {
-    drag = { x:e.clientX, y:e.clientY, left:panel.offsetLeft, top:panel.offsetTop };
-    panel.setPointerCapture?.(e.pointerId);
-  });
-  panel.addEventListener('pointermove', e => {
+  const stopDrag = e => {
     if (!drag) return;
+    const id = drag.pointerId;
+    drag = null;
+    try { panel.releasePointerCapture?.(id); } catch {}
+  };
+  panel.querySelector('[data-loc-drag]').addEventListener('pointerdown', e => {
+    if (e.button !== undefined && e.button !== 0) return;
+    e.preventDefault();
+    drag = { pointerId:e.pointerId, x:e.clientX, y:e.clientY, left:panel.offsetLeft, top:panel.offsetTop };
+    try { panel.setPointerCapture?.(e.pointerId); } catch {}
+  });
+  window.addEventListener('pointermove', e => {
+    if (!drag) return;
+    if (e.buttons !== undefined && e.buttons === 0) return stopDrag(e);
+    e.preventDefault();
     const nextLeft = drag.left + e.clientX - drag.x;
     const nextTop = drag.top + e.clientY - drag.y;
     panel.style.left = Math.max(0, Math.min(window.innerWidth - 80, nextLeft)) + 'px';
     panel.style.right = 'auto';
     panel.style.top = Math.max(0, Math.min(window.innerHeight - 80, nextTop)) + 'px';
-  });
-  panel.addEventListener('pointerup', e => { drag = null; panel.releasePointerCapture?.(e.pointerId); });
-  panel.addEventListener('pointercancel', e => { drag = null; panel.releasePointerCapture?.(e.pointerId); });
+  }, { passive:false });
+  window.addEventListener('pointerup', stopDrag, true);
+  window.addEventListener('pointercancel', stopDrag, true);
+  window.addEventListener('blur', stopDrag);
+  document.addEventListener('mouseleave', stopDrag);
 
   window.addEventListener('greed-character-updated', e => render(e.detail));
   setInterval(() => render(currentCharacter), 60000);
