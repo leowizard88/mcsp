@@ -174,8 +174,8 @@
     updateStatPanel(false);
   }, 1000);
   setTimeout(() => updateStatPanel(true), 700);
-  import('/assets/js/greed-location-panel-stable.js?v=20260708-locationstable-2');
-  import('/assets/js/greed-entry-gate.js?v=20260708-entrygate-safe-2');
+  import('/assets/js/greed-location-panel-stable.js?v=20260708-locationstable-3');
+  import('/assets/js/greed-entry-gate.js?v=20260708-entrygate-safe-3');
   import('/assets/js/greed-delete-confirm.js?v=20260708-deleteconfirm-1');
   import('/assets/js/greed-binder-book.js?v=20260708-binder-1');
 })();
