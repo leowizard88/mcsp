@@ -1,0 +1,20 @@
+(() => {
+  const css = document.createElement('style');
+  css.textContent = `
+    .gi-chat{z-index:44!important}
+    .location-panel{z-index:115!important}
+    .city-popup{z-index:116!important}
+    .side-menu{z-index:150!important}
+    .menu-panel{z-index:151!important}
+    .menu-button{z-index:152!important}
+    body.menu-open .location-display,
+    body.menu-open .energy-hud,
+    body.menu-open .hxh-welcome,
+    body.menu-open .hxh-profile-hud,
+    body.menu-open [data-energy-hud]{z-index:24!important;opacity:.22!important;pointer-events:none!important}
+    body.menu-open .location-panel{z-index:80!important}
+    body.menu-open .gi-chat{z-index:40!important;opacity:.34!important}
+    @media(max-width:760px){body.menu-open .gi-chat{display:none!important}}
+  `;
+  document.head.appendChild(css);
+})();
