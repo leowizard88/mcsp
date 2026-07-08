@@ -36,7 +36,7 @@
   };
   const css = document.createElement('style');
   css.textContent = `
-    .side-menu [data-panel="explore"]{display:none!important}.location-panel{position:fixed;right:18px;top:150px;z-index:34;width:min(440px,calc(100vw - var(--side,44px) - 38px));max-height:calc(100vh - 176px);overflow:auto;border:2px solid #ffe16a;background:rgba(4,12,9,.9);box-shadow:8px 8px 0 rgba(0,0,0,.72);color:#f7ffe8;font-family:Arial,Helvetica,sans-serif;backdrop-filter:blur(4px)}.location-panel.is-closed{display:none!important}.location-panel-head{cursor:move;user-select:none;touch-action:none;background:linear-gradient(180deg,rgba(62,95,12,.96),rgba(22,48,10,.96));border-bottom:2px solid #ffe16a;padding:10px 42px 10px 12px;display:flex;justify-content:space-between;gap:12px;align-items:center;position:relative}.location-panel-head strong{color:#ffe16a;font:900 20px/1 Arial,Helvetica,sans-serif;text-shadow:2px 2px 0 #000}.location-panel-head span{font:700 11px/1 Arial,Helvetica,sans-serif;color:#dfff73;text-transform:uppercase;letter-spacing:.08em}.location-close{position:absolute;right:8px;top:6px;width:28px;height:28px;border:1px solid #ffe16a;background:rgba(90,0,0,.85);color:#fff;font:900 16px/1 Arial,Helvetica,sans-serif;cursor:pointer;box-shadow:2px 2px 0 #000}.location-close:hover{background:#b0001b}.location-panel-body{padding:12px}.location-photo{width:100%;aspect-ratio:16/9;object-fit:cover;border:2px solid rgba(255,255,255,.75);background:#111;box-shadow:4px 4px 0 rgba(0,0,0,.55)}.location-desc{font:400 14px/1.42 Arial,Helvetica,sans-serif;margin:12px 0;color:#f7ffe8}.location-count{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.42);padding:9px 10px;margin:0 0 11px;font:800 13px/1.2 Arial,Helvetica,sans-serif;color:#fff}.location-count strong{color:#ffe16a}.location-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.location-actions button{border:1px solid #dfff73;background:rgba(22,75,0,.82);color:#dfff73;font:900 12px/1 Arial,Helvetica,sans-serif;text-transform:uppercase;padding:10px 8px;cursor:pointer}.location-actions button:hover{background:rgba(45,120,0,.92)}.location-actions button:disabled{background:#666!important;border-color:#aaa!important;color:#ddd!important;cursor:not-allowed;filter:grayscale(1);opacity:.72}.location-panel.is-busy .location-actions button{pointer-events:none;opacity:.62}.location-panel-msg{margin-top:10px;font:800 13px/1.3 Arial,Helvetica,sans-serif;color:#dfff73}.location-panel-msg.err{color:#ff7474}.location-rest-note{font:400 12px/1.3 Arial,Helvetica,sans-serif;color:#ddd;margin-top:8px}.location-rest-timer{margin-top:8px;color:#ffdf7b;font:900 12px/1.3 Arial,Helvetica,sans-serif}.location-rest-penalty{margin-top:8px;color:#ffb0b0;font:900 12px/1.3 Arial,Helvetica,sans-serif}@media(max-width:760px){.location-panel{right:10px;top:212px;width:calc(100vw - var(--side,38px) - 28px);max-height:calc(100vh - 226px)}}`;
+    .side-menu [data-panel="explore"]{display:none!important}.location-panel{position:fixed;right:18px;top:150px;z-index:34;width:min(440px,calc(100vw - var(--side,44px) - 38px));max-height:calc(100vh - 176px);overflow:auto;border:2px solid #ffe16a;background:rgba(4,12,9,.9);box-shadow:8px 8px 0 rgba(0,0,0,.72);color:#f7ffe8;font-family:Arial,Helvetica,sans-serif;backdrop-filter:blur(4px)}.location-panel.is-closed{display:none!important}.location-panel-head{cursor:move;user-select:none;touch-action:none;background:linear-gradient(180deg,rgba(62,95,12,.96),rgba(22,48,10,.96));border-bottom:2px solid #ffe16a;padding:10px 42px 10px 12px;display:flex;justify-content:space-between;gap:12px;align-items:center;position:relative}.location-panel-head strong{color:#ffe16a;font:900 20px/1 Arial,Helvetica,sans-serif;text-shadow:2px 2px 0 #000}.location-panel-head span{font:700 11px/1 Arial,Helvetica,sans-serif;color:#dfff73;text-transform:uppercase;letter-spacing:.08em}.location-close{position:absolute;right:8px;top:6px;width:28px;height:28px;border:1px solid #ffe16a;background:rgba(90,0,0,.85);color:#fff;font:900 16px/1 Arial,Helvetica,sans-serif;cursor:pointer;box-shadow:2px 2px 0 #000}.location-close:hover{background:#b0001b}.location-panel-body{padding:12px}.location-photo{width:100%;aspect-ratio:16/9;object-fit:cover;border:2px solid rgba(255,255,255,.75);background:#111;box-shadow:4px 4px 0 rgba(0,0,0,.55)}.location-desc{font:400 14px/1.42 Arial,Helvetica,sans-serif;margin:12px 0;color:#f7ffe8}.location-count{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.42);padding:9px 10px;margin:0 0 11px;font:800 13px/1.2 Arial,Helvetica,sans-serif;color:#fff}.location-count strong{color:#ffe16a}.location-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.location-actions button{border:1px solid #dfff73;background:rgba(22,75,0,.82);color:#dfff73;font:900 12px/1 Arial,Helvetica,sans-serif;text-transform:uppercase;padding:10px 8px;cursor:pointer}.location-actions button[data-loc-action="sleep"]{border-color:#9ecbff;background:rgba(20,38,94,.86);color:#cfe8ff}.location-actions button:hover{background:rgba(45,120,0,.92)}.location-actions button:disabled{background:#666!important;border-color:#aaa!important;color:#ddd!important;cursor:not-allowed;filter:grayscale(1);opacity:.72}.location-panel.is-busy .location-actions button{pointer-events:none;opacity:.62}.location-panel-msg{margin-top:10px;font:800 13px/1.3 Arial,Helvetica,sans-serif;color:#dfff73}.location-panel-msg.err{color:#ff7474}.location-rest-note{font:400 12px/1.3 Arial,Helvetica,sans-serif;color:#ddd;margin-top:8px}.location-rest-timer{margin-top:8px;color:#ffdf7b;font:900 12px/1.3 Arial,Helvetica,sans-serif}.location-rest-penalty{margin-top:8px;color:#ffb0b0;font:900 12px/1.3 Arial,Helvetica,sans-serif}@media(max-width:760px){.location-panel{right:10px;top:212px;width:calc(100vw - var(--side,38px) - 28px);max-height:calc(100vh - 226px)}.location-actions{grid-template-columns:1fr!important}}`;
   document.head.appendChild(css);
 
   const panel = document.createElement('aside');
@@ -63,7 +63,10 @@
   };
   const actionHtml = (loc, meta, c) => {
     const here = loc === canonicalLoc(c?.location || 'Shiso tree');
-    if (meta.type === 'city') return `<button type="button" data-loc-action="activity">Attività</button><button type="button" data-loc-action="rest" ${!here || c?.restCooldownSecondsLeft > 0 ? 'disabled' : ''}>Riposa</button><button type="button" data-loc-action="card">Usa carta</button>`;
+    const restDisabled = !here || c?.restCooldownSecondsLeft > 0;
+    const sleepDisabled = !here || c?.sleepActive || c?.sleepCooldownSecondsLeft > 0;
+    if (meta.type === 'city') return `<button type="button" data-loc-action="activity">Attività</button><button type="button" data-loc-action="rest" ${restDisabled ? 'disabled' : ''}>Riposa</button><button type="button" data-loc-action="sleep" ${sleepDisabled ? 'disabled' : ''}>Dormi</button><button type="button" data-loc-action="card">Usa carta</button>`;
+    if (meta.type === 'neutral') return `<button type="button" data-loc-action="activity">Attività</button><button type="button" data-loc-action="rest" ${restDisabled ? 'disabled' : ''}>Riposa</button><button type="button" data-loc-action="card">Usa carta</button>`;
     if (meta.type === 'wild') return `<button type="button" data-loc-action="explore" ${!here ? 'disabled' : ''}>Esplora</button><button type="button" data-loc-action="card">Usa carta</button>`;
     return `<button type="button" data-loc-action="activity">Attività</button><button type="button" data-loc-action="card">Usa carta</button>`;
   };
@@ -71,10 +74,17 @@
     const c = currentCharacter || {};
     const meta = places[selectedLocation] || places['Shiso tree'];
     const cd = c.restCooldownSecondsLeft || 0;
+    const sleep = c.sleepSecondsLeft || 0;
+    const sleepCd = c.sleepCooldownSecondsLeft || 0;
     const pen = c.restPenaltySecondsLeft || 0;
-    $('[data-loc-rest-timer]').textContent = meta.type === 'city' ? (cd > 0 ? `Riposo disponibile tra: ${fmt(cd)}` : (selectedLocation === canonicalLoc(c.location) ? 'Riposo disponibile ora.' : 'Devi essere qui per riposare.')) : '';
+    const canRestHere = meta.type === 'city' || meta.type === 'neutral';
+    $('[data-loc-rest-timer]').textContent = canRestHere ? (cd > 0 ? `Riposo disponibile tra: ${fmt(cd)}` : (selectedLocation === canonicalLoc(c.location) ? 'Riposo disponibile ora.' : 'Devi essere qui per riposare.')) : '';
+    if (meta.type === 'city' && sleep > 0) $('[data-loc-rest-timer]').textContent += ` Dormi attivo: ${fmt(sleep)}.`;
+    else if (meta.type === 'city' && sleepCd > 0) $('[data-loc-rest-timer]').textContent += ` Dormi disponibile tra: ${fmt(sleepCd)}.`;
     $('[data-loc-penalty]').textContent = pen > 0 ? `Penalità riposo attiva: -1 a tutti i parametri per ${fmt(pen)}.` : '';
     if (cd > 0) c.restCooldownSecondsLeft = Math.max(0, cd - 1);
+    if (sleep > 0) c.sleepSecondsLeft = Math.max(0, sleep - 1);
+    if (sleepCd > 0) c.sleepCooldownSecondsLeft = Math.max(0, sleepCd - 1);
     if (pen > 0) c.restPenaltySecondsLeft = Math.max(0, pen - 1);
   };
   const render = async (loc = selectedLocation, c = currentCharacter, force = false) => {
@@ -96,7 +106,7 @@
       lastCountFetch = 0;
     }
     $('[data-loc-actions]').innerHTML = actionHtml(selectedLocation, meta, currentCharacter || {});
-    $('[data-loc-note]').textContent = meta.type === 'city' ? 'Riposa: energia e vita piene, cooldown globale di 3 ore. Dopo il riposo tutti i parametri effettivi scendono di 1 per 10 minuti.' : meta.type === 'wild' ? 'Esplora: azione selvaggia della zona. Meccanica da collegare.' : '';
+    $('[data-loc-note]').textContent = meta.type === 'city' ? 'Riposa: energia piena, poca vita recuperata, Stato azzerato, cooldown 3 ore, parametri -1 per 10 minuti. Dormi: vita/energia/Stato full, blocco in città per 6 ore e vulnerabilità alta.' : meta.type === 'neutral' ? 'Zona neutra: puoi riposare. Recuperi energia piena, poca vita e azzeri Stato, ma subisci la penalità temporanea del riposo.' : meta.type === 'wild' ? 'Esplora: azione selvaggia della zona. Meccanica da collegare.' : '';
     updateTimers();
     countPlayers(selectedLocation);
   };
@@ -109,15 +119,15 @@
     msg.classList.remove('err'); msg.textContent = '';
     const action = btn.dataset.locAction;
     if (action === 'explore') { msg.textContent = 'Esplorazione da implementare: qui finiranno oggetti, carte, mostri e quest della zona selvaggia.'; return; }
-    if (action !== 'rest') { msg.textContent = 'Questa azione non è ancora implementata.'; return; }
+    if (action !== 'rest' && action !== 'sleep') { msg.textContent = 'Questa azione non è ancora implementata.'; return; }
     try {
-      busy = true; panel.classList.add('is-busy'); btn.disabled = true; msg.textContent = 'Riposo in corso...';
-      const data = await api({ action:'rest' });
+      busy = true; panel.classList.add('is-busy'); btn.disabled = true; msg.textContent = action === 'sleep' ? 'Ti stai mettendo a dormire...' : 'Riposo in corso...';
+      const data = await api({ action: action === 'sleep' ? 'sleep' : 'rest' });
       currentCharacter = data.character;
       selectedLocation = canonicalLoc(data.character?.location || selectedLocation);
       window.dispatchEvent(new CustomEvent('greed-character-updated', { detail:data.character }));
       await render(selectedLocation, data.character, true);
-      $('[data-loc-msg]').textContent = 'Energia e vita ripristinate. Parametri -1 per 10 minuti. Prossimo riposo tra 3 ore.';
+      $('[data-loc-msg]').textContent = action === 'sleep' ? 'Dormi iniziato: vita, energia e Stato pieni. Sei bloccato in città per 6 ore con vulnerabilità alta.' : 'Energia ripristinata, poca vita recuperata, Stato azzerato. Parametri -1 per 10 minuti. Prossimo riposo tra 3 ore.';
     } catch (err) {
       msg.classList.add('err'); msg.textContent = err.message;
     } finally { busy = false; panel.classList.remove('is-busy'); }
