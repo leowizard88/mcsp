@@ -30,8 +30,10 @@
     const p = params();
     const agi = Math.max(0, Math.floor(Number(p.agilita) || 0));
     const perc = Math.max(0, Math.floor(Number(p.percezione) || 0));
+    const nen = Math.max(0, Math.floor(Number(p.nen) || 0));
     const effective = Math.max(5, d.base - agi);
     const safeEnemy = Math.max(10, d.enemy - perc * 2);
+    const zetsuEnemy = Math.max(10, d.enemy - nen * 2);
     let info = box.querySelector('.wild-explore-info');
     if (!info) {
       info = document.createElement('div');
@@ -44,7 +46,8 @@
       <span>Tempo: <b>${effective} min</b> <small>base ${d.base} - Agilità ${agi}, minimo 5</small></span>
       <span>Costo: <b>${d.energy} energia</b></span>
       <span>Difficoltà: <b>${esc(d.label)}</b></span>
-      <span>Nemici: <b>${d.enemy}%</b> scoperta · <b>${safeEnemy}%</b> sicura <small>Percezione ${perc}</small></span>
+      <span>Nemici: <b>${safeEnemy}%</b> Sicura <small>Percezione ${perc}</small></span>
+      <span>Nemici: <b>${zetsuEnemy}%</b> Zetsu attivo <small>Nen ${nen}</small></span>
     `;
   };
   const css = document.createElement('style');
