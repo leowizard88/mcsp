@@ -9,7 +9,7 @@
   };
   const css = document.createElement('style');
   css.textContent = `
-    .gi-chat{position:fixed;right:14px;bottom:18px;z-index:44;width:min(430px,calc(100vw - var(--side,44px) - 28px));font-family:Arial,Helvetica,sans-serif;color:#f4ffe8;text-shadow:1px 1px 0 #000;pointer-events:auto}.gi-chat-log{height:310px;max-height:34vh;overflow:auto;-webkit-overflow-scrolling:touch;padding:0 0 9px;display:flex;flex-direction:column;gap:5px;mask-image:linear-gradient(to bottom,transparent 0,#000 18px,#000 100%)}.gi-chat-line{font:700 13px/1.28 Arial,Helvetica,sans-serif;background:rgba(0,0,0,.16);border-left:2px solid rgba(255,255,255,.22);padding:3px 6px;word-break:break-word}.gi-chat-line.global{color:#f4ffe8}.gi-chat-line.info{color:#dfff73;border-left-color:#dfff73}.gi-chat-line.good{color:#66ff86;border-left-color:#66ff86}.gi-chat-line.bad{color:#ff5a5a;border-left-color:#ff5a5a}.gi-chat-line.system{color:#9ecbff;border-left-color:#9ecbff;font-size:15px;line-height:1.3;background:rgba(0,0,0,.28);padding:7px 8px}.gi-chat-line time{opacity:.62;font-size:10px;margin-right:4px}.gi-chat-line strong{color:#ffe16a;font-weight:900}.gi-chat-form{display:flex;gap:6px;align-items:center;background:transparent}.gi-chat-input{flex:1;min-width:0;border:0;border-bottom:1px solid rgba(255,255,255,.48);background:rgba(0,0,0,.18);color:#fff;padding:7px 5px;font:700 13px/1 Arial,Helvetica,sans-serif;outline:none;text-shadow:1px 1px 0 #000}.gi-chat-input::placeholder{color:rgba(255,255,255,.62)}.gi-chat-send{border:0;background:transparent;color:#dfff73;font:900 12px/1 'Courier New',monospace;text-transform:uppercase;cursor:pointer;padding:5px 0;text-shadow:1px 1px 0 #000}.gi-chat-send:disabled{opacity:.42;cursor:not-allowed}.gi-chat-toggle{display:none}@media(max-width:760px){.gi-chat{right:8px;bottom:10px;width:calc(100vw - var(--side,38px) - 18px);z-index:86}.gi-chat-log{height:210px;max-height:28vh}.gi-chat-line{font-size:12px}.gi-chat-line.system{font-size:14px}.gi-chat-input{font-size:12px}body.menu-open .gi-chat{display:none}}
+    .gi-chat{position:fixed;right:14px;bottom:18px;z-index:44;width:min(430px,calc(100vw - var(--side,44px) - 28px));font-family:Arial,Helvetica,sans-serif;color:#f4ffe8;text-shadow:1px 1px 0 #000;pointer-events:auto}.gi-chat-log{height:310px;max-height:34vh;overflow:auto;-webkit-overflow-scrolling:touch;padding:0 0 9px;display:flex;flex-direction:column;gap:5px;mask-image:linear-gradient(to bottom,transparent 0,#000 18px,#000 100%)}.gi-chat-line{font:700 13px/1.28 Arial,Helvetica,sans-serif;background:rgba(0,0,0,.16);border-left:2px solid rgba(255,255,255,.22);padding:3px 6px;word-break:break-word}.gi-chat-line.global{color:#f4ffe8}.gi-chat-line.info{color:#dfff73;border-left-color:#dfff73}.gi-chat-line.good{color:#66ff86;border-left-color:#66ff86}.gi-chat-line.bad{color:#ff5a5a;border-left-color:#ff5a5a}.gi-chat-line.system{color:#9ecbff;border-left-color:#9ecbff;font-size:15px;line-height:1.3;background:rgba(0,0,0,.28);padding:7px 8px}.gi-chat-line.loading{color:#dfff73;opacity:.72;text-align:center;border-left-color:transparent;background:transparent}.gi-chat-line time{opacity:.62;font-size:10px;margin-right:4px}.gi-chat-line strong{color:#ffe16a;font-weight:900}.gi-chat-form{display:flex;gap:6px;align-items:center;background:transparent}.gi-chat-input{flex:1;min-width:0;border:0;border-bottom:1px solid rgba(255,255,255,.48);background:rgba(0,0,0,.18);color:#fff;padding:7px 5px;font:700 13px/1 Arial,Helvetica,sans-serif;outline:none;text-shadow:1px 1px 0 #000}.gi-chat-input::placeholder{color:rgba(255,255,255,.62)}.gi-chat-send{border:0;background:transparent;color:#dfff73;font:900 12px/1 'Courier New',monospace;text-transform:uppercase;cursor:pointer;padding:5px 0;text-shadow:1px 1px 0 #000}.gi-chat-send:disabled{opacity:.42;cursor:not-allowed}.gi-chat-toggle{display:none}@media(max-width:760px){.gi-chat{right:8px;bottom:10px;width:calc(100vw - var(--side,38px) - 18px);z-index:86}.gi-chat-log{height:210px;max-height:28vh}.gi-chat-line{font-size:12px}.gi-chat-line.system{font-size:14px}.gi-chat-input{font-size:12px}body.menu-open .gi-chat{display:none}}
   `;
   document.head.appendChild(css);
   const box = document.createElement('section');
@@ -22,6 +22,10 @@
   let globalMessages = [];
   let localMessages = [];
   let previousCharacter = null;
+  let hasMore = false;
+  let oldest = null;
+  let loadingOlder = false;
+  let olderLoaded = 0;
   const introKey = 'greedGlobalChatIntroV2';
   const firstEnterKey = 'greedGlobalChatFirstEnterV2';
   const pigNotifyKey = 'greedGlobalChatPigNotifyV1';
@@ -31,32 +35,63 @@
     localMessages = localMessages.slice(-50);
     render();
   };
-  const render = () => {
+  const uniqById = rows => {
+    const seen = new Set();
+    return rows.filter(m => {
+      const id = m?.id || `${m?.createdAt}-${m?.author}-${m?.text}`;
+      if (seen.has(id)) return false;
+      seen.add(id);
+      return true;
+    });
+  };
+  const render = (keepScroll = false) => {
+    const beforeBottom = log.scrollHeight - log.scrollTop;
     const all = [...globalMessages.map(m => ({ ...m, kind:'global' })), ...localMessages]
       .filter(m => m?.text)
-      .slice(-95)
+      .slice(-150)
       .sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
-    log.innerHTML = all.map(m => {
+    log.innerHTML = `${loadingOlder ? '<div class="gi-chat-line loading">caricamento messaggi vecchi...</div>' : ''}${all.map(m => {
       const cls = m.kind === 'good' ? 'good' : m.kind === 'bad' ? 'bad' : m.kind === 'system' ? 'system' : m.kind === 'info' ? 'info' : 'global';
       const author = m.author ? `<strong>${esc(m.author)}:</strong> ` : '';
       return `<div class="gi-chat-line ${cls}"><time>${fmtTime(m.createdAt)}</time>${author}${esc(m.text)}</div>`;
-    }).join('');
-    log.scrollTop = log.scrollHeight;
+    }).join('')}`;
+    if (keepScroll) log.scrollTop = Math.max(0, log.scrollHeight - beforeBottom);
+    else log.scrollTop = log.scrollHeight;
   };
-  const fetchChat = async () => {
-    const res = await fetch('/api/hxh-chat', { headers:{ authorization:`Bearer ${token()}` }, cache:'no-store' });
+  const fetchChat = async ({ before = '', appendOlder = false } = {}) => {
+    const qs = before ? `?limit=20&before=${encodeURIComponent(before)}` : '?limit=40';
+    const res = await fetch(`/api/hxh-chat${qs}`, { headers:{ authorization:`Bearer ${token()}` }, cache:'no-store' });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || 'Errore chat');
-    globalMessages = Array.isArray(data.messages) ? data.messages : [];
-    render();
+    const rows = Array.isArray(data.messages) ? data.messages : [];
+    if (appendOlder) {
+      globalMessages = uniqById([...rows, ...globalMessages]).sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
+      olderLoaded += rows.length;
+      render(true);
+    } else {
+      const knownOld = globalMessages.filter(m => data.oldest && new Date(m.createdAt) < new Date(data.oldest));
+      globalMessages = uniqById([...knownOld, ...rows]).sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
+      render(false);
+    }
+    hasMore = !!data.hasMore && olderLoaded < 100;
+    oldest = globalMessages[0]?.createdAt || data.oldest || null;
+  };
+  const loadOlder = async () => {
+    if (loadingOlder || !hasMore || !oldest || olderLoaded >= 100) return;
+    loadingOlder = true;
+    render(true);
+    try { await fetchChat({ before:oldest, appendOlder:true }); }
+    catch (err) { local(err.message, 'bad'); }
+    finally { loadingOlder = false; render(true); }
   };
   const postChat = async text => {
     const res = await fetch('/api/hxh-chat', { method:'POST', headers:{ 'content-type':'application/json', authorization:`Bearer ${token()}` }, body:JSON.stringify({ text }), cache:'no-store' });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || 'Errore chat');
-    globalMessages = Array.isArray(data.messages) ? data.messages : [...globalMessages, data.message].filter(Boolean);
+    globalMessages = uniqById([...globalMessages, ...(Array.isArray(data.messages) ? data.messages : [data.message].filter(Boolean))]).sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
     render();
   };
+  log.addEventListener('scroll', () => { if (log.scrollTop <= 18) loadOlder(); });
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const text = input.value.trim();
@@ -95,6 +130,7 @@
         const id = item?.id || inventoryName(item);
         if (!oldItems.has(id)) local(`Hai ottenuto ${inventoryName(item)}.`, 'good');
       });
+      if (!previousCharacter.restCooldownActive && c.restCooldownActive) local('Ti sei riposato. Energia piena, Stato azzerato e un po’ di vita recuperata.', 'good');
       if (!previousCharacter.sleepActive && c.sleepActive) local('Stai dormendo! Azioni bloccate e vulnerabilità alta.', 'bad');
       if (previousCharacter.sleepActive && !c.sleepActive) local('Ti sei svegliato.', 'good');
       if (!previousCharacter.exhaustionActive && c.exhaustionActive) local('Sei in esaurimento.', 'bad');
