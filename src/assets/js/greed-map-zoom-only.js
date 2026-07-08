@@ -11,6 +11,7 @@
   const world = document.querySelector('.map-world');
   if (!game || !world) return;
 
+  const ignore = e => e.target.closest('button,nav,.menu-panel,.city-popup,.test-levelup,.location-panel');
   const state = { x:0, y:0, scale:1, down:false, px:0, py:0 };
   const minScale = 1;
   const maxScale = 3.4;
@@ -32,7 +33,7 @@
   apply();
 
   game.addEventListener('wheel', e => {
-    if (e.target.closest('button,nav,.menu-panel,.city-popup,.test-levelup')) return;
+    if (ignore(e)) return;
     e.preventDefault();
     e.stopImmediatePropagation();
 
@@ -59,7 +60,7 @@
   }, { capture:true, passive:false });
 
   game.addEventListener('pointerdown', e => {
-    if (e.target.closest('button,nav,.menu-panel,.city-popup,.test-levelup')) return;
+    if (ignore(e)) return;
     if (state.scale <= 1.001) return;
     e.preventDefault();
     e.stopImmediatePropagation();
