@@ -30,12 +30,6 @@ const visibleDone = exploration => {
   if (!Number.isFinite(started)) return false;
   return Math.floor((Date.now() - started) / 1000) >= total;
 };
-const shouldApplyFinalReward = (character, exploration) => {
-  if (exploration?.rewardsPaid) return false;
-  const finalJenny = clampInt(exploration?.final?.jenny, -1);
-  const currentJenny = clampInt(character?.jenny, 0);
-  return finalJenny >= 0 && currentJenny < finalJenny;
-};
 export async function onRequestPost({ request, env }) {
   if (!env.CHAT_MESSAGES) return json({ error:'CHAT_MESSAGES KV binding mancante' }, 500);
   const user = await getUserByToken(env, bearer(request));
@@ -49,7 +43,7 @@ export async function onRequestPost({ request, env }) {
   if (!visibleDone(exploration) && exploration.status !== 'done' && exploration.status !== 'claimed') {
     return json({ error:'Esplorazione ancora in corso.' }, 403);
   }
-  if (shouldApplyFinalReward(character, exploration)) {
+  if (!exploration.rewardsPaid) {
     character = {
       ...character,
       health: exploration.final?.health || character.health,
