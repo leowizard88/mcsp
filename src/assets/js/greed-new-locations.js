@@ -23,6 +23,13 @@
   const canonicalLoc = loc => loc === 'Shiso Tree' ? 'Shiso tree' : (loc || 'Shiso tree');
   const selectLocation = (place, character = currentCharacter) => window.dispatchEvent(new CustomEvent('greed-location-selected', { detail:{ place:canonicalLoc(place), character } }));
   const syncLabel = c => { if (c?.location && locationLabel) locationLabel.textContent = canonicalLoc(c.location); };
+  const fmt = secs => {
+    secs = Math.max(0, Math.floor(Number(secs) || 0));
+    const h = Math.floor(secs / 3600);
+    const m = Math.floor((secs % 3600) / 60);
+    const s = secs % 60;
+    return h > 0 ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
+  };
   const apiGet = async () => {
     const res = await fetch('/api/hxh-character', { headers:{ authorization:`Bearer ${token()}` }, cache:'no-store' });
     const data = await res.json().catch(() => ({}));
@@ -89,6 +96,7 @@
   const blockReason = place => {
     const loc = current();
     if (currentCharacter?.exhaustionActive) return 'Esaurimento attivo: non puoi fare attività.';
+    if (currentCharacter?.sleepActive) return `Stai dormendo a ${currentCharacter.sleepLocation || loc}: non puoi lasciare la città per ${fmt(currentCharacter.sleepSecondsLeft)}.`;
     if ((currentCharacter?.fatigue || 0) >= 30) return 'Sei esausto: non puoi muoverti. Collassa a terra dalla schermata STAT.';
     if (loc === place) return 'Sei già qui.';
     if (place === 'Limeiro' && !hasAllCards()) return 'Limeiro è off limits finché non possiedi tutte le carte.';
