@@ -94,5 +94,4 @@
   game.addEventListener('pointercancel', endPan, true);
 
   window.addEventListener('resize', apply);
-  import('/assets/js/greed-new-locations.js?v=20260708-expanded-1');
 })();
