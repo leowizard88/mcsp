@@ -101,4 +101,5 @@
   setTimeout(() => updateStatPanel(true), 700);
   import('/assets/js/greed-location-panel.js?v=20260708-locationpanel-1');
   import('/assets/js/greed-entry-gate.js?v=20260708-entrygate-1');
+  import('/assets/js/greed-delete-confirm.js?v=20260708-deleteconfirm-1');
 })();
