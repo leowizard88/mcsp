@@ -42,7 +42,16 @@ const nowMs = () => Date.now();
 const isFuture = value => value && Date.parse(value) > nowMs();
 const restPenaltyActive = character => isFuture(character?.restPenaltyUntil);
 const restCooldownActive = character => isFuture(character?.restCooldownUntil);
+const exhaustionActive = character => isFuture(character?.exhaustionUntil);
 const secondsLeft = value => Math.max(0, Math.ceil((Date.parse(value || 0) - nowMs()) / 1000));
+const fatigueTier = value => {
+  const v = clampInt(value);
+  if (v >= 30) return { key:'esausto', label:'Esausto', surcharge:Infinity };
+  if (v >= 20) return { key:'stanco', label:'Stanco', surcharge:2 };
+  if (v >= 10) return { key:'affaticato', label:'Affaticato', surcharge:1 };
+  return { key:'normale', label:'Normale', surcharge:0 };
+};
+const energyCostFor = character => 1 + Math.max(0, fatigueTier(character?.fatigue).surcharge === Infinity ? 999 : fatigueTier(character?.fatigue).surcharge);
 const nextXpFor = level => {
   let needed = 10;
   for (let i = 1; i < clampInt(level, 1); i++) needed += Math.ceil(needed / 2);
@@ -94,15 +103,23 @@ const derivedStats = character => {
   const saluteGenerale = avg(salute);
   const saluteGeneraleMax = avg(saluteMax);
   const nenValue = 1 + (clampInt(params.nen) * 4);
-  return { generali:{ livello:level, esperienza:clampInt(character.xp), prossimoLivello:nextXpFor(level), puntiParametro:clampInt(character.paramPoints), puntiSetup:clampInt(character.setupPoints), energia:currentEnergy, energiaMax:maxEnergy, saluteGenerale, saluteGeneraleMax, nen:nenValue, nenMax:nenValue, jenny:clampInt(character.jenny) }, salute, saluteMax };
+  const fatigue = clampInt(character.fatigue);
+  const tier = fatigueTier(fatigue);
+  return { generali:{ livello:level, esperienza:clampInt(character.xp), prossimoLivello:nextXpFor(level), puntiParametro:clampInt(character.paramPoints), puntiSetup:clampInt(character.setupPoints), energia:currentEnergy, energiaMax:maxEnergy, saluteGenerale, saluteGeneraleMax, nen:nenValue, nenMax:nenValue, jenny:clampInt(character.jenny), stato:tier.label, statoValore:fatigue, costoExtraEnergia:tier.surcharge === Infinity ? null : tier.surcharge, costoMovimento:tier.surcharge === Infinity ? null : 1 + tier.surcharge }, salute, saluteMax };
 };
 const normalizeCharacter = value => {
   if (!value) return null;
   const level = clampInt(value.level || 1, 1);
   const params = { ...blankParams(), ...(value.params || {}) };
   const rawLocation = value.location && value.location !== 'Sperduto' ? value.location : 'Shiso tree';
-  let character = { ...value, level, xp:clampInt(value.xp), nextXp:nextXpFor(level), paramPoints:clampInt(value.paramPoints), setupPoints:clampInt(value.setupPoints), params, location:rawLocation, jenny:clampInt(value.jenny), energy:clampInt(value.energy ?? maxEnergyFor(level), 0, maxEnergyFor(level)), energyUpdatedAt:value.energyUpdatedAt || value.updatedAt || value.createdAt || new Date().toISOString(), inventory:Array.isArray(value.inventory) ? value.inventory : [], restPenaltyUntil:value.restPenaltyUntil || null, restCooldownUntil:value.restCooldownUntil || null };
-  character = applyEnergyRegen(character);
+  let character = { ...value, level, xp:clampInt(value.xp), nextXp:nextXpFor(level), paramPoints:clampInt(value.paramPoints), setupPoints:clampInt(value.setupPoints), params, location:rawLocation, jenny:clampInt(value.jenny), energy:clampInt(value.energy ?? maxEnergyFor(level), 0, maxEnergyFor(level)), energyUpdatedAt:value.energyUpdatedAt || value.updatedAt || value.createdAt || new Date().toISOString(), inventory:Array.isArray(value.inventory) ? value.inventory : [], restPenaltyUntil:value.restPenaltyUntil || null, restCooldownUntil:value.restCooldownUntil || null, fatigue:clampInt(value.fatigue), exhaustionUntil:value.exhaustionUntil || null };
+  if (character.exhaustionUntil && !exhaustionActive(character)) {
+    character.exhaustionUntil = null;
+    character.fatigue = 0;
+    character.energy = maxEnergyFor(level);
+    character.energyUpdatedAt = new Date().toISOString();
+  }
+  if (!exhaustionActive(character)) character = applyEnergyRegen(character);
   character.health = normalizeHealth(character);
   character.ready = character.setupPoints <= 0;
   character.paramsEffective = effectiveParams(character);
@@ -110,6 +127,12 @@ const normalizeCharacter = value => {
   character.restPenaltySecondsLeft = character.restPenaltyActive ? secondsLeft(character.restPenaltyUntil) : 0;
   character.restCooldownActive = restCooldownActive(character);
   character.restCooldownSecondsLeft = character.restCooldownActive ? secondsLeft(character.restCooldownUntil) : 0;
+  character.exhaustionActive = exhaustionActive(character);
+  character.exhaustionSecondsLeft = character.exhaustionActive ? secondsLeft(character.exhaustionUntil) : 0;
+  character.fatigueTier = fatigueTier(character.fatigue).key;
+  character.fatigueLabel = fatigueTier(character.fatigue).label;
+  character.energySurcharge = fatigueTier(character.fatigue).surcharge === Infinity ? null : fatigueTier(character.fatigue).surcharge;
+  character.moveEnergyCost = fatigueTier(character.fatigue).surcharge === Infinity ? null : energyCostFor(character);
   character.stats = derivedStats(character);
   return character;
 };
@@ -119,9 +142,10 @@ const publicCharacter = value => {
 };
 const ownCharacter = value => {
   const c = normalizeCharacter(value);
-  return c ? { userId:c.userId, username:c.username, nome:c.nome, cognome:c.cognome, eta:c.eta, sesso:c.sesso, storia:c.storia, nen:c.nen, autore:c.autore, location:c.location, level:c.level, xp:c.xp, nextXp:c.nextXp, paramPoints:c.paramPoints, setupPoints:c.setupPoints, jenny:c.jenny, energy:c.energy, energyUpdatedAt:c.energyUpdatedAt, inventory:c.inventory, health:c.health, restPenaltyUntil:c.restPenaltyUntil, restPenaltyActive:c.restPenaltyActive, restPenaltySecondsLeft:c.restPenaltySecondsLeft, restCooldownUntil:c.restCooldownUntil, restCooldownActive:c.restCooldownActive, restCooldownSecondsLeft:c.restCooldownSecondsLeft, ready:c.ready, params:c.params, paramsEffective:c.paramsEffective, stats:c.stats, createdAt:c.createdAt, updatedAt:c.updatedAt } : null;
+  return c ? { userId:c.userId, username:c.username, nome:c.nome, cognome:c.cognome, eta:c.eta, sesso:c.sesso, storia:c.storia, nen:c.nen, autore:c.autore, location:c.location, level:c.level, xp:c.xp, nextXp:c.nextXp, paramPoints:c.paramPoints, setupPoints:c.setupPoints, jenny:c.jenny, energy:c.energy, energyUpdatedAt:c.energyUpdatedAt, inventory:c.inventory, health:c.health, fatigue:c.fatigue, fatigueTier:c.fatigueTier, fatigueLabel:c.fatigueLabel, energySurcharge:c.energySurcharge, moveEnergyCost:c.moveEnergyCost, exhaustionUntil:c.exhaustionUntil, exhaustionActive:c.exhaustionActive, exhaustionSecondsLeft:c.exhaustionSecondsLeft, restPenaltyUntil:c.restPenaltyUntil, restPenaltyActive:c.restPenaltyActive, restPenaltySecondsLeft:c.restPenaltySecondsLeft, restCooldownUntil:c.restCooldownUntil, restCooldownActive:c.restCooldownActive, restCooldownSecondsLeft:c.restCooldownSecondsLeft, ready:c.ready, params:c.params, paramsEffective:c.paramsEffective, stats:c.stats, createdAt:c.createdAt, updatedAt:c.updatedAt } : null;
 };
 const saveCharacter = (env, key, character) => env.CHAT_MESSAGES.put(key, JSON.stringify(normalizeCharacter(character)));
+const blockIfInactive = character => character.exhaustionActive ? json({ error: `Esaurimento attivo: sei inattivo per altri ${character.exhaustionSecondsLeft} secondi.` }, 403) : null;
 
 export async function onRequestGet({ request, env }) {
   if (!env.CHAT_MESSAGES) return json({ error: 'CHAT_MESSAGES KV binding mancante' }, 500);
@@ -149,8 +173,19 @@ export async function onRequestPost({ request, env }) {
 
   if (action === 'save') {
     const existing = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
-    const character = { userId:user.id, username:user.username, nome:clean(data.nome).slice(0,40), cognome:clean(data.cognome).slice(0,40), eta:clean(data.eta).slice(0,8), sesso:clean(data.sesso).slice(0,40), storia:clean(data.storia).slice(0,1400), nen:clean(data.nen).slice(0,900), autore:clean(data.autore).slice(0,80), location:existing?.location || 'Shiso tree', level:existing?.level || 1, xp:existing?.xp || 0, jenny:existing?.jenny || 0, energy:existing?.energy ?? maxEnergyFor(existing?.level || 1), energyUpdatedAt:existing?.energyUpdatedAt || new Date().toISOString(), inventory:existing?.inventory || [], health:existing?.health || null, restPenaltyUntil:existing?.restPenaltyUntil || null, restCooldownUntil:existing?.restCooldownUntil || null, paramPoints:existing?.paramPoints || 0, setupPoints:existing ? existing.setupPoints : 10, params:existing?.params || blankParams(), createdAt:existing?.createdAt || new Date().toISOString(), updatedAt:new Date().toISOString() };
+    const character = { userId:user.id, username:user.username, nome:clean(data.nome).slice(0,40), cognome:clean(data.cognome).slice(0,40), eta:clean(data.eta).slice(0,8), sesso:clean(data.sesso).slice(0,40), storia:clean(data.storia).slice(0,1400), nen:clean(data.nen).slice(0,900), autore:clean(data.autore).slice(0,80), location:existing?.location || 'Shiso tree', level:existing?.level || 1, xp:existing?.xp || 0, jenny:existing?.jenny || 0, energy:existing?.energy ?? maxEnergyFor(existing?.level || 1), energyUpdatedAt:existing?.energyUpdatedAt || new Date().toISOString(), inventory:existing?.inventory || [], health:existing?.health || null, fatigue:existing?.fatigue || 0, exhaustionUntil:existing?.exhaustionUntil || null, restPenaltyUntil:existing?.restPenaltyUntil || null, restCooldownUntil:existing?.restCooldownUntil || null, paramPoints:existing?.paramPoints || 0, setupPoints:existing ? existing.setupPoints : 10, params:existing?.params || blankParams(), createdAt:existing?.createdAt || new Date().toISOString(), updatedAt:new Date().toISOString() };
     if (!character.nome || !character.cognome || !character.eta || !character.sesso || !character.storia || !character.nen || !character.autore) return json({ error: 'Compila tutti i campi' }, 400);
+    await saveCharacter(env, key, character);
+    return json({ character: ownCharacter(character) });
+  }
+
+  if (action === 'collapse') {
+    const character = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
+    if (!character) return json({ error: 'Crea prima un personaggio HxH' }, 404);
+    if (character.exhaustionActive) return json({ character: ownCharacter(character) });
+    if (clampInt(character.fatigue) < 30) return json({ error: 'Puoi collassare solo quando sei esausto.' }, 403);
+    character.exhaustionUntil = new Date(nowMs() + 600000).toISOString();
+    character.updatedAt = new Date().toISOString();
     await saveCharacter(env, key, character);
     return json({ character: ownCharacter(character) });
   }
@@ -158,6 +193,7 @@ export async function onRequestPost({ request, env }) {
   if (action === 'allocate') {
     const character = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
     if (!character) return json({ error: 'Crea prima un personaggio HxH' }, 404);
+    const blocked = blockIfInactive(character); if (blocked) return blocked;
     const param = clean(data.param);
     if (!PARAMS.includes(param)) return json({ error: 'Parametro non valido' }, 400);
     const amount = clampInt(data.amount || 1, 1, 50);
@@ -173,6 +209,7 @@ export async function onRequestPost({ request, env }) {
   if (action === 'deallocate') {
     const character = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
     if (!character) return json({ error: 'Crea prima un personaggio HxH' }, 404);
+    const blocked = blockIfInactive(character); if (blocked) return blocked;
     if (character.setupPoints <= 0) return json({ error: 'Puoi togliere punti solo durante la distribuzione iniziale' }, 403);
     const param = clean(data.param);
     if (!PARAMS.includes(param)) return json({ error: 'Parametro non valido' }, 400);
@@ -188,6 +225,7 @@ export async function onRequestPost({ request, env }) {
   if (action === 'levelup') {
     const character = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
     if (!character) return json({ error: 'Crea prima un personaggio HxH' }, 404);
+    const blocked = blockIfInactive(character); if (blocked) return blocked;
     character.level = clampInt(character.level, 1) + 1;
     character.paramPoints = clampInt(character.paramPoints) + 3;
     character.energy = clampInt(character.energy) + 2;
@@ -201,12 +239,14 @@ export async function onRequestPost({ request, env }) {
   if (action === 'rest') {
     const character = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
     if (!character) return json({ error: 'Crea prima un personaggio HxH' }, 404);
+    const blocked = blockIfInactive(character); if (blocked) return blocked;
     if (character.restCooldownActive) return json({ error: `Puoi riposare di nuovo tra ${Math.ceil(character.restCooldownSecondsLeft / 60)} minuti.` }, 403);
     character.energy = maxEnergyFor(character.level);
     character.energyUpdatedAt = new Date().toISOString();
     character.restPenaltyUntil = new Date(nowMs() + 600000).toISOString();
     character.restCooldownUntil = new Date(nowMs() + 10800000).toISOString();
     character.health = fullHealthFor(character);
+    character.fatigue = 0;
     character.updatedAt = new Date().toISOString();
     await saveCharacter(env, key, character);
     return json({ character: ownCharacter(character) });
@@ -215,15 +255,19 @@ export async function onRequestPost({ request, env }) {
   if (action === 'move') {
     const character = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
     if (!character) return json({ error: 'Crea prima un personaggio HxH' }, 404);
+    const blocked = blockIfInactive(character); if (blocked) return blocked;
     if (!character.ready) return json({ error: 'Distribuisci prima tutti i 10 punti parametro iniziali' }, 403);
+    if (clampInt(character.fatigue) >= 30) return json({ error: 'Sei esausto: non puoi muoverti. Collassa a terra per avviare l’esaurimento.' }, 403);
     const place = clean(data.place);
     if (!allowedPlaces.has(place)) return json({ error: 'Location non valida' }, 400);
     if (place === 'Limeiro') return json({ error: 'Limeiro è off limits finché non possiedi tutte le carte.' }, 403);
     const from = character.location || 'Shiso tree';
     if (!(routes[from] || []).includes(place)) return json({ error: 'non puoi arrivare qua a piedi da dove sei ora!' }, 403);
-    if (clampInt(character.energy) < 1) return json({ error: 'Energia insufficiente: ogni spostamento consuma 1 energia.' }, 403);
-    character.energy = clampInt(character.energy) - 1;
+    const cost = energyCostFor(character);
+    if (clampInt(character.energy) < cost) return json({ error: `Energia insufficiente: questo spostamento consuma ${cost} energia.` }, 403);
+    character.energy = clampInt(character.energy) - cost;
     character.energyUpdatedAt = new Date().toISOString();
+    character.fatigue = clampInt(character.fatigue) + 1;
     character.location = place;
     character.updatedAt = new Date().toISOString();
     await saveCharacter(env, key, character);
