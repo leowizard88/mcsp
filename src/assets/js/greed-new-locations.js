@@ -122,7 +122,6 @@
     e.stopImmediatePropagation();
     try { await apiGet(); } catch {}
     const name = btn.dataset.place;
-    selectLocation(name, currentCharacter);
     const place = byName[name];
     const reason = blockReason(name);
     const reachable = !reason;
@@ -154,6 +153,6 @@
   }, true);
 
   window.addEventListener('greed-character-updated', e => { if (e.detail) currentCharacter = e.detail; refresh(); });
-  apiGet().then(c => { refresh(); selectLocation(c?.location || 'Shiso tree', c); }).catch(refresh);
+  apiGet().then(c => { refresh(); }).catch(refresh);
   setInterval(refresh, 800);
 })();
