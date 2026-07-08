@@ -88,9 +88,9 @@ const enemyHitDamage = (raw, robustezza) => Math.max(1, Math.round(raw * (1 - Ma
 function handleZeroParts(logs, state, atSec) {
   const max = state.maxHealth; let delay = 0;
   if (state.health.testa <= 0) { addLog(logs, atSec, 'La testa è a 0. Stato critico: esplorazione cancellata.', 'bad'); state.critical = true; state.criticalAtSec = atSec; snapshot(state, atSec); return 0; }
-  if (state.health.corpo <= 0) { addLog(logs, atSec, 'Corpo a 0. Crolli a terra: 3 minuti di ripristino protetto.', 'bad'); state.health.corpo = Math.max(1, Math.ceil(max.corpo * 0.5)); delay += 180; addLog(logs, atSec + delay, 'Ti sei ripreso. Corpo ripristinato al 50%.', 'good'); snapshot(state, atSec + delay); }
-  if (state.health.braccioDx <= 0 && state.health.braccioSx <= 0) { addLog(logs, atSec + delay, 'Entrambe le braccia sono a 0. 1 minuto di ripristino protetto.', 'bad'); state.health.braccioDx = Math.max(1, Math.ceil(max.braccioDx * 0.5)); state.health.braccioSx = Math.max(1, Math.ceil(max.braccioSx * 0.5)); delay += 60; addLog(logs, atSec + delay, 'Braccia ripristinate al 50%.', 'good'); snapshot(state, atSec + delay); }
-  if (state.health.gambaDx <= 0 && state.health.gambaSx <= 0) { addLog(logs, atSec + delay, 'Entrambe le gambe sono a 0. 1 minuto di ripristino protetto.', 'bad'); state.health.gambaDx = Math.max(1, Math.ceil(max.gambaDx * 0.5)); state.health.gambaSx = Math.max(1, Math.ceil(max.gambaSx * 0.5)); delay += 60; addLog(logs, atSec + delay, 'Gambe ripristinate al 50%.', 'good'); snapshot(state, atSec + delay); }
+  if (state.health.corpo <= 0) { addLog(logs, atSec, 'Corpo a 0. Crolli a terra: recupero fisico necessario.', 'bad'); state.health.corpo = Math.max(1, Math.ceil(max.corpo * 0.5)); addLog(logs, atSec, 'Ti sei ripreso. Corpo ripristinato al 50%.', 'good'); snapshot(state, atSec); }
+  if (state.health.braccioDx <= 0 && state.health.braccioSx <= 0) { addLog(logs, atSec, 'Entrambe le braccia sono a 0. Recupero fisico necessario.', 'bad'); state.health.braccioDx = Math.max(1, Math.ceil(max.braccioDx * 0.5)); state.health.braccioSx = Math.max(1, Math.ceil(max.braccioSx * 0.5)); addLog(logs, atSec, 'Braccia ripristinate al 50%.', 'good'); snapshot(state, atSec); }
+  if (state.health.gambaDx <= 0 && state.health.gambaSx <= 0) { addLog(logs, atSec, 'Entrambe le gambe sono a 0. Recupero fisico necessario.', 'bad'); state.health.gambaDx = Math.max(1, Math.ceil(max.gambaDx * 0.5)); state.health.gambaSx = Math.max(1, Math.ceil(max.gambaSx * 0.5)); addLog(logs, atSec, 'Gambe ripristinate al 50%.', 'good'); snapshot(state, atSec); }
   return delay;
 }
 function simulateCombat(logs, state, atSec) {
@@ -109,8 +109,7 @@ function simulateCombat(logs, state, atSec) {
       state.health[part] = Math.max(0, clampInt(state.health[part]) - entered);
       addLog(logs, atSec, `${enemy.name} ti colpisce a ${part}: ${entered} danni entrati.`, 'bad');
       snapshot(state, atSec);
-      const extraDelay = handleZeroParts(logs, state, atSec);
-      state.delay += extraDelay; atSec += extraDelay;
+      handleZeroParts(logs, state, atSec);
       if (state.critical) return;
     }
   }
@@ -153,6 +152,7 @@ function rollBonus(diffKey, inventory) {
 function rollAccidentCount(diffKey) { const w = DIFFICULTY[diffKey].accidents; let n = rnd() * w.reduce((a,b) => a + b, 0); for (let i = 0; i < w.length; i++) if ((n -= w[i]) <= 0) return i; return 0; }
 const modeLabel = mode => mode === 'zetsu' ? 'Zetsu attivo' : 'Scoperta';
 const enemyChanceFor = (mode, diff, p) => mode === 'zetsu' ? Math.max(10, diff.enemyChance - clampInt(p.nen) * 2) : diff.enemyChance;
+const logOrder = l => Number(String(l.id || '').match(/^log-(\d+)-/)?.[1] || 0);
 function buildExploration(character, mode) {
   const location = clean(character.location || 'Shiso tree');
   if (!WILD.has(location)) throw new Error('Esplora è disponibile solo nelle zone selvagge.');
@@ -179,29 +179,24 @@ function buildExploration(character, mode) {
     }
   }
   events.sort((a,b) => a.t - b.t || (a.type === 'accident' ? -1 : 1));
-  let protectedUntil = -1;
   for (const ev of events) {
     if (state.critical) break;
-    let at = ev.t + state.delay;
-    if (ev.type !== 'accident' && at < protectedUntil) continue;
-    if (ev.type === 'accident' && at < protectedUntil) at = protectedUntil + 1;
+    const at = ev.t;
     if (ev.type === 'minute') minuteEvent(logs, state, at);
     if (ev.type === 'enemy') {
-      if (chance(enemyChance)) { const before = logs.length; simulateCombat(logs, state, at); const combatDelay = Math.max(0, logs.length - before); state.delay += combatDelay; protectedUntil = Math.max(protectedUntil, at + combatDelay); }
+      if (chance(enemyChance)) simulateCombat(logs, state, at);
       else addLog(logs, at, 'Nessun nemico incontrato nel modulo.', 'info');
     }
     if (ev.type === 'accident') {
       const part = pick(['corpo','braccioDx','braccioSx','gambaDx','gambaSx']);
       const damage = 4 + Math.floor((clampInt(character.level, 1) - 1) / 2) + diff.trapMod;
       state.health[part] = Math.max(0, clampInt(state.health[part]) - damage);
-      addLog(logs, at, `Sei inciampato in una trappola della location! Serviranno 2 minuti per uscire. Hai preso ${damage} danni a ${part}.`, 'bad');
-      snapshot(state, at); state.delay += 120; protectedUntil = at + 120;
-      addLog(logs, protectedUntil, 'Sei uscito dalla trappola. L’esplorazione riprende.', 'info');
-      const extra = handleZeroParts(logs, state, protectedUntil);
-      if (extra > 0) { state.delay += extra; protectedUntil += extra; }
+      addLog(logs, at, `Sei inciampato in una trappola della location! Hai preso ${damage} danni a ${part}.`, 'bad');
+      snapshot(state, at);
+      handleZeroParts(logs, state, at);
     }
   }
-  let totalSeconds = durationMin * 60 + state.delay;
+  let totalSeconds = durationMin * 60;
   if (!state.critical && remainderMin > 0) {
     const item = rollBonus(diffKey, state.inventory);
     if (item) { pushNamed(state.summary.itemsGained, item); addLog(logs, totalSeconds, `Modulo bonus: trovato ${item.name} (${item.rarity}).`, 'good'); }
@@ -212,7 +207,7 @@ function buildExploration(character, mode) {
   if (state.critical) totalSeconds = Math.floor(state.criticalAtSec || totalSeconds);
   else addLog(logs, totalSeconds, 'Esplorazione conclusa. Puoi vedere i risultati.', 'system');
   snapshot(state, totalSeconds);
-  logs.sort((a,b) => a.atSec - b.atSec || a.id.localeCompare(b.id)); state.snapshots.sort((a,b) => a.atSec - b.atSec);
+  logs.sort((a,b) => a.atSec - b.atSec || logOrder(a) - logOrder(b)); state.snapshots.sort((a,b) => a.atSec - b.atSec);
   return { id:crypto.randomUUID(), location, difficulty:diffKey, difficultyLabel:diff.label, mode, modeLabel:modeLabel(mode), status:state.critical ? 'critical' : 'active', startedAt:new Date().toISOString(), totalSeconds, baseMinutes:durationMin, moduleMinutes:moduleMin, bonusMinutes:remainderMin, enemyChance, antiRepeatBoss:true, logs, snapshots:state.snapshots, appliedSnapshotAt:0, summary:state.summary, final:{ health:state.health, cards:state.cards, inventory:state.inventory, xp:state.startXp + state.rewardXp, jenny:state.startJenny + state.rewardJenny, rewardCards:state.rewardCards, critical:state.critical, criticalAtSec:state.criticalAtSec }, claimed:false };
 }
 function visibleExploration(e) { if (!e) return null; const elapsed = Math.max(0, Math.floor((Date.now() - Date.parse(e.startedAt || new Date().toISOString())) / 1000)); const done = elapsed >= clampInt(e.totalSeconds); const critical = e.status === 'critical' && elapsed >= clampInt(e.final?.criticalAtSec || e.totalSeconds); return { ...e, elapsedSeconds:elapsed, secondsLeft:Math.max(0, clampInt(e.totalSeconds) - elapsed), done, criticalNow:critical, visibleLogs:(e.logs || []).filter(l => clampInt(l.atSec) <= elapsed) }; }
