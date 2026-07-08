@@ -20,8 +20,8 @@
   const css = document.createElement('style');
   css.textContent = `
     .inventory-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}.inventory-list li{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.45);padding:10px 11px;color:#f4ffe8}.inventory-empty{color:#d9d9d9;font:400 14px/1.35 Arial,Helvetica,sans-serif}
-    .energy-hud{position:fixed;top:44px;left:calc(var(--side,44px) + 104px);z-index:30;color:#00e33a;font:800 14px/1.25 Arial,Helvetica,sans-serif;text-shadow:1px 1px 0 #000}.energy-hud small{display:block;margin-top:2px;color:#dfff73;font:700 11px/1.25 Arial,Helvetica,sans-serif;text-transform:none}.stat-energy-timer{display:block;margin-top:4px;color:#dfff73;font:700 11px/1.25 Arial,Helvetica,sans-serif;text-transform:none}
-    @media(max-width:760px){.energy-hud{top:84px;left:calc(var(--side,38px) + 14px)}}
+    .location-display{max-width:230px!important}.energy-hud{position:fixed;left:calc(var(--side,44px) + 104px);z-index:30;color:#00e33a;font:800 14px/1.25 Arial,Helvetica,sans-serif;text-shadow:1px 1px 0 #000;white-space:nowrap}.energy-hud small{display:block;margin-top:2px;color:#dfff73;font:700 11px/1.25 Arial,Helvetica,sans-serif;text-transform:none}.stat-energy-timer{display:block;margin-top:4px;color:#dfff73;font:700 11px/1.25 Arial,Helvetica,sans-serif;text-transform:none}
+    @media(max-width:760px){.energy-hud{left:calc(var(--side,38px) + 14px)}}
   `;
   document.head.appendChild(css);
 
@@ -32,6 +32,11 @@
     energyHud.dataset.energyHud = '1';
     locationBox.after(energyHud);
   }
+  const placeEnergyHud = () => {
+    if (!energyHud || !locationBox) return;
+    const r = locationBox.getBoundingClientRect();
+    energyHud.style.top = `${Math.ceil(r.bottom + 6)}px`;
+  };
   const maxEnergy = c => c?.stats?.generali?.energiaMax ?? c?.stats?.generali?.energia ?? c?.energy ?? 0;
   const curEnergy = c => c?.stats?.generali?.energia ?? c?.energy ?? 0;
   const timerText = c => {
@@ -48,6 +53,7 @@
   };
   const renderEnergyHud = c => {
     if (!energyHud || !c) return;
+    placeEnergyHud();
     energyHud.innerHTML = `Energia ${curEnergy(c)} / ${maxEnergy(c)}<small>${timerText(c)}</small>`;
   };
 
@@ -86,6 +92,7 @@
     } catch {}
   };
   nav.querySelector('[data-panel="stat"]')?.addEventListener('click', () => setTimeout(() => updateStatPanel(true), 40), true);
+  window.addEventListener('resize', placeEnergyHud);
   window.addEventListener('greed-character-updated', e => {
     if (e.detail) { currentCharacter = e.detail; lastFetch = Date.now(); renderEnergyHud(currentCharacter); }
     setTimeout(() => updateStatPanel(true), 50);
@@ -93,4 +100,5 @@
   setInterval(() => updateStatPanel(false), 1000);
   setTimeout(() => updateStatPanel(true), 700);
   import('/assets/js/greed-location-panel.js?v=20260708-locationpanel-1');
+  import('/assets/js/greed-entry-gate.js?v=20260708-entrygate-1');
 })();
