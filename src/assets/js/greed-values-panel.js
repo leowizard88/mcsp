@@ -10,6 +10,17 @@
     const s = secs % 60;
     return h > 0 ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
   };
+  const damageValue = c => {
+    const p = c?.paramsEffective || c?.params || {};
+    const inv = Array.isArray(c?.inventory) ? c.inventory : [];
+    const weapon = inv.filter(i => i?.weapon || i?.damageMod || i?.dannoMod).sort((a,b) => Number(b.damageMod ?? b.dannoMod ?? 0) - Number(a.damageMod ?? a.dannoMod ?? 0))[0];
+    const mod = Math.max(0, Math.floor(Number(weapon?.damageMod ?? weapon?.dannoMod ?? 0) || 0));
+    let value = 2 + Math.max(0, Math.floor(Number(p.forza) || 0)) + mod;
+    const h = c?.health || {};
+    const limbOut = ['braccioDx','braccioSx','gambaDx','gambaSx'].some(k => Math.floor(Number(h[k]) || 0) <= 0);
+    if (limbOut) value = Math.max(1, Math.floor(value * 0.5));
+    return { value, weapon:weapon?.name || weapon?.nome || '', mod, limbOut };
+  };
   const css = document.createElement('style');
   css.textContent = `
     .values-section{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.38);padding:10px;margin:0 0 14px}.values-section h3{margin:0 0 8px;color:#dfff73;font:900 17px/1 'Courier New',monospace;text-transform:uppercase;letter-spacing:.06em}.values-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.value-tile{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.46);padding:9px}.value-tile strong{display:block;color:#ffe16a;text-transform:uppercase;font-size:11px;margin-bottom:4px}.value-tile span{font-weight:900;text-transform:uppercase}.value-tile small{display:block;margin-top:4px;color:#ffdf7b;font:700 11px/1.25 Arial,Helvetica,sans-serif;text-transform:none}
@@ -38,7 +49,9 @@
     section.className = 'values-section';
     const vulnerabilita = c.vulnerabilityEffective || c.stats?.valori?.vulnerabilita || c.vulnerability || 'bassa';
     const sleepLine = c.sleepActive ? `<small>Dormi: vulnerabilità alta per ${fmt(c.sleepSecondsLeft)}.</small>` : '';
-    section.innerHTML = `<h3>Valori</h3><div class="values-grid"><div class="value-tile"><strong>Vulnerabilità</strong><span>${vulnerabilita}</span>${sleepLine}</div></div>`;
+    const dmg = damageValue(c);
+    const dmgNote = `${dmg.weapon ? `Arma: ${dmg.weapon}. ` : ''}${dmg.mod ? `Mod arma +${dmg.mod}. ` : ''}${dmg.limbOut ? 'Arto fuori uso: danno dimezzato.' : 'Formula: 2 + Forza + arma.'}`;
+    section.innerHTML = `<h3>Valori</h3><div class="values-grid"><div class="value-tile"><strong>Vulnerabilità</strong><span>${vulnerabilita}</span>${sleepLine}</div><div class="value-tile"><strong>Danno</strong><span>${dmg.value}</span><small>${dmgNote}</small></div></div>`;
     anchor.after(section);
   };
   const refresh = async () => { try { render(await readCharacter()); } catch {} };
