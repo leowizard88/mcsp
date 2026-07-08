@@ -36,11 +36,11 @@
       <section class="guide-chapter">
         <h3>4. Energia, salute e Nen</h3>
         <ul>
-          <li><strong>Energia:</strong> al livello 1 vale 3. Ogni livello aggiunge 2. Si ricarica di 1 ogni 10 minuti.</li>
+          <li><strong>Energia:</strong> al livello 1 vale 3. Ogni livello aggiunge 2. Si ricarica di 1 ogni 10 minuti, se non sei in esaurimento o in sonno attivo.</li>
           <li><strong>Salute generale:</strong> è la media arrotondata delle parti del corpo.</li>
           <li><strong>Nen:</strong> se il parametro Nen è 0, la statistica vale 1. Ogni punto in Nen aggiunge 4.</li>
         </ul>
-        <p>La salute è divisa in testa, corpo, braccio dx, braccio sx, gamba dx e gamba sx. La Robustezza modifica i valori salute.</p>
+        <p>La salute è divisa in testa, corpo, braccio dx, braccio sx, gamba dx e gamba sx. La formula attuale è: base parte corpo + Robustezza×2 + bonus livello.</p>
       </section>
       <section class="guide-chapter">
         <h3>5. Mappa e movimento</h3>
@@ -64,21 +64,35 @@
         <p>Quando sei Esausto compare in STAT il tasto rosso Collassa a terra. Il collasso attiva Esaurimento: per 10 minuti sei inattivo, appare un timer gigante e ogni attività è bloccata. Alla fine recuperi tutta l’energia e Stato torna a 0.</p>
       </section>
       <section class="guide-chapter">
-        <h3>7. Tipi di location e azioni</h3>
+        <h3>7. Valori</h3>
+        <p>Dentro STAT c’è una sezione Valori. Per ora contiene Vulnerabilità.</p>
         <ul>
-          <li><strong>● Città:</strong> hanno Attività, Riposa e Usa carta.</li>
+          <li><strong>Bassa:</strong> valore standard di default.</li>
+          <li><strong>Media:</strong> valore intermedio riservato a eventi futuri.</li>
+          <li><strong>Alta:</strong> valore pericoloso. Dormire imposta Vulnerabilità alta per 6 ore.</li>
+        </ul>
+      </section>
+      <section class="guide-chapter">
+        <h3>8. Tipi di location e azioni</h3>
+        <ul>
+          <li><strong>● Città:</strong> hanno Attività, Riposa, Dormi e Usa carta.</li>
           <li><strong>♣ Zone selvagge:</strong> hanno Esplora e Usa carta. Il numero indica la difficoltà da 1 a 5.</li>
-          <li><strong>★ Zone neutre:</strong> hanno azioni più limitate e funzioni speciali.</li>
+          <li><strong>★ Zone neutre:</strong> hanno Attività, Riposa e Usa carta.</li>
         </ul>
         <p>La box location può essere chiusa con la X. Si apre quando entri in una nuova location o quando clicchi la location in cui ti trovi già.</p>
       </section>
       <section class="guide-chapter">
-        <h3>8. Riposa</h3>
-        <p>Riposa è disponibile solo nelle città. Ripristina tutta l’energia, tutta la vita e azzera Stato.</p>
+        <h3>9. Riposa</h3>
+        <p>Riposa è disponibile nelle città e nelle zone neutre. Ripristina tutta l’energia, azzera Stato e cura solo una parte della vita, circa il 30% della salute massima di ogni parte del corpo.</p>
         <p>Dopo il riposo hai un cooldown globale di 3 ore. Inoltre subisci una penalità temporanea: -1 a tutti i parametri per 10 minuti.</p>
       </section>
       <section class="guide-chapter">
-        <h3>9. Binder Book</h3>
+        <h3>10. Dormi</h3>
+        <p>Dormi è disponibile solo nelle città. Ha cooldown di 6 ore e non dà penalità ai parametri.</p>
+        <p>Quando dormi recuperi vita piena, energia piena e Stato 0. Per 6 ore rimani bloccato nella città in cui ti trovi e la tua Vulnerabilità diventa alta.</p>
+      </section>
+      <section class="guide-chapter">
+        <h3>11. Binder Book</h3>
         <p>Il Binder Book è l’album delle carte. Ha 150 slot totali, divisi in pagine da 10 slot.</p>
         <ul>
           <li><strong>000-099:</strong> carte specifiche necessarie per finire Greed Island.</li>
@@ -86,13 +100,13 @@
         </ul>
       </section>
       <section class="guide-chapter">
-        <h3>10. Jenny e inventario</h3>
+        <h3>12. Jenny e inventario</h3>
         <p>Il Jenny, indicato con Ｊ, è la valuta ingame. Per ora ogni personaggio parte da 0 Ｊ.</p>
         <p>L’inventario conserva oggetti, carte e strumenti del giocatore. Le carte possono poi essere lette dal Binder Book quando avranno numero o slot.</p>
       </section>
       <section class="guide-chapter">
-        <h3>11. Salvataggio e cancellazione</h3>
-        <p>Personaggio, location, parametri, energia, salute, Stato, riposo, esaurimento, inventario, livello, XP e Jenny sono salvati lato server.</p>
+        <h3>13. Salvataggio e cancellazione</h3>
+        <p>Personaggio, location, parametri, energia, salute, Stato, Valori, sonno, riposo, esaurimento, inventario, livello, XP e Jenny sono salvati lato server.</p>
         <p class="guide-note">Il tasto Elimina personaggio cancella il personaggio dopo conferma.</p>
       </section>
     </div>
