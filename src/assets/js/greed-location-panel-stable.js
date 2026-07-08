@@ -63,12 +63,14 @@
   };
   const actionHtml = (loc, meta, c) => {
     const here = loc === canonicalLoc(c?.location || 'Shiso tree');
-    const restDisabled = !here || c?.restCooldownSecondsLeft > 0;
-    const sleepDisabled = !here || c?.sleepActive || c?.sleepCooldownSecondsLeft > 0;
-    if (meta.type === 'city') return `<button type="button" data-loc-action="activity">Attività</button><button type="button" data-loc-action="rest" ${restDisabled ? 'disabled' : ''}>Riposa</button><button type="button" data-loc-action="sleep" ${sleepDisabled ? 'disabled' : ''}>Dormi</button><button type="button" data-loc-action="card">Usa carta</button>`;
-    if (meta.type === 'neutral') return `<button type="button" data-loc-action="activity">Attività</button><button type="button" data-loc-action="rest" ${restDisabled ? 'disabled' : ''}>Riposa</button><button type="button" data-loc-action="card">Usa carta</button>`;
-    if (meta.type === 'wild') return `<button type="button" data-loc-action="explore" ${!here ? 'disabled' : ''}>Esplora</button><button type="button" data-loc-action="card">Usa carta</button>`;
-    return `<button type="button" data-loc-action="activity">Attività</button><button type="button" data-loc-action="card">Usa carta</button>`;
+    const sleeping = !!c?.sleepActive && (c.sleepSecondsLeft || 0) > 0;
+    const restDisabled = sleeping || !here || c?.restCooldownSecondsLeft > 0;
+    const sleepDisabled = sleeping || !here || c?.sleepCooldownSecondsLeft > 0;
+    const dis = sleeping ? 'disabled' : '';
+    if (meta.type === 'city') return `<button type="button" data-loc-action="activity" ${dis}>Attività</button><button type="button" data-loc-action="rest" ${restDisabled ? 'disabled' : ''}>Riposa</button><button type="button" data-loc-action="sleep" ${sleepDisabled ? 'disabled' : ''}>Dormi</button><button type="button" data-loc-action="card" ${dis}>Usa carta</button>`;
+    if (meta.type === 'neutral') return `<button type="button" data-loc-action="activity" ${dis}>Attività</button><button type="button" data-loc-action="rest" ${restDisabled ? 'disabled' : ''}>Riposa</button><button type="button" data-loc-action="card" ${dis}>Usa carta</button>`;
+    if (meta.type === 'wild') return `<button type="button" data-loc-action="explore" ${sleeping || !here ? 'disabled' : ''}>Esplora</button><button type="button" data-loc-action="card" ${dis}>Usa carta</button>`;
+    return `<button type="button" data-loc-action="activity" ${dis}>Attività</button><button type="button" data-loc-action="card" ${dis}>Usa carta</button>`;
   };
   const updateTimers = () => {
     const c = currentCharacter || {};
@@ -79,7 +81,7 @@
     const pen = c.restPenaltySecondsLeft || 0;
     const canRestHere = meta.type === 'city' || meta.type === 'neutral';
     $('[data-loc-rest-timer]').textContent = canRestHere ? (cd > 0 ? `Riposo disponibile tra: ${fmt(cd)}` : (selectedLocation === canonicalLoc(c.location) ? 'Riposo disponibile ora.' : 'Devi essere qui per riposare.')) : '';
-    if (meta.type === 'city' && sleep > 0) $('[data-loc-rest-timer]').textContent += ` Dormi attivo: ${fmt(sleep)}.`;
+    if (sleep > 0) $('[data-loc-rest-timer]').textContent = `Dormi attivo: ${fmt(sleep)}. Azioni bloccate, vulnerabilità alta.`;
     else if (meta.type === 'city' && sleepCd > 0) $('[data-loc-rest-timer]').textContent += ` Dormi disponibile tra: ${fmt(sleepCd)}.`;
     $('[data-loc-penalty]').textContent = pen > 0 ? `Penalità riposo attiva: -1 a tutti i parametri per ${fmt(pen)}.` : '';
     if (cd > 0) c.restCooldownSecondsLeft = Math.max(0, cd - 1);
@@ -106,7 +108,8 @@
       lastCountFetch = 0;
     }
     $('[data-loc-actions]').innerHTML = actionHtml(selectedLocation, meta, currentCharacter || {});
-    $('[data-loc-note]').textContent = meta.type === 'city' ? 'Riposa: energia piena, poca vita recuperata, Stato azzerato, cooldown 3 ore, parametri -1 per 10 minuti. Dormi: vita/energia/Stato full, blocco in città per 6 ore e vulnerabilità alta.' : meta.type === 'neutral' ? 'Zona neutra: puoi riposare. Recuperi energia piena, poca vita e azzeri Stato, ma subisci la penalità temporanea del riposo.' : meta.type === 'wild' ? 'Esplora: azione selvaggia della zona. Meccanica da collegare.' : '';
+    const sleeping = !!currentCharacter?.sleepActive && (currentCharacter.sleepSecondsLeft || 0) > 0;
+    $('[data-loc-note]').textContent = sleeping ? 'Stai dormendo: la location box è in sola visualizzazione. Riposa, Attività e Usa carta sono bloccati fino alla fine del sonno.' : meta.type === 'city' ? 'Riposa: energia piena, poca vita recuperata, Stato azzerato, cooldown 3 ore, parametri -1 per 10 minuti. Dormi: vita/energia/Stato full, blocco in città per 6 ore e vulnerabilità alta.' : meta.type === 'neutral' ? 'Zona neutra: puoi riposare. Recuperi energia piena, poca vita e azzeri Stato, ma subisci la penalità temporanea del riposo.' : meta.type === 'wild' ? 'Esplora: azione selvaggia della zona. Meccanica da collegare.' : '';
     updateTimers();
     countPlayers(selectedLocation);
   };
@@ -117,6 +120,7 @@
     e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
     const msg = $('[data-loc-msg]');
     msg.classList.remove('err'); msg.textContent = '';
+    if (currentCharacter?.sleepActive) { msg.classList.add('err'); msg.textContent = `Stai dormendo: azioni bloccate per ${fmt(currentCharacter.sleepSecondsLeft)}.`; return; }
     const action = btn.dataset.locAction;
     if (action === 'explore') { msg.textContent = 'Esplorazione da implementare: qui finiranno oggetti, carte, mostri e quest della zona selvaggia.'; return; }
     if (action !== 'rest' && action !== 'sleep') { msg.textContent = 'Questa azione non è ancora implementata.'; return; }
