@@ -32,22 +32,24 @@
       panel.classList.add('is-active');
     });
   }
-  const statButton = nav.querySelector('[data-panel="stat"]');
-  statButton?.addEventListener('click', async () => {
-    setTimeout(async () => {
-      try {
-        const c = await getCharacter();
-        const g = c?.stats?.generali || {};
-        const tiles = [...panel.querySelectorAll('.stat-tile')];
-        const setTile = (name, value) => {
-          const tile = tiles.find(t => t.querySelector('strong')?.textContent?.trim() === name);
-          const span = tile?.querySelector('span');
-          if (span) span.textContent = value;
-        };
-        setTile('Energia', `${g.energia ?? c.energy ?? 0}/${g.energiaMax ?? g.energia ?? c.energy ?? 0}`);
-        setTile('Nen', `${g.nen ?? 0}/${g.nenMax ?? g.nen ?? 0}`);
-        setTile('Salute generale', `${g.saluteGenerale ?? 0}/${g.saluteGeneraleMax ?? g.saluteGenerale ?? 0}`);
-      } catch {}
-    }, 40);
-  }, true);
+  const updateStatPanel = async () => {
+    try {
+      const c = await getCharacter();
+      window.dispatchEvent(new CustomEvent('greed-character-updated', { detail:c }));
+      const g = c?.stats?.generali || {};
+      const tiles = [...panel.querySelectorAll('.stat-tile')];
+      const setTile = (name, value) => {
+        const tile = tiles.find(t => t.querySelector('strong')?.textContent?.trim() === name);
+        const span = tile?.querySelector('span');
+        if (span) span.textContent = value;
+      };
+      setTile('Energia', `${g.energia ?? c.energy ?? 0}/${g.energiaMax ?? g.energia ?? c.energy ?? 0}`);
+      setTile('Nen', `${g.nen ?? 0}/${g.nenMax ?? g.nen ?? 0}`);
+      setTile('Salute generale', `${g.saluteGenerale ?? 0}/${g.saluteGeneraleMax ?? g.saluteGenerale ?? 0}`);
+    } catch {}
+  };
+  nav.querySelector('[data-panel="stat"]')?.addEventListener('click', () => setTimeout(updateStatPanel, 40), true);
+  window.addEventListener('greed-character-updated', () => setTimeout(updateStatPanel, 50));
+  setInterval(updateStatPanel, 60000);
+  import('/assets/js/greed-location-panel.js?v=20260708-locationpanel-1');
 })();
