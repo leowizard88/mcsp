@@ -5,8 +5,6 @@ const MAX_AVATAR = 420000;
 const ROLE_USER = 'user';
 const ROLE_REDACTORE = 'redattore';
 
-// Codici SEC monouso validi, salvati come SHA-256 del codice normalizzato.
-// Quando serve un nuovo codice, va aggiunto qui il suo hash.
 const SEC_CODE_HASHES = new Set([
   'c914c0f9c5005e79ebd0a169f0e235b09b2f6da1d1db655bda4d6ef446d12be2',
   '68d7950e35c85a501ddf7325caff249132573f40fed5591646ef87d982672d78',
@@ -14,6 +12,7 @@ const SEC_CODE_HASHES = new Set([
 ]);
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: HEADERS });
+const fail = (error, status = 500) => json({ error: String(error?.message || error || 'Errore account') }, status);
 const clean = value => String(value || '').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim();
 const usernameKey = value => clean(value).toLowerCase();
 const normalizeSecCode = value => clean(value).toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -26,6 +25,7 @@ const randomHex = bytes => {
   crypto.getRandomValues(array);
   return [...array].map(byte => byte.toString(16).padStart(2, '0')).join('');
 };
+const randomId = () => crypto.randomUUID ? crypto.randomUUID() : randomHex(16);
 const hash = async value => bytesToHex(await crypto.subtle.digest('SHA-256', enc.encode(value)));
 const passHash = (password, salt) => hash(`${salt}:${password}`);
 const roleOf = user => user?.role === ROLE_REDACTORE ? ROLE_REDACTORE : ROLE_USER;
@@ -75,7 +75,7 @@ const redeemSecCode = async (env, rawCode, user) => {
   return { ok: true, user };
 };
 
-export async function onRequestGet({ request, env }) {
+const handleGet = async ({ request, env }) => {
   const url = new URL(request.url);
   const requested = clean(url.searchParams.get('username'));
   const self = await getUserByToken(env, bearer(request));
@@ -86,9 +86,9 @@ export async function onRequestGet({ request, env }) {
     return json({ user: publicUser(user) });
   }
   return json({ user: ownUser(self) });
-}
+};
 
-export async function onRequestPost({ request, env }) {
+const handlePost = async ({ request, env }) => {
   if (!env.CHAT_MESSAGES) return json({ error: 'CHAT_MESSAGES KV binding mancante' }, 500);
   let data;
   try { data = await request.json(); } catch { return json({ error: 'JSON non valido' }, 400); }
@@ -103,7 +103,7 @@ export async function onRequestPost({ request, env }) {
     if (await env.CHAT_MESSAGES.get(`auth:username:${key}`)) return json({ error: 'Username già preso' }, 409);
     const signupKey = await originKey(request);
     if (signupKey && await env.CHAT_MESSAGES.get(signupKey)) return json({ error: 'Troppi account creati da questa rete. Riprova tra poco.' }, 429);
-    const id = crypto.randomUUID();
+    const id = randomId();
     const salt = randomHex(16);
     const user = { id, username, usernameKey: key, role: ROLE_USER, salt, passwordHash: await passHash(password, salt), bio: '', avatar: '', sec: '', createdAt: new Date().toISOString() };
     await env.CHAT_MESSAGES.put(`auth:user:${id}`, JSON.stringify(user));
@@ -118,8 +118,9 @@ export async function onRequestPost({ request, env }) {
     const password = String(data.password || '');
     const id = await env.CHAT_MESSAGES.get(`auth:username:${key}`);
     if (!id) return json({ error: 'Credenziali non valide' }, 401);
-    const user = await env.CHAT_MESSAGES.get(`auth:user:${id}`, 'json');
-    if (!user || await passHash(password, user.salt) !== user.passwordHash) return json({ error: 'Credenziali non valide' }, 401);
+    const user = await env.CHAT_MESSAGES.get(`auth:user:${id}`, 'json').catch(() => null);
+    if (!user?.salt || !user?.passwordHash) return json({ error: 'Credenziali non valide' }, 401);
+    if (await passHash(password, user.salt) !== user.passwordHash) return json({ error: 'Credenziali non valide' }, 401);
     if (!user.role) {
       user.role = ROLE_USER;
       await env.CHAT_MESSAGES.put(`auth:user:${user.id}`, JSON.stringify(user));
@@ -161,4 +162,12 @@ export async function onRequestPost({ request, env }) {
   }
 
   return json({ error: 'Azione non valida' }, 400);
+};
+
+export async function onRequestGet(ctx) {
+  try { return await handleGet(ctx); } catch (error) { return fail(error); }
+}
+
+export async function onRequestPost(ctx) {
+  try { return await handlePost(ctx); } catch (error) { return fail(error); }
 }
