@@ -38,6 +38,8 @@ const neutralPlaces = new Set(['Shiso tree','Casa senile','Isola sul lago','Acca
 const PARAMS = ['forza','robustezza','nen','intelligenza','malizia','agilita','oratoria','percezione'];
 const healthBase = { testa:5, corpo:8, braccioDx:6, braccioSx:6, gambaDx:7, gambaSx:7 };
 const HEALTH_FORMULA_VERSION = 2;
+const STARTER_PIG_ID = 'free-greed-island-pig';
+const STARTER_PIG_SLOT = 100;
 const characterKey = user => `hxh:character:${user.id}`;
 const clampInt = (value, min = 0, max = 999999) => Math.max(min, Math.min(max, Math.floor(Number(value) || 0)));
 const maxEnergyFor = level => 3 + ((clampInt(level, 1) - 1) * 2);
@@ -51,6 +53,14 @@ const exhaustionActive = character => isFuture(character?.exhaustionUntil);
 const secondsLeft = value => Math.max(0, Math.ceil((Date.parse(value || 0) - nowMs()) / 1000));
 const cleanVulnerability = value => ['bassa','media','alta'].includes(clean(value).toLowerCase()) ? clean(value).toLowerCase() : 'bassa';
 const vulnerabilityFor = character => sleepActive(character) ? 'alta' : cleanVulnerability(character?.vulnerability);
+const starterPigCard = character => ({ id:STARTER_PIG_ID, type:'card', cardType:'free', number:STARTER_PIG_SLOT, slot:STARTER_PIG_SLOT, name:'Maiale di Greed Island', nome:'Maiale di Greed Island', rarity:'H', rarita:'H', description:`Benvenuto ${clean(character?.nome) || 'giocatore'}!`, descrizione:`Benvenuto ${clean(character?.nome) || 'giocatore'}!`, materializesTo:{ type:'item', name:'Maiale di Greed Island', nome:'Maiale di Greed Island', description:'Un... maiale!?', descrizione:'Un... maiale!?' }, art:'pig', createdAt:character?.createdAt || new Date().toISOString() });
+const hasStarterPigCard = character => Array.isArray(character?.cards) && character.cards.some(card => card?.id === STARTER_PIG_ID || card?.name === 'Maiale di Greed Island' || card?.nome === 'Maiale di Greed Island');
+const hasStarterPigItem = character => Array.isArray(character?.inventory) && character.inventory.some(item => item?.id === 'item-greed-island-pig' || item?.sourceCardId === STARTER_PIG_ID || item?.name === 'Maiale di Greed Island' || item?.nome === 'Maiale di Greed Island');
+const ensureStarterPigCard = character => {
+  const cards = Array.isArray(character.cards) ? [...character.cards] : [];
+  if (!hasStarterPigCard({ cards }) && !hasStarterPigItem(character)) cards.push(starterPigCard(character));
+  return { ...character, cards };
+};
 const fatigueTier = value => {
   const v = clampInt(value);
   if (v >= 30) return { key:'esausto', label:'Esausto', surcharge:Infinity };
@@ -129,7 +139,8 @@ const normalizeCharacter = value => {
   const level = clampInt(value.level || 1, 1);
   const params = { ...blankParams(), ...(value.params || {}) };
   const rawLocation = value.location && value.location !== 'Sperduto' ? value.location : 'Shiso tree';
-  let character = { ...value, level, xp:clampInt(value.xp), nextXp:nextXpFor(level), paramPoints:clampInt(value.paramPoints), setupPoints:clampInt(value.setupPoints), params, location:rawLocation, jenny:clampInt(value.jenny), energy:clampInt(value.energy ?? maxEnergyFor(level), 0, maxEnergyFor(level)), energyUpdatedAt:value.energyUpdatedAt || value.updatedAt || value.createdAt || new Date().toISOString(), inventory:Array.isArray(value.inventory) ? value.inventory : [], restPenaltyUntil:value.restPenaltyUntil || null, restCooldownUntil:value.restCooldownUntil || null, fatigue:clampInt(value.fatigue), fatigueUpdatedAt:value.fatigueUpdatedAt || null, vulnerability:cleanVulnerability(value.vulnerability), sleepUntil:value.sleepUntil || null, sleepCooldownUntil:value.sleepCooldownUntil || null, sleepLocation:value.sleepLocation || null, exhaustionUntil:value.exhaustionUntil || null, healthFormulaVersion:value.healthFormulaVersion || 1 };
+  let character = { ...value, level, xp:clampInt(value.xp), nextXp:nextXpFor(level), paramPoints:clampInt(value.paramPoints), setupPoints:clampInt(value.setupPoints), params, location:rawLocation, jenny:clampInt(value.jenny), energy:clampInt(value.energy ?? maxEnergyFor(level), 0, maxEnergyFor(level)), energyUpdatedAt:value.energyUpdatedAt || value.updatedAt || value.createdAt || new Date().toISOString(), inventory:Array.isArray(value.inventory) ? value.inventory : [], cards:Array.isArray(value.cards) ? value.cards : [], restPenaltyUntil:value.restPenaltyUntil || null, restCooldownUntil:value.restCooldownUntil || null, fatigue:clampInt(value.fatigue), fatigueUpdatedAt:value.fatigueUpdatedAt || null, vulnerability:cleanVulnerability(value.vulnerability), sleepUntil:value.sleepUntil || null, sleepCooldownUntil:value.sleepCooldownUntil || null, sleepLocation:value.sleepLocation || null, exhaustionUntil:value.exhaustionUntil || null, healthFormulaVersion:value.healthFormulaVersion || 1 };
+  character = ensureStarterPigCard(character);
   character = applyFatigueIdleReset(character);
   if (character.sleepUntil && !sleepActive(character)) {
     character.sleepUntil = null;
@@ -172,7 +183,7 @@ const publicCharacter = value => {
 };
 const ownCharacter = value => {
   const c = normalizeCharacter(value);
-  return c ? { userId:c.userId, username:c.username, nome:c.nome, cognome:c.cognome, eta:c.eta, sesso:c.sesso, storia:c.storia, nen:c.nen, autore:c.autore, location:c.location, level:c.level, xp:c.xp, nextXp:c.nextXp, paramPoints:c.paramPoints, setupPoints:c.setupPoints, jenny:c.jenny, energy:c.energy, energyUpdatedAt:c.energyUpdatedAt, inventory:c.inventory, health:c.health, healthFormulaVersion:c.healthFormulaVersion, vulnerability:c.vulnerability, vulnerabilityEffective:c.vulnerabilityEffective, sleepUntil:c.sleepUntil, sleepActive:c.sleepActive, sleepSecondsLeft:c.sleepSecondsLeft, sleepCooldownUntil:c.sleepCooldownUntil, sleepCooldownActive:c.sleepCooldownActive, sleepCooldownSecondsLeft:c.sleepCooldownSecondsLeft, sleepLocation:c.sleepLocation, fatigue:c.fatigue, fatigueUpdatedAt:c.fatigueUpdatedAt, fatigueTier:c.fatigueTier, fatigueLabel:c.fatigueLabel, energySurcharge:c.energySurcharge, moveEnergyCost:c.moveEnergyCost, exhaustionUntil:c.exhaustionUntil, exhaustionActive:c.exhaustionActive, exhaustionSecondsLeft:c.exhaustionSecondsLeft, restPenaltyUntil:c.restPenaltyUntil, restPenaltyActive:c.restPenaltyActive, restPenaltySecondsLeft:c.restPenaltySecondsLeft, restCooldownUntil:c.restCooldownUntil, restCooldownActive:c.restCooldownActive, restCooldownSecondsLeft:c.restCooldownSecondsLeft, ready:c.ready, params:c.params, paramsEffective:c.paramsEffective, stats:c.stats, createdAt:c.createdAt, updatedAt:c.updatedAt } : null;
+  return c ? { userId:c.userId, username:c.username, nome:c.nome, cognome:c.cognome, eta:c.eta, sesso:c.sesso, storia:c.storia, nen:c.nen, autore:c.autore, location:c.location, level:c.level, xp:c.xp, nextXp:c.nextXp, paramPoints:c.paramPoints, setupPoints:c.setupPoints, jenny:c.jenny, energy:c.energy, energyUpdatedAt:c.energyUpdatedAt, inventory:c.inventory, cards:c.cards, health:c.health, healthFormulaVersion:c.healthFormulaVersion, vulnerability:c.vulnerability, vulnerabilityEffective:c.vulnerabilityEffective, sleepUntil:c.sleepUntil, sleepActive:c.sleepActive, sleepSecondsLeft:c.sleepSecondsLeft, sleepCooldownUntil:c.sleepCooldownUntil, sleepCooldownActive:c.sleepCooldownActive, sleepCooldownSecondsLeft:c.sleepCooldownSecondsLeft, sleepLocation:c.sleepLocation, fatigue:c.fatigue, fatigueUpdatedAt:c.fatigueUpdatedAt, fatigueTier:c.fatigueTier, fatigueLabel:c.fatigueLabel, energySurcharge:c.energySurcharge, moveEnergyCost:c.moveEnergyCost, exhaustionUntil:c.exhaustionUntil, exhaustionActive:c.exhaustionActive, exhaustionSecondsLeft:c.exhaustionSecondsLeft, restPenaltyUntil:c.restPenaltyUntil, restPenaltyActive:c.restPenaltyActive, restPenaltySecondsLeft:c.restPenaltySecondsLeft, restCooldownUntil:c.restCooldownUntil, restCooldownActive:c.restCooldownActive, restCooldownSecondsLeft:c.restCooldownSecondsLeft, ready:c.ready, params:c.params, paramsEffective:c.paramsEffective, stats:c.stats, createdAt:c.createdAt, updatedAt:c.updatedAt } : null;
 };
 const saveCharacter = (env, key, character) => env.CHAT_MESSAGES.put(key, JSON.stringify(normalizeCharacter(character)));
 const blockIfInactive = character => character.exhaustionActive ? json({ error: `Esaurimento attivo: sei inattivo per altri ${character.exhaustionSecondsLeft} secondi.` }, 403) : null;
@@ -203,10 +214,31 @@ export async function onRequestPost({ request, env }) {
 
   if (action === 'save') {
     const existing = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
-    const character = { userId:user.id, username:user.username, nome:clean(data.nome).slice(0,40), cognome:clean(data.cognome).slice(0,40), eta:clean(data.eta).slice(0,8), sesso:clean(data.sesso).slice(0,40), storia:clean(data.storia).slice(0,1400), nen:clean(data.nen).slice(0,900), autore:clean(data.autore).slice(0,80), location:existing?.location || 'Shiso tree', level:existing?.level || 1, xp:existing?.xp || 0, jenny:existing?.jenny || 0, energy:existing?.energy ?? maxEnergyFor(existing?.level || 1), energyUpdatedAt:existing?.energyUpdatedAt || new Date().toISOString(), inventory:existing?.inventory || [], health:existing?.health || null, healthFormulaVersion:existing?.healthFormulaVersion || null, vulnerability:existing?.vulnerability || 'bassa', sleepUntil:existing?.sleepUntil || null, sleepCooldownUntil:existing?.sleepCooldownUntil || null, sleepLocation:existing?.sleepLocation || null, fatigue:existing?.fatigue || 0, fatigueUpdatedAt:existing?.fatigueUpdatedAt || null, exhaustionUntil:existing?.exhaustionUntil || null, restPenaltyUntil:existing?.restPenaltyUntil || null, restCooldownUntil:existing?.restCooldownUntil || null, paramPoints:existing?.paramPoints || 0, setupPoints:existing ? existing.setupPoints : 10, params:existing?.params || blankParams(), createdAt:existing?.createdAt || new Date().toISOString(), updatedAt:new Date().toISOString() };
+    const character = { userId:user.id, username:user.username, nome:clean(data.nome).slice(0,40), cognome:clean(data.cognome).slice(0,40), eta:clean(data.eta).slice(0,8), sesso:clean(data.sesso).slice(0,40), storia:clean(data.storia).slice(0,1400), nen:clean(data.nen).slice(0,900), autore:clean(data.autore).slice(0,80), location:existing?.location || 'Shiso tree', level:existing?.level || 1, xp:existing?.xp || 0, jenny:existing?.jenny || 0, energy:existing?.energy ?? maxEnergyFor(existing?.level || 1), energyUpdatedAt:existing?.energyUpdatedAt || new Date().toISOString(), inventory:existing?.inventory || [], cards:existing?.cards || [], health:existing?.health || null, healthFormulaVersion:existing?.healthFormulaVersion || null, vulnerability:existing?.vulnerability || 'bassa', sleepUntil:existing?.sleepUntil || null, sleepCooldownUntil:existing?.sleepCooldownUntil || null, sleepLocation:existing?.sleepLocation || null, fatigue:existing?.fatigue || 0, fatigueUpdatedAt:existing?.fatigueUpdatedAt || null, exhaustionUntil:existing?.exhaustionUntil || null, restPenaltyUntil:existing?.restPenaltyUntil || null, restCooldownUntil:existing?.restCooldownUntil || null, paramPoints:existing?.paramPoints || 0, setupPoints:existing ? existing.setupPoints : 10, params:existing?.params || blankParams(), createdAt:existing?.createdAt || new Date().toISOString(), updatedAt:new Date().toISOString() };
     if (!character.nome || !character.cognome || !character.eta || !character.sesso || !character.storia || !character.nen || !character.autore) return json({ error: 'Compila tutti i campi' }, 400);
     await saveCharacter(env, key, character);
     return json({ character: ownCharacter(character) });
+  }
+
+  if (action === 'materialize-card') {
+    const character = normalizeCharacter(await env.CHAT_MESSAGES.get(key, 'json').catch(() => null));
+    if (!character) return json({ error: 'Crea prima un personaggio HxH' }, 404);
+    const blocked = blockIfInactive(character); if (blocked) return blocked;
+    if (character.sleepActive) return json({ error: 'Stai dormendo: non puoi materializzare carte.' }, 403);
+    const slot = clampInt(data.slot ?? data.number ?? STARTER_PIG_SLOT, 0, 149);
+    const cards = Array.isArray(character.cards) ? [...character.cards] : [];
+    const index = cards.findIndex(card => clampInt(card?.number ?? card?.slot, -1, 999) === slot);
+    if (index < 0) return json({ error: 'Nessuna carta in questo slot.' }, 404);
+    const card = cards[index];
+    if (card?.spell || card?.isSpell || card?.cardType === 'spell' || card?.type === 'spell') return json({ error: 'Gli incantesimi si usano, non si materializzano.' }, 403);
+    const itemTemplate = card.materializesTo || {};
+    const item = { id: card.id === STARTER_PIG_ID ? 'item-greed-island-pig' : `item-${card.id || slot}-${nowMs()}`, type:'item', name:itemTemplate.name || itemTemplate.nome || card.name || card.nome || 'Oggetto', nome:itemTemplate.nome || itemTemplate.name || card.nome || card.name || 'Oggetto', description:itemTemplate.description || itemTemplate.descrizione || 'Oggetto materializzato da una carta.', descrizione:itemTemplate.descrizione || itemTemplate.description || 'Oggetto materializzato da una carta.', sourceCardId:card.id || null, sourceSlot:slot, createdAt:new Date().toISOString() };
+    cards.splice(index, 1);
+    character.cards = cards;
+    character.inventory = [...(Array.isArray(character.inventory) ? character.inventory : []), item];
+    character.updatedAt = new Date().toISOString();
+    await saveCharacter(env, key, character);
+    return json({ character: ownCharacter(character), item });
   }
 
   if (action === 'collapse') {
