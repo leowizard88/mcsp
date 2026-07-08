@@ -26,6 +26,19 @@
     return data.character;
   };
   const esc = s => String(s || '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const clamp = v => Math.max(0, Math.floor(Number(v) || 0));
+  const avg = values => values.length ? Math.ceil(values.reduce((a,b) => a + b, 0) / values.length) : 0;
+  const healthBase = { testa:5, corpo:8, braccioDx:6, braccioSx:6, gambaDx:7, gambaSx:7 };
+  const healthLabels = { testa:'Testa', corpo:'Corpo', braccioDx:'Braccio dx', braccioSx:'Braccio sx', gambaDx:'Gamba dx', gambaSx:'Gamba sx' };
+  const healthMax = (c, key) => {
+    const fromStats = c?.stats?.saluteMax?.[key];
+    if (fromStats != null) return clamp(fromStats);
+    const p = c?.paramsEffective || c?.params || {};
+    return (healthBase[key] || 0) + clamp(p.robustezza) * 2 + Math.max(0, clamp(c?.level || 1) - 1);
+  };
+  const healthCur = (c, key) => clamp(c?.stats?.salute?.[key] ?? c?.health?.[key] ?? healthMax(c, key));
+  const healthGeneralCur = c => clamp(c?.stats?.generali?.saluteGenerale ?? avg(Object.keys(healthBase).map(k => healthCur(c, k))));
+  const healthGeneralMax = c => clamp(c?.stats?.generali?.saluteGeneraleMax ?? avg(Object.keys(healthBase).map(k => healthMax(c, k))));
   const css = document.createElement('style');
   css.textContent = `
     .inventory-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}.inventory-list li{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.45);padding:10px 11px;color:#f4ffe8}.inventory-empty{color:#d9d9d9;font:400 14px/1.35 Arial,Helvetica,sans-serif}
@@ -111,7 +124,8 @@
     };
     setTile('Energia', `${g.energia ?? c.energy ?? 0}/${g.energiaMax ?? g.energia ?? c.energy ?? 0}`, timerText(c));
     setTile('Nen', `${g.nen ?? 0}/${g.nenMax ?? g.nen ?? 0}`);
-    setTile('Salute generale', `${g.saluteGenerale ?? 0}/${g.saluteGeneraleMax ?? g.saluteGenerale ?? 0}`);
+    setTile('Salute generale', `${healthGeneralCur(c)}/${healthGeneralMax(c)}`);
+    Object.entries(healthLabels).forEach(([key, label]) => setTile(label, `${healthCur(c, key)} / ${healthMax(c, key)}`));
     let statoValue = `${c.fatigueLabel || g.stato || 'Normale'} (${c.fatigue || 0}/30)`;
     if (c.energySurcharge > 0) statoValue += `<small class="stat-energy-timer">costo energia +${c.energySurcharge}</small>`;
     if ((c.fatigue || 0) >= 30 && !c.exhaustionActive) statoValue += `<button type="button" class="collapse-button" data-collapse-ground>Collassa a terra</button>`;
