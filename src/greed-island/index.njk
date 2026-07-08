@@ -22,7 +22,6 @@ title: Greed Island
   .city-popup{display:none;position:fixed;z-index:28;left:50%;top:50%;transform:translate(-50%,-50%);width:min(360px,calc(100vw - var(--side,44px) - 36px));border:2px solid #ffe16a;background:rgba(4,14,10,.88);box-shadow:6px 6px 0 rgba(0,0,0,.75);padding:18px;color:#f7ffe8}.city-popup.is-open{display:block}.city-popup h2{margin:0 0 10px;color:#ffe16a;font:900 30px/1 Impact,Haettenschweiler,'Arial Black',sans-serif;text-transform:uppercase;text-shadow:3px 3px 0 #000}.city-actions{display:flex;gap:9px;justify-content:flex-end}.city-actions button{border:1px solid #fff;background:#eaffff;color:#00131c;font:900 12px/1 'Courier New',monospace;text-transform:uppercase;padding:9px 11px;cursor:pointer}.city-actions [data-city-close]{background:#1b1b1b;color:#fff}.city-actions [hidden]{display:none!important}
   .delete-character{display:none!important}
   body.greed-not-logged .login-warning{display:block}body.greed-not-logged .greed-card,body.greed-not-logged .greed-game,body.greed-not-logged .delete-character{display:none!important}body.has-greed-profile .greed-card{display:none}body.has-greed-profile .greed-game{display:block}body.has-greed-profile .delete-character{display:none!important}
-  .gi-debug{position:fixed;left:calc(var(--side,44px) + 10px);right:10px;bottom:10px;z-index:99999;max-height:34vh;overflow:auto;background:rgba(0,0,0,.9);color:#ffb0b0;border:2px solid #ff4040;padding:10px;font:12px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;display:none;white-space:pre-wrap}.gi-debug.is-open{display:block}.gi-debug strong{color:#fff}
   @media(max-width:760px){.greed-card,.login-warning{width:calc(100vw - var(--side,38px) - 28px)}.menu-button{left:calc(var(--side,38px) + 14px)}.location-display{top:62px;left:calc(var(--side,38px) + 14px)}.side-menu{left:var(--side,38px);width:calc(100vw - var(--side,38px) - 18px)}.menu-panel{left:calc(var(--side,38px) + 14px);top:250px;width:calc(100vw - var(--side,38px) - 36px)}.info-grid{grid-template-columns:1fr}}
 </style>
 <section class="greed-island-page" aria-label="Greed Island">
@@ -30,22 +29,22 @@ title: Greed Island
   <div class="greed-card"><h1>Crea il tuo personaggio</h1><form class="greed-form" data-greed-form><div class="greed-field"><label for="gi-name">Nome:</label><input id="gi-name" name="nome" required></div><div class="greed-field"><label for="gi-surname">Cognome:</label><input id="gi-surname" name="cognome" required></div><div class="greed-field"><label for="gi-age">Età:</label><input id="gi-age" name="eta" type="number" min="1" max="999" required></div><div class="greed-field"><label for="gi-sex">Sesso:</label><select id="gi-sex" name="sesso" required><option value="">Scegli</option><option>Maschio</option><option>Femmina</option><option>Altro</option><option>Non specificato</option></select></div><div class="greed-field"><label for="gi-story">Storia:</label><textarea id="gi-story" name="storia" required></textarea></div><div class="greed-field"><label for="gi-nen">Abilità Nen:</label><textarea id="gi-nen" name="nen" required></textarea></div><div class="greed-field"><label for="gi-author">Autore preferito:</label><input id="gi-author" name="autore" required></div><button class="greed-submit" type="submit">Invia</button></form></div>
   <main class="greed-game" data-greed-game><button class="map-label" style="left:53%;top:40%" data-place="Masadora">Masadora</button><button class="map-label" style="left:89%;top:37%" data-place="Aiai">Aiai</button><button class="map-label" style="left:17%;top:33%" data-place="Soufrabi">Soufrabi</button><button class="map-label" style="left:61%;top:46%" data-place="Antokiba">Antokiba</button><button class="map-label" style="left:64%;top:62%" data-place="Dorias">Dorias</button><button class="map-label" style="left:73%;top:54%" data-place="Rubicuta">Rubicuta</button><button class="map-label" style="left:61%;top:26%" data-place="Limeiro">Limeiro</button><button class="map-label" style="left:28%;top:38%" data-place="Bunzen">Bunzen</button><button class="map-label forest-label" style="left:39%;top:39%" data-place="Foresta Oscura">Foresta Oscura</button><button class="menu-button" type="button" data-menu-toggle>Menù</button><div class="location-display">Location: <strong data-location-label>Sperduto</strong></div><nav class="side-menu" aria-label="Menu Greed Island"><button type="button" data-panel="players">Giocatori</button><button type="button" data-panel="explore">Esplora</button><button type="button" data-panel="info">Info</button><button type="button" data-panel="guide">Guida</button></nav><section class="menu-panel" data-menu-panel></section><aside class="city-popup" data-city-popup><h2 data-city-title></h2><p data-city-info></p><div class="city-actions"><button type="button" data-city-close>Chiudi</button><button type="button" data-city-enter>Entra</button></div></aside></main>
 </section>
-<div class="gi-debug" data-gi-debug><strong>Greed Island debug</strong>\n</div>
-<script>
-(() => {
-  const box = document.querySelector('[data-gi-debug]');
-  const show = msg => {
-    if (!box) return;
-    box.classList.add('is-open');
-    box.textContent += '\n' + String(msg);
-  };
-  window.addEventListener('error', e => show(`JS ERROR: ${e.message}\n${e.filename}:${e.lineno}:${e.colno}`));
-  window.addEventListener('unhandledrejection', e => show(`PROMISE ERROR: ${e.reason?.message || e.reason}`));
-  setTimeout(() => {
-    if (!document.body.classList.contains('has-greed-profile') && !document.body.classList.contains('has-param-setup') && !document.body.classList.contains('greed-not-logged')) {
-      show('BOOTSTRAP TIMEOUT: dopo 4s nessuno stato body impostato dal core.');
-    }
-  }, 4000);
-})();
-</script>
-<script src="/assets/js/greed-island-game.js?v=20260708-core-diagnostic-1"></script>
+<script src="/assets/js/greed-island-game.js?v=20260708-core-clean-1"></script>
+<script src="/assets/js/greed-island-guide.js?v=20260708-guide-modes-1"></script>
+<script src="/assets/js/greed-map-single-layer.js?v=20260708-singlemap-1"></script>
+<script src="/assets/js/greed-location-font.js?v=20260708-locationfont-1"></script>
+<script src="/assets/js/greed-new-locations.js?v=20260708-sleep-3"></script>
+<script src="/assets/js/greed-inventory-energy.js?v=20260708-pig-1"></script>
+<script src="/assets/js/greed-location-panel-stable.js?v=20260708-sleep-3"></script>
+<script src="/assets/js/greed-wild-zone-info.js?v=20260708-wildinfo-modes-1"></script>
+<script src="/assets/js/greed-values-panel.js?v=20260708-damage-1"></script>
+<script src="/assets/js/greed-mobile-layout.js?v=20260708-sleep-3"></script>
+<script src="/assets/js/greed-card-detail-panels.js?v=20260708-carddetail-1"></script>
+<script src="/assets/js/greed-numbered-card-gold.js?v=20260708-gold-1"></script>
+<script src="/assets/js/greed-global-chat.js?v=20260708-chat-4"></script>
+<script src="/assets/js/greed-layer-stack-fix.js?v=20260708-layer-1"></script>
+<script src="/assets/js/greed-delete-confirm.js?v=20260708-delete-menu-1"></script>
+<script src="/assets/js/greed-shiso-image-fix.js?v=20260708-shiso-1"></script>
+<script src="/assets/js/greed-special-materialize.js?v=20260708-specialmat-1"></script>
+<script src="/assets/js/greed-exploration-system.js?v=20260708-explore-4"></script>
+<script src="/assets/js/greed-explore-summary.js?v=20260708-results-1"></script>
