@@ -16,28 +16,29 @@
     return res.ok ? (data.characters || []) : [];
   };
   const places = {
-    Masadora:{img:'Masadora.webp',desc:'La città magica! Una città colorata e fantastica piena di possibilità, infatti è uno dei posti con più traffico di npc e giocatori. Questo è l\'unico punto in cui puoi acquistare le Carte Incantesimo sulla mappa. Con 10.000 J puoi acquistare 3 carte a caso dalla macchina delle carte, ma ci sono anche altre opzioni. Molti giocatori cercano le Leave Card qui per uscire dal gioco, ma raramente escono dalla macchina.'},
-    'Shiso tree':{img:'shiso.webp',desc:'Il punto iniziale del gioco dove i player fanno imboscate ai nuovi giocatori, attento a questa zona sembra che qui ci siano molte possibilità di venire scavallati.'},
-    Antokiba:{img:'antokiba.webp',desc:'La città dei concorsi a premi! Pulla situazioni interessanti dagli eventi nella città.'},
-    Rubicuta:{img:'Rubicuta.webp',desc:'Una tranquilla città perfetta per riposarsi senza la paura di venire fatti o peggio uccisi nel sonno. Molti npc e poco traffico di giocatori... il più delle volte.'},
-    Dorias:{img:'dorias.webp',desc:'La città del gioco d\'azzardo, tutti e dico tutti possono entrare qua dentro: bimbi, donne, disabili, animali ecc, purtroppo è frequentata da gentaccia e non ci si può fidare di nessuno. Si dice che chi è vestito bene è trattato meglio.'},
-    Aiai:{img:'City_Of_Aiai.webp',desc:'La stranissima città dell\'amore, nessuno sa perché ma chiunque qua può trovare l\'amore, anche Chrollo.'},
-    Limeiro:{img:'Limeiro.webp',desc:'La capitale di Greed Island, se sei qui è perché hai completato la tua collezione, ben fatto!'},
-    Bunzen:{img:'bunzen.webp',desc:'Una città molto piccola e piena di npc, sembra nascondere qualcosa...'},
-    Soufrabi:{img:'soufrabi.webp',desc:'Una bellissima città portuale molto popolata e viva. Purtroppo il porto è stato catturato dai pirati Razor, si dice che chi riesce a riunire un team di 15 persone può provare ad affrontare i pirati e vincere una carta leggendaria.'},
-    'Foresta Oscura':{img:'forest.jpg',desc:'Un posto da brividi, qui si può esplorare sperando di trovare oggetti e carte buone oppure fare qualche quest di livello semplice.'},
-    'Villaggio di banditi':{img:'vilalge.webp',desc:'Un villaggio di criminali che finalmente hanno trovato una casa, sono sospettosi verso il prossimo e proveranno ad attaccarti... ma forse vanno solo capiti.'},
-    'Casa senile':{img:'senile.jpg',desc:'La casa di un certo Jopper K. Long.'},
-    'Isola sul lago':{img:'island.webp',desc:'Un\'isola che si dice ospiti una tribù pericolosa.'},
-    Badlands:{img:'badlands.webp',desc:'Canyon di roccia molto dura, qui ci si può allenare in forza, sperando di non essere avvistati da altri player o da mostri.'},
-    'Accampamento misterioso':{img:'camp.jpg',desc:'Degli individui mascherati da gatto stanno sorseggiando del tè intorno al falò, sono armati. Cosa ci faranno qui?'},
-    'Rovine infestate':{img:'ruins.webp',desc:'Un temibile luogo dove fantasmi e cavalieri zombie proteggono un tesoro molto prezioso.'},
-    'Plateau Bye Bye':{img:'plateau.png',desc:'La zona più selvaggia di Greed Island! Se pensi di avventurarti qui senza precauzioni ti conviene pregare.'},
-    Farlands:{img:'greed.png',desc:'Zona neutra remota. Per ora non è collegata al resto della mappa.'}
+    Masadora:{type:'city',img:'Masadora.webp',desc:'La città magica! Una città colorata e fantastica piena di possibilità, infatti è uno dei posti con più traffico di npc e giocatori. Questo è l\'unico punto in cui puoi acquistare le Carte Incantesimo sulla mappa. Con 10.000 J puoi acquistare 3 carte a caso dalla macchina delle carte, ma ci sono anche altre opzioni. Molti giocatori cercano le Leave Card qui per uscire dal gioco, ma raramente escono dalla macchina.'},
+    'Shiso tree':{type:'neutral',img:'shiso.webp',desc:'Il punto iniziale del gioco dove i player fanno imboscate ai nuovi giocatori, attento a questa zona sembra che qui ci siano molte possibilità di venire scavallati.'},
+    Antokiba:{type:'city',img:'antokiba.webp',desc:'La città dei concorsi a premi! Pulla situazioni interessanti dagli eventi nella città.'},
+    Rubicuta:{type:'city',img:'Rubicuta.webp',desc:'Una tranquilla città perfetta per riposarsi senza la paura di venire fatti o peggio uccisi nel sonno. Molti npc e poco traffico di giocatori... il più delle volte.'},
+    Dorias:{type:'city',img:'dorias.webp',desc:'La città del gioco d\'azzardo, tutti e dico tutti possono entrare qua dentro: bimbi, donne, disabili, animali ecc, purtroppo è frequentata da gentaccia e non ci si può fidare di nessuno. Si dice che chi è vestito bene è trattato meglio.'},
+    Aiai:{type:'city',img:'City_Of_Aiai.webp',desc:'La stranissima città dell\'amore, nessuno sa perché ma chiunque qua può trovare l\'amore, anche Chrollo.'},
+    Limeiro:{type:'city',img:'Limeiro.webp',desc:'La capitale di Greed Island, se sei qui è perché hai completato la tua collezione, ben fatto!'},
+    Bunzen:{type:'city',img:'bunzen.webp',desc:'Una città molto piccola e piena di npc, sembra nascondere qualcosa...'},
+    Soufrabi:{type:'city',img:'soufrabi.webp',desc:'Una bellissima città portuale molto popolata e viva. Purtroppo il porto è stato catturato dai pirati Razor, si dice che chi riesce a riunire un team di 15 persone può provare ad affrontare i pirati e vincere una carta leggendaria.'},
+    'Foresta Oscura':{type:'wild',img:'forest.jpg',desc:'Un posto da brividi, qui si può esplorare sperando di trovare oggetti e carte buone oppure fare qualche quest di livello semplice.'},
+    'Villaggio di banditi':{type:'wild',img:'vilalge.webp',desc:'Un villaggio di criminali che finalmente hanno trovato una casa, sono sospettosi verso il prossimo e proveranno ad attaccarti... ma forse vanno solo capiti.'},
+    'Casa senile':{type:'neutral',img:'senile.jpg',desc:'La casa di un certo Jopper K. Long.'},
+    'Isola sul lago':{type:'neutral',img:'island.webp',desc:'Un\'isola che si dice ospiti una tribù pericolosa.'},
+    Badlands:{type:'wild',img:'badlands.webp',desc:'Canyon di roccia molto dura, qui ci si può allenare in forza, sperando di non essere avvistati da altri player o da mostri.'},
+    'Accampamento misterioso':{type:'neutral',img:'camp.jpg',desc:'Degli individui mascherati da gatto stanno sorseggiando del tè intorno al falò, sono armati. Cosa ci faranno qui?'},
+    'Rovine infestate':{type:'wild',img:'ruins.webp',desc:'Un temibile luogo dove fantasmi e cavalieri zombie proteggono un tesoro molto prezioso.'},
+    'Plateau Bye Bye':{type:'wild',img:'plateau.png',desc:'La zona più selvaggia di Greed Island! Se pensi di avventurarti qui senza precauzioni ti conviene pregare.'},
+    Farlands:{type:'neutral',img:'greed.png',desc:'Zona neutra remota. Per ora non è collegata al resto della mappa.'}
   };
   const css = document.createElement('style');
   css.textContent = `
     .menu-button{background:rgba(14,84,22,.88)!important;border:1px solid rgba(223,255,115,.95)!important;border-radius:8px!important;box-shadow:3px 3px 0 rgba(0,0,0,.65)!important;padding:8px 11px!important;color:#fff!important;font-weight:800!important}
+    .side-menu [data-panel="explore"]{display:none!important}
     .location-panel{position:fixed;right:18px;top:92px;z-index:27;width:min(440px,calc(100vw - var(--side,44px) - 38px));max-height:calc(100vh - 118px);overflow:auto;border:2px solid #ffe16a;background:rgba(4,12,9,.88);box-shadow:8px 8px 0 rgba(0,0,0,.72);color:#f7ffe8;font-family:Arial,Helvetica,sans-serif;backdrop-filter:blur(4px)}
     .location-panel-head{cursor:move;user-select:none;touch-action:none;background:linear-gradient(180deg,rgba(62,95,12,.96),rgba(22,48,10,.96));border-bottom:2px solid #ffe16a;padding:10px 12px;display:flex;justify-content:space-between;gap:12px;align-items:center}
     .location-panel-head strong{color:#ffe16a;font:900 20px/1 Arial,Helvetica,sans-serif;text-shadow:2px 2px 0 #000}.location-panel-head span{font:700 11px/1 Arial,Helvetica,sans-serif;color:#dfff73;text-transform:uppercase;letter-spacing:.08em}
@@ -63,6 +64,11 @@
     const s = secs % 60;
     return h > 0 ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
   };
+  const actionHtml = (meta, cd) => {
+    if (meta.type === 'city') return `<button type="button" data-loc-action="activity">Attività</button><button type="button" data-loc-action="rest" ${cd > 0 ? 'disabled' : ''}>Riposa</button><button type="button" data-loc-action="card">Usa carta</button>`;
+    if (meta.type === 'wild') return `<button type="button" data-loc-action="explore">Esplora</button><button type="button" data-loc-action="card">Usa carta</button>`;
+    return `<button type="button" data-loc-action="activity">Attività</button><button type="button" data-loc-action="card">Usa carta</button>`;
+  };
 
   const render = async (character = currentCharacter) => {
     if (!character) {
@@ -80,9 +86,9 @@
       <img class="location-photo" src="/assets/img/${meta.img}" alt="${esc(loc)}">
       <p class="location-desc">${esc(meta.desc)}</p>
       <div class="location-count">Giocatori in questo luogo: <strong>${count}</strong></div>
-      <div class="location-actions"><button type="button" data-loc-action="activity">Attività</button><button type="button" data-loc-action="rest" ${cd > 0 ? 'disabled' : ''}>Riposa</button><button type="button" data-loc-action="card">Usa carta</button></div>
-      <p class="location-rest-note">Riposa: energia piena, cooldown globale di 3 ore. Dopo il riposo tutti i parametri effettivi scendono di 1 per 10 minuti.</p>
-      ${cd > 0 ? `<div class="location-rest-timer">Riposo disponibile tra: ${fmt(cd)}</div>` : '<div class="location-rest-timer">Riposo disponibile ora.</div>'}
+      <div class="location-actions">${actionHtml(meta, cd)}</div>
+      ${meta.type === 'city' ? `<p class="location-rest-note">Riposa: energia e vita piene, cooldown globale di 3 ore. Dopo il riposo tutti i parametri effettivi scendono di 1 per 10 minuti.</p>${cd > 0 ? `<div class="location-rest-timer">Riposo disponibile tra: ${fmt(cd)}</div>` : '<div class="location-rest-timer">Riposo disponibile ora.</div>'}` : ''}
+      ${meta.type === 'wild' ? '<p class="location-rest-note">Esplora: azione selvaggia della zona. Meccanica da collegare.</p>' : ''}
       ${penalty > 0 ? `<div class="location-rest-penalty">Penalità riposo attiva: -1 a tutti i parametri per ${fmt(penalty)}.</div>` : ''}
       <div class="location-panel-msg" data-loc-msg></div>
     `;
@@ -93,6 +99,10 @@
     if (!action) return;
     const msg = panel.querySelector('[data-loc-msg]');
     msg.classList.remove('err');
+    if (action === 'explore') {
+      msg.textContent = 'Esplorazione da implementare: qui finiranno oggetti, carte, mostri e quest della zona selvaggia.';
+      return;
+    }
     if (action !== 'rest') {
       msg.textContent = 'Questa azione non è ancora implementata.';
       return;
@@ -104,7 +114,7 @@
       window.dispatchEvent(new CustomEvent('greed-character-updated', { detail:data.character }));
       await render(data.character);
       const msg2 = panel.querySelector('[data-loc-msg]');
-      msg2.textContent = 'Energia ripristinata. Parametri -1 per 10 minuti. Prossimo riposo tra 3 ore.';
+      msg2.textContent = 'Energia e vita ripristinate. Parametri -1 per 10 minuti. Prossimo riposo tra 3 ore.';
     } catch (err) {
       msg.classList.add('err');
       msg.textContent = err.message;
