@@ -79,48 +79,47 @@
       panel.classList.add('is-active');
     });
   }
+  const patchStatPanel = c => {
+    if (!c) return;
+    renderEnergyHud(c);
+    const g = c?.stats?.generali || {};
+    const tiles = [...panel.querySelectorAll('.stat-tile')];
+    const setTile = (name, value, timer = '') => {
+      const tile = tiles.find(t => t.querySelector('strong')?.textContent?.trim() === name);
+      const span = tile?.querySelector('span');
+      if (span) span.innerHTML = `${value}${timer ? `<small class="stat-energy-timer">${timer}</small>` : ''}`;
+    };
+    setTile('Energia', `${g.energia ?? c.energy ?? 0}/${g.energiaMax ?? g.energia ?? c.energy ?? 0}`, timerText(c));
+    setTile('Nen', `${g.nen ?? 0}/${g.nenMax ?? g.nen ?? 0}`);
+    setTile('Salute generale', `${g.saluteGenerale ?? 0}/${g.saluteGeneraleMax ?? g.saluteGenerale ?? 0}`);
+    panel.querySelector('.rest-stat-note')?.remove();
+    panel.querySelector('.rest-cooldown-note')?.remove();
+    if (c?.restPenaltySecondsLeft > 0) {
+      const note = document.createElement('div');
+      note.className = 'rest-stat-note';
+      note.textContent = `Riposo attivo: -1 a tutti i parametri per ${fmt(c.restPenaltySecondsLeft)}.`;
+      panel.querySelector('.stat-section')?.before(note);
+      const labels = { forza:'Forza', robustezza:'Robustezza', nen:'Nen', intelligenza:'Intelligenza', malizia:'Malizia', agilita:'Agilità', oratoria:'Oratoria', percezione:'Percezione' };
+      Object.entries(labels).forEach(([key,label]) => {
+        const row = [...panel.querySelectorAll('.stat-row')].find(r => r.querySelector('span:first-child')?.textContent?.trim() === label);
+        const val = row?.querySelector('.stat-value');
+        if (val && c.paramsEffective && c.params) val.innerHTML = `${c.paramsEffective[key] ?? 0}<small class="param-penalty">base ${c.params[key] ?? 0}, riposo -1</small>`;
+      });
+    }
+    if (c?.restCooldownSecondsLeft > 0) {
+      const cd = document.createElement('div');
+      cd.className = 'rest-stat-note rest-cooldown-note';
+      cd.textContent = `Prossimo riposo disponibile tra ${fmt(c.restCooldownSecondsLeft)}.`;
+      panel.querySelector('.stat-section')?.before(cd);
+    }
+  };
   const updateStatPanel = async (force = false) => {
-    try {
-      const c = await getCharacter(force);
-      renderEnergyHud(c);
-      window.dispatchEvent(new CustomEvent('greed-character-updated', { detail:c }));
-      const g = c?.stats?.generali || {};
-      const tiles = [...panel.querySelectorAll('.stat-tile')];
-      const setTile = (name, value, timer = '') => {
-        const tile = tiles.find(t => t.querySelector('strong')?.textContent?.trim() === name);
-        const span = tile?.querySelector('span');
-        if (span) span.innerHTML = `${value}${timer ? `<small class="stat-energy-timer">${timer}</small>` : ''}`;
-      };
-      setTile('Energia', `${g.energia ?? c.energy ?? 0}/${g.energiaMax ?? g.energia ?? c.energy ?? 0}`, timerText(c));
-      setTile('Nen', `${g.nen ?? 0}/${g.nenMax ?? g.nen ?? 0}`);
-      setTile('Salute generale', `${g.saluteGenerale ?? 0}/${g.saluteGeneraleMax ?? g.saluteGenerale ?? 0}`);
-      panel.querySelector('.rest-stat-note')?.remove();
-      if (c?.restPenaltySecondsLeft > 0) {
-        const note = document.createElement('div');
-        note.className = 'rest-stat-note';
-        note.textContent = `Riposo attivo: -1 a tutti i parametri per ${fmt(c.restPenaltySecondsLeft)}.`;
-        panel.querySelector('.stat-section')?.before(note);
-        const labels = { forza:'Forza', robustezza:'Robustezza', nen:'Nen', intelligenza:'Intelligenza', malizia:'Malizia', agilita:'Agilità', oratoria:'Oratoria', percezione:'Percezione' };
-        Object.entries(labels).forEach(([key,label]) => {
-          const row = [...panel.querySelectorAll('.stat-row')].find(r => r.querySelector('span:first-child')?.textContent?.trim() === label);
-          const val = row?.querySelector('.stat-value');
-          if (val && c.paramsEffective && c.params) val.innerHTML = `${c.paramsEffective[key] ?? 0}<small class="param-penalty">base ${c.params[key] ?? 0}, riposo -1</small>`;
-        });
-      }
-      panel.querySelector('.rest-cooldown-note')?.remove();
-      if (c?.restCooldownSecondsLeft > 0) {
-        const cd = document.createElement('div');
-        cd.className = 'rest-stat-note rest-cooldown-note';
-        cd.textContent = `Prossimo riposo disponibile tra ${fmt(c.restCooldownSecondsLeft)}.`;
-        panel.querySelector('.stat-section')?.before(cd);
-      }
-    } catch {}
+    try { patchStatPanel(await getCharacter(force)); } catch {}
   };
   nav.querySelector('[data-panel="stat"]')?.addEventListener('click', () => setTimeout(() => updateStatPanel(true), 40), true);
   window.addEventListener('resize', placeEnergyHud);
   window.addEventListener('greed-character-updated', e => {
-    if (e.detail) { currentCharacter = e.detail; lastFetch = Date.now(); renderEnergyHud(currentCharacter); }
-    setTimeout(() => updateStatPanel(true), 50);
+    if (e.detail) { currentCharacter = e.detail; lastFetch = Date.now(); patchStatPanel(currentCharacter); }
   });
   setInterval(() => updateStatPanel(false), 1000);
   setTimeout(() => updateStatPanel(true), 700);
