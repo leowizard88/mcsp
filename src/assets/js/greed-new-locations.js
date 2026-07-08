@@ -81,12 +81,15 @@
   const current = () => locationLabel?.textContent?.trim() || currentCharacter?.location || 'Shiso tree';
   const hasAllCards = () => false;
   const energy = () => currentCharacter?.stats?.generali?.energia ?? currentCharacter?.energy ?? 0;
+  const moveCost = () => currentCharacter?.moveEnergyCost || currentCharacter?.stats?.generali?.costoMovimento || 1;
   const blockReason = place => {
     const loc = current();
+    if (currentCharacter?.exhaustionActive) return 'Esaurimento attivo: non puoi fare attività.';
+    if ((currentCharacter?.fatigue || 0) >= 30) return 'Sei esausto: non puoi muoverti. Collassa a terra dalla schermata STAT.';
     if (loc === place) return 'Sei già qui.';
     if (place === 'Limeiro' && !hasAllCards()) return 'Limeiro è off limits finché non possiedi tutte le carte.';
     if (!(routes[loc] || []).includes(place)) return 'Non puoi arrivare qua a piedi da dove sei ora.';
-    if (energy() < 1) return 'Non hai energie.';
+    if (energy() < moveCost()) return 'Non hai energie.';
     return '';
   };
   const canGo = place => !blockReason(place);
@@ -126,7 +129,7 @@
     const reason = blockReason(name);
     const reachable = !reason;
     cityTitle.textContent = name;
-    const cost = reachable ? '<span class="city-cost">Userai 1 energia.</span>' : reason === 'Non hai energie.' ? '<span class="city-cost no-energy">Non hai energie.</span>' : '';
+    const cost = reachable ? `<span class="city-cost">Userai ${moveCost()} energia.</span>` : reason === 'Non hai energie.' ? `<span class="city-cost no-energy">Non hai energie. Questo spostamento richiede ${moveCost()} energia.</span>` : '';
     cityInfo.innerHTML = `${place?.[5] || name}${reason ? `<span class="city-blocked">${reason}</span>` : ''}${cost}`;
     cityEnter.hidden = false;
     cityEnter.disabled = !!reason;
