@@ -21,71 +21,79 @@
     <div class="guide-book">
       <section class="guide-chapter">
         <h3>1. Benvenuto a Greed Island!</h3>
-        <p>Benvenuto ${playerName()}, lo scopo, come ben sai se hai familiarità con HxH, è quello di collezionare tutte le carte e andare alla capitale per incontrarti con il creatore del gioco. Ma attento! Ci sono altri giocatori e mostri temibili... ce la farai a battere tutti?</p>
+        <p>Benvenuto ${playerName()}, lo scopo è collezionare le carte specifiche di Greed Island e raggiungere Limeiro, la capitale, per incontrare il creatore del gioco. Ci sono altri giocatori, mostri, zone selvagge, città strane e parecchie occasioni per farsi scavallare.</p>
       </section>
-
       <section class="guide-chapter">
-        <h3>2. Livello ed esperienza</h3>
-        <p>Il personaggio parte dal livello 1. Per ora c'è un tasto provvisorio Level-up test che regala un livello per provare il sistema.</p>
-        <p>Ogni level up dà 3 punti parametro da distribuire. Se non li spendi subito, si accumulano.</p>
-        <p>La soglia esperienza cresce così: dal livello 1 al 2 servono 10 XP, poi ogni nuova soglia aumenta della metà del valore precedente arrotondata per eccesso.</p>
+        <h3>2. Creazione personaggio e parametri</h3>
+        <p>Dopo aver creato il personaggio devi distribuire 10 punti iniziali tra Forza, Robustezza, Nen, Intelligenza, Malizia, Agilità, Oratoria e Percezione.</p>
+        <p>Quando i punti rimasti arrivano a 0 compare il tasto ENTRA IN GREED ISLAND. Premendolo parte l’ingresso nel gioco.</p>
       </section>
-
       <section class="guide-chapter">
-        <h3>3. Statistiche generali</h3>
-        <p>La scheda STAT mostra livello, esperienza, punti parametro, Jenny, energia, salute generale e Nen.</p>
+        <h3>3. Livello, XP e punti parametro</h3>
+        <p>Il personaggio parte dal livello 1. Ogni level up assegna 3 punti parametro da distribuire. Se non li spendi subito, si accumulano.</p>
+        <p>La soglia XP parte da 10 e poi cresce aggiungendo ogni volta metà della soglia precedente, arrotondata per eccesso.</p>
+      </section>
+      <section class="guide-chapter">
+        <h3>4. Energia, salute e Nen</h3>
         <ul>
-          <li><strong>Energia:</strong> al livello 1 vale 3. Ogni livello aggiunge 2.</li>
+          <li><strong>Energia:</strong> al livello 1 vale 3. Ogni livello aggiunge 2. Si ricarica di 1 ogni 10 minuti.</li>
+          <li><strong>Salute generale:</strong> è la media arrotondata delle parti del corpo.</li>
           <li><strong>Nen:</strong> se il parametro Nen è 0, la statistica vale 1. Ogni punto in Nen aggiunge 4.</li>
-          <li><strong>Salute generale:</strong> media arrotondata delle statistiche salute.</li>
         </ul>
-        <p>Energia, Nen e salute generale appaiono come valore attuale / valore massimo. Per ora sono uguali perché non sono ancora stati aggiunti danni, consumo energia o consumo Nen.</p>
+        <p>La salute è divisa in testa, corpo, braccio dx, braccio sx, gamba dx e gamba sx. La Robustezza modifica i valori salute.</p>
       </section>
-
-      <section class="guide-chapter">
-        <h3>4. Salute e robustezza</h3>
-        <p>La salute è divisa in testa, corpo, braccio dx, braccio sx, gamba dx e gamba sx.</p>
-        <p>La Robustezza modifica questi valori. Con Robustezza 0 restano i valori base. Con Robustezza 1 si aggiunge 4. Da Robustezza 2 in poi il valore base viene moltiplicato per la Robustezza.</p>
-        <p>Ogni level up aggiunge anche un bonus salute basato sul valore base della parte del corpo.</p>
-      </section>
-
       <section class="guide-chapter">
         <h3>5. Mappa e movimento</h3>
-        <p>La mappa può essere zoomata con la rotella del mouse. Quando sei zoomato puoi spostare la visuale trascinando la mappa. Se torni a 1x, la visuale si resetta al centro.</p>
+        <p>Puoi muoverti solo verso location collegate a quella in cui ti trovi. Cliccando una location raggiungibile compare il popup con ENTRA.</p>
         <ul>
-          <li><strong>Verde:</strong> location in cui ti trovi.</li>
-          <li><strong>Giallo:</strong> location raggiungibile a piedi dalla tua posizione.</li>
-          <li><strong>Bianco:</strong> location non raggiungibile da dove sei ora.</li>
+          <li><strong>Verde:</strong> location in cui sei.</li>
+          <li><strong>Giallo:</strong> location raggiungibile.</li>
+          <li><strong>Bianco:</strong> location non raggiungibile.</li>
         </ul>
-        <p>Se provi a raggiungere una location non collegata alla tua posizione, il gioco ti dice perché non puoi andarci.</p>
+        <p>Cliccando la location in cui sei già si apre direttamente la box location.</p>
       </section>
-
       <section class="guide-chapter">
-        <h3>6. Tipi di location</h3>
-        <p>Esistono tre tipi di location, indicati da icone vicino al nome.</p>
+        <h3>6. Stato, fatica ed esaurimento</h3>
+        <p>Ogni movimento aumenta il valore Stato di 1. Se non ti sposti per 30 minuti, il valore Stato torna automaticamente a 0.</p>
         <ul>
-          <li><strong>● Città:</strong> centri abitati come Masadora, Antokiba o Aiai.</li>
-          <li><strong>♣ Zone selvagge:</strong> aree pericolose o esplorative. Il numero vicino all'icona indica la difficoltà da 1 a 5.</li>
-          <li><strong>★ Zone neutre:</strong> aree speciali, non ancora legate a combattimento diretto.</li>
+          <li><strong>0-9 Normale:</strong> costo energia base.</li>
+          <li><strong>10-19 Affaticato:</strong> tutte le azioni che consumano energia costano +1.</li>
+          <li><strong>20-29 Stanco:</strong> tutte le azioni che consumano energia costano +2.</li>
+          <li><strong>30+ Esausto:</strong> non puoi muoverti.</li>
+        </ul>
+        <p>Quando sei Esausto compare in STAT il tasto rosso Collassa a terra. Il collasso attiva Esaurimento: per 10 minuti sei inattivo, appare un timer gigante e ogni attività è bloccata. Alla fine recuperi tutta l’energia e Stato torna a 0.</p>
+      </section>
+      <section class="guide-chapter">
+        <h3>7. Tipi di location e azioni</h3>
+        <ul>
+          <li><strong>● Città:</strong> hanno Attività, Riposa e Usa carta.</li>
+          <li><strong>♣ Zone selvagge:</strong> hanno Esplora e Usa carta. Il numero indica la difficoltà da 1 a 5.</li>
+          <li><strong>★ Zone neutre:</strong> hanno azioni più limitate e funzioni speciali.</li>
+        </ul>
+        <p>La box location può essere chiusa con la X. Si apre quando entri in una nuova location o quando clicchi la location in cui ti trovi già.</p>
+      </section>
+      <section class="guide-chapter">
+        <h3>8. Riposa</h3>
+        <p>Riposa è disponibile solo nelle città. Ripristina tutta l’energia, tutta la vita e azzera Stato.</p>
+        <p>Dopo il riposo hai un cooldown globale di 3 ore. Inoltre subisci una penalità temporanea: -1 a tutti i parametri per 10 minuti.</p>
+      </section>
+      <section class="guide-chapter">
+        <h3>9. Binder Book</h3>
+        <p>Il Binder Book è l’album delle carte. Ha 150 slot totali, divisi in pagine da 10 slot.</p>
+        <ul>
+          <li><strong>000-099:</strong> carte specifiche necessarie per finire Greed Island.</li>
+          <li><strong>100-149:</strong> carte libere, non necessarie al completamento.</li>
         </ul>
       </section>
-
       <section class="guide-chapter">
-        <h3>7. Location attuali</h3>
-        <p>Le location attuali includono città, zone selvagge e zone neutre distribuite sulla mappa: Masadora, Antokiba, Aiai, Limeiro, Foresta Oscura, Badlands, Rovine infestate, Plateau Bye Bye, Shiso tree, Accampamento misterioso, Isola sul lago, Casa senile e altre.</p>
-        <p>Limeiro è la capitale: da Masadora sarà accessibile solo con tutte le carte collezionate.</p>
-      </section>
-
-      <section class="guide-chapter">
-        <h3>8. Jenny</h3>
+        <h3>10. Jenny e inventario</h3>
         <p>Il Jenny, indicato con Ｊ, è la valuta ingame. Per ora ogni personaggio parte da 0 Ｊ.</p>
-        <p>In futuro servirà per acquisti, ricompense, città, carte o altre meccaniche economiche.</p>
+        <p>L’inventario conserva oggetti, carte e strumenti del giocatore. Le carte possono poi essere lette dal Binder Book quando avranno numero o slot.</p>
       </section>
-
       <section class="guide-chapter">
-        <h3>9. Salvataggio</h3>
-        <p>Il personaggio, la location, i parametri, il livello, l'esperienza e i Jenny vengono salvati nell'archivio server.</p>
-        <p class="guide-note">L'unico modo per cancellare tutto è usare il tasto Elimina personaggio.</p>
+        <h3>11. Salvataggio e cancellazione</h3>
+        <p>Personaggio, location, parametri, energia, salute, Stato, riposo, esaurimento, inventario, livello, XP e Jenny sono salvati lato server.</p>
+        <p class="guide-note">Il tasto Elimina personaggio cancella il personaggio dopo conferma.</p>
       </section>
     </div>
   `;
