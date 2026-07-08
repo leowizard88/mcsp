@@ -20,11 +20,15 @@
   `;
   document.head.appendChild(style);
 
+  const canonicalLoc = loc => loc === 'Shiso Tree' ? 'Shiso tree' : (loc || 'Shiso tree');
+  const selectLocation = (place, character = currentCharacter) => window.dispatchEvent(new CustomEvent('greed-location-selected', { detail:{ place:canonicalLoc(place), character } }));
+  const syncLabel = c => { if (c?.location && locationLabel) locationLabel.textContent = canonicalLoc(c.location); };
   const apiGet = async () => {
     const res = await fetch('/api/hxh-character', { headers:{ authorization:`Bearer ${token()}` }, cache:'no-store' });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || 'Errore personaggio');
     currentCharacter = data.character;
+    syncLabel(currentCharacter);
     return currentCharacter;
   };
   const apiMove = async place => {
@@ -32,9 +36,9 @@
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || 'Errore movimento');
     currentCharacter = data.character;
+    syncLabel(currentCharacter);
     return data.character;
   };
-  const selectLocation = (place, character = currentCharacter) => window.dispatchEvent(new CustomEvent('greed-location-selected', { detail:{ place, character } }));
 
   const places = [
     ['Soufrabi',14,42,'city',0,'Città portuale a ovest. Punto di passaggio verso Bunzen e la costa.'],
@@ -78,7 +82,7 @@
     Sperduto:['Shiso tree']
   };
   const byName = Object.fromEntries(places.map(p => [p[0], p]));
-  const current = () => locationLabel?.textContent?.trim() || currentCharacter?.location || 'Shiso tree';
+  const current = () => canonicalLoc(currentCharacter?.location || locationLabel?.textContent?.trim() || 'Shiso tree');
   const hasAllCards = () => false;
   const energy = () => currentCharacter?.stats?.generali?.energia ?? currentCharacter?.energy ?? 0;
   const moveCost = () => currentCharacter?.moveEnergyCost || currentCharacter?.stats?.generali?.costoMovimento || 1;
@@ -124,7 +128,12 @@
     e.preventDefault();
     e.stopImmediatePropagation();
     try { await apiGet(); } catch {}
-    const name = btn.dataset.place;
+    const name = canonicalLoc(btn.dataset.place);
+    if (name === current()) {
+      cityPopup?.classList.remove('is-open');
+      selectLocation(name, currentCharacter);
+      return;
+    }
     const place = byName[name];
     const reason = blockReason(name);
     const reachable = !reason;
@@ -144,7 +153,6 @@
     e.stopImmediatePropagation();
     try {
       const updated = await apiMove(place);
-      if (updated?.location && locationLabel) locationLabel.textContent = updated.location;
       window.dispatchEvent(new CustomEvent('greed-character-updated', { detail:updated }));
       selectLocation(updated.location || place, updated);
       cityPopup.classList.remove('is-open');
@@ -155,7 +163,7 @@
     }
   }, true);
 
-  window.addEventListener('greed-character-updated', e => { if (e.detail) currentCharacter = e.detail; refresh(); });
-  apiGet().then(c => { refresh(); }).catch(refresh);
+  window.addEventListener('greed-character-updated', e => { if (e.detail) { currentCharacter = e.detail; syncLabel(currentCharacter); } refresh(); });
+  apiGet().then(c => { syncLabel(c); refresh(); }).catch(refresh);
   setInterval(refresh, 800);
 })();
