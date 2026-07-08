@@ -9,20 +9,29 @@
   if (!game || !world) return;
 
   const token = () => localStorage.getItem('mancuspieAuthToken') || '';
+  let currentCharacter = null;
   const style = document.createElement('style');
   style.textContent = `
     .map-label[data-type="city"]::before{content:'●'!important;color:#fff!important;-webkit-text-stroke:1px #000!important}
     .map-label[data-type="wild"]::before{content:'♣ ' attr(data-danger)!important;color:inherit!important;-webkit-text-stroke:1px #000!important}
     .map-label[data-type="neutral"]::before{content:'★'!important;color:inherit!important;-webkit-text-stroke:1px #000!important}
-    .city-blocked{display:block;margin-top:10px;color:#ff4b4b;font-weight:800}
+    .city-blocked{display:block;margin-top:10px;color:#ff4b4b;font-weight:800}.city-cost{display:block;margin-top:10px;color:#dfff73;font-weight:900}.city-cost.no-energy{color:#ff4b4b}
     .city-actions button:disabled{opacity:.45;filter:grayscale(1);cursor:not-allowed;background:#777!important;color:#ddd!important}
   `;
   document.head.appendChild(style);
 
+  const apiGet = async () => {
+    const res = await fetch('/api/hxh-character', { headers:{ authorization:`Bearer ${token()}` }, cache:'no-store' });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Errore personaggio');
+    currentCharacter = data.character;
+    return currentCharacter;
+  };
   const apiMove = async place => {
     const res = await fetch('/api/hxh-character', { method:'POST', headers:{ 'content-type':'application/json', authorization:`Bearer ${token()}` }, body:JSON.stringify({ action:'move', place }), cache:'no-store' });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || 'Errore movimento');
+    currentCharacter = data.character;
     return data.character;
   };
 
@@ -65,17 +74,19 @@
     Limeiro:['Masadora','Badlands'],
     Soufrabi:['Bunzen'],
     Farlands:[],
-    Sperduto:['Masadora']
+    Sperduto:['Shiso tree']
   };
   const byName = Object.fromEntries(places.map(p => [p[0], p]));
-  const current = () => locationLabel?.textContent?.trim() || 'Sperduto';
+  const current = () => locationLabel?.textContent?.trim() || 'Shiso tree';
   const hasAllCards = () => false;
+  const energy = () => currentCharacter?.stats?.generali?.energia ?? currentCharacter?.energy ?? 0;
   const blockReason = place => {
     const loc = current();
     if (loc === place) return 'Sei già qui.';
     if (place === 'Limeiro' && !hasAllCards()) return 'Limeiro è off limits finché non possiedi tutte le carte.';
-    if ((routes[loc] || []).includes(place)) return '';
-    return 'Non puoi arrivare qua a piedi da dove sei ora.';
+    if (!(routes[loc] || []).includes(place)) return 'Non puoi arrivare qua a piedi da dove sei ora.';
+    if (energy() < 1) return 'Non hai energie.';
+    return '';
   };
   const canGo = place => !blockReason(place);
 
@@ -103,16 +114,19 @@
     });
   };
 
-  game.addEventListener('click', e => {
+  game.addEventListener('click', async e => {
     const btn = e.target.closest('[data-place]');
     if (!btn) return;
     e.preventDefault();
     e.stopImmediatePropagation();
+    try { await apiGet(); } catch {}
     const name = btn.dataset.place;
     const place = byName[name];
     const reason = blockReason(name);
+    const reachable = !reason;
     cityTitle.textContent = name;
-    cityInfo.innerHTML = `${place?.[5] || name}${reason ? `<span class="city-blocked">${reason}</span>` : ''}`;
+    const cost = reachable ? '<span class="city-cost">Userai 1 energia.</span>' : reason === 'Non hai energie.' ? '<span class="city-cost no-energy">Non hai energie.</span>' : '';
+    cityInfo.innerHTML = `${place?.[5] || name}${reason ? `<span class="city-blocked">${reason}</span>` : ''}${cost}`;
     cityEnter.hidden = false;
     cityEnter.disabled = !!reason;
     cityEnter.dataset.nextPlace = name;
@@ -136,6 +150,7 @@
     }
   }, true);
 
+  window.addEventListener('greed-character-updated', e => { if (e.detail) currentCharacter = e.detail; refresh(); });
+  apiGet().then(refresh).catch(refresh);
   setInterval(refresh, 600);
-  refresh();
 })();
