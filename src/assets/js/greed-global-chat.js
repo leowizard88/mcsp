@@ -9,7 +9,7 @@
   };
   const css = document.createElement('style');
   css.textContent = `
-    .gi-chat{position:fixed;right:14px;bottom:18px;z-index:44;width:min(430px,calc(100vw - var(--side,44px) - 28px));font-family:Arial,Helvetica,sans-serif;color:#f4ffe8;text-shadow:1px 1px 0 #000;pointer-events:auto}.gi-chat-log{height:310px;max-height:34vh;overflow:auto;-webkit-overflow-scrolling:touch;padding:0 0 9px;display:flex;flex-direction:column;gap:5px;mask-image:linear-gradient(to bottom,transparent 0,#000 18px,#000 100%)}.gi-chat-line{font:700 13px/1.28 Arial,Helvetica,sans-serif;background:rgba(0,0,0,.16);border-left:2px solid rgba(255,255,255,.22);padding:3px 6px;word-break:break-word}.gi-chat-line.global{color:#f4ffe8}.gi-chat-line.info{color:#dfff73;border-left-color:#dfff73}.gi-chat-line.good{color:#66ff86;border-left-color:#66ff86}.gi-chat-line.bad{color:#ff5a5a;border-left-color:#ff5a5a}.gi-chat-line.system{color:#9ecbff;border-left-color:#9ecbff;font-size:15px;line-height:1.3;background:rgba(0,0,0,.28);padding:7px 8px}.gi-chat-line.loading{color:#dfff73;opacity:.72;text-align:center;border-left-color:transparent;background:transparent}.gi-chat-line time{opacity:.62;font-size:10px;margin-right:4px}.gi-chat-line strong{color:#ffe16a;font-weight:900}.gi-chat-form{display:flex;gap:6px;align-items:center;background:transparent}.gi-chat-input{flex:1;min-width:0;border:0;border-bottom:1px solid rgba(255,255,255,.48);background:rgba(0,0,0,.18);color:#fff;padding:7px 5px;font:700 13px/1 Arial,Helvetica,sans-serif;outline:none;text-shadow:1px 1px 0 #000}.gi-chat-input::placeholder{color:rgba(255,255,255,.62)}.gi-chat-send{border:0;background:transparent;color:#dfff73;font:900 12px/1 'Courier New',monospace;text-transform:uppercase;cursor:pointer;padding:5px 0;text-shadow:1px 1px 0 #000}.gi-chat-send:disabled{opacity:.42;cursor:not-allowed}.gi-chat-toggle{display:none}@media(max-width:760px){.gi-chat{right:8px;bottom:10px;width:calc(100vw - var(--side,38px) - 18px);z-index:86}.gi-chat-log{height:210px;max-height:28vh}.gi-chat-line{font-size:12px}.gi-chat-line.system{font-size:14px}.gi-chat-input{font-size:12px}body.menu-open .gi-chat{display:none}}
+    .gi-chat{position:fixed;right:14px;bottom:18px;z-index:44;width:min(430px,calc(100vw - var(--side,44px) - 28px));font-family:Arial,Helvetica,sans-serif;color:#f4ffe8;text-shadow:1px 1px 0 #000;pointer-events:auto;background:linear-gradient(180deg,rgba(0,0,0,.34),rgba(0,0,0,.22));border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:8px 9px 7px;box-shadow:0 8px 28px rgba(0,0,0,.34);backdrop-filter:blur(2px)}.gi-chat-log{height:310px;max-height:34vh;overflow:auto;-webkit-overflow-scrolling:touch;padding:0 0 9px;display:flex;flex-direction:column;gap:5px;mask-image:linear-gradient(to bottom,transparent 0,#000 18px,#000 100%)}.gi-chat-line{font:700 13px/1.28 Arial,Helvetica,sans-serif;background:rgba(0,0,0,.24);border-left:2px solid rgba(255,255,255,.22);border-radius:3px;padding:3px 6px;word-break:break-word}.gi-chat-line.global{color:#f4ffe8}.gi-chat-line.info{color:#dfff73;border-left-color:#dfff73}.gi-chat-line.good{color:#66ff86;border-left-color:#66ff86}.gi-chat-line.bad{color:#ff5a5a;border-left-color:#ff5a5a}.gi-chat-line.system{color:#9ecbff;border-left-color:#9ecbff;font-size:15px;line-height:1.3;background:rgba(0,0,0,.34);padding:7px 8px}.gi-chat-line.loading{color:#dfff73;opacity:.72;text-align:center;border-left-color:transparent;background:transparent}.gi-chat-line time{opacity:.62;font-size:10px;margin-right:4px}.gi-chat-line strong{color:#ffe16a;font-weight:900}.gi-chat-form{display:flex;gap:6px;align-items:center;background:rgba(0,0,0,.14);border-radius:6px;padding:0 5px}.gi-chat-input{flex:1;min-width:0;border:0;border-bottom:1px solid rgba(255,255,255,.48);background:transparent;color:#fff;padding:7px 2px;font:700 13px/1 Arial,Helvetica,sans-serif;outline:none;text-shadow:1px 1px 0 #000}.gi-chat-input::placeholder{color:rgba(255,255,255,.62)}.gi-chat-send{border:0;background:transparent;color:#dfff73;font:900 12px/1 'Courier New',monospace;text-transform:uppercase;cursor:pointer;padding:5px 0;text-shadow:1px 1px 0 #000}.gi-chat-send:disabled{opacity:.42;cursor:not-allowed}.gi-chat-toggle{display:none}@media(max-width:760px){.gi-chat{right:8px;bottom:10px;width:calc(100vw - var(--side,38px) - 18px);z-index:86;padding:7px}.gi-chat-log{height:210px;max-height:28vh}.gi-chat-line{font-size:12px}.gi-chat-line.system{font-size:14px}.gi-chat-input{font-size:12px}body.menu-open .gi-chat{display:none}}
   `;
   document.head.appendChild(css);
   const box = document.createElement('section');
@@ -28,7 +28,7 @@
   let olderLoaded = 0;
   const introKey = 'greedGlobalChatIntroV2';
   const firstEnterKey = 'greedGlobalChatFirstEnterV2';
-  const pigNotifyKey = 'greedGlobalChatPigNotifyV1';
+  const pigNotifyKey = 'greedGlobalChatPigNotifyV2';
   const local = (text, tone = 'info', id = '') => {
     const msg = { id:id || `local-${Date.now()}-${Math.random()}`, local:true, kind:tone, text, createdAt:new Date().toISOString() };
     localMessages.push(msg);
@@ -105,6 +105,10 @@
   const inventoryName = i => i?.name || i?.nome || 'un oggetto';
   const isPigCard = card => card?.id === 'free-greed-island-pig' || cardName(card) === 'Maiale di Greed Island';
   const hasPigCard = c => (c?.cards || []).some(isPigCard);
+  const isFreshCharacter = c => {
+    const created = Date.parse(c?.createdAt || 0);
+    return Number.isFinite(created) && Date.now() - created < 5 * 60 * 1000;
+  };
   const diffCharacter = c => {
     if (!c) return;
     if (!localStorage.getItem(introKey)) {
@@ -115,7 +119,7 @@
       localStorage.setItem(firstEnterKey, '1');
       local(`Benvenuto ${c.nome || 'giocatore'}: sei entrato in Greed Island.`, 'good');
     }
-    if (hasPigCard(c) && !localStorage.getItem(pigNotifyKey)) {
+    if (!previousCharacter && hasPigCard(c) && isFreshCharacter(c) && !localStorage.getItem(pigNotifyKey)) {
       localStorage.setItem(pigNotifyKey, '1');
       local('Hai ottenuto la carta Maiale di Greed Island!', 'good');
     }
