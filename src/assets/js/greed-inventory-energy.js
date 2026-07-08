@@ -20,7 +20,7 @@
   const css = document.createElement('style');
   css.textContent = `
     .inventory-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}.inventory-list li{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.45);padding:10px 11px;color:#f4ffe8}.inventory-empty{color:#d9d9d9;font:400 14px/1.35 Arial,Helvetica,sans-serif}
-    .location-display{max-width:230px!important}.energy-hud{position:fixed;left:calc(var(--side,44px) + 104px);z-index:30;color:#00e33a;font:800 14px/1.25 Arial,Helvetica,sans-serif;text-shadow:1px 1px 0 #000;white-space:nowrap}.energy-hud small{display:block;margin-top:2px;color:#dfff73;font:700 11px/1.25 Arial,Helvetica,sans-serif;text-transform:none}.stat-energy-timer{display:block;margin-top:4px;color:#dfff73;font:700 11px/1.25 Arial,Helvetica,sans-serif;text-transform:none}
+    .location-display{max-width:230px!important}.energy-hud{position:fixed;left:calc(var(--side,44px) + 104px);z-index:30;color:#00e33a;font:800 14px/1.25 Arial,Helvetica,sans-serif;text-shadow:1px 1px 0 #000;white-space:nowrap}.energy-hud small{display:block;margin-top:2px;color:#dfff73;font:700 11px/1.25 Arial,Helvetica,sans-serif;text-transform:none}.stat-energy-timer{display:block;margin-top:4px;color:#dfff73;font:700 11px/1.25 Arial,Helvetica,sans-serif;text-transform:none}.rest-stat-note{border:1px solid rgba(255,176,176,.7);background:rgba(90,0,0,.45);color:#ffb0b0;padding:9px 10px;margin:0 0 12px;font:900 13px/1.35 Arial,Helvetica,sans-serif}.param-penalty{display:block;margin-top:3px;color:#ffb0b0;font:800 11px/1.2 Arial,Helvetica,sans-serif}
     @media(max-width:760px){.energy-hud{left:calc(var(--side,38px) + 14px)}}
   `;
   document.head.appendChild(css);
@@ -37,6 +37,13 @@
     const r = locationBox.getBoundingClientRect();
     energyHud.style.top = `${Math.ceil(r.bottom + 6)}px`;
   };
+  const fmt = secs => {
+    secs = Math.max(0, Math.floor(Number(secs) || 0));
+    const h = Math.floor(secs / 3600);
+    const m = Math.floor((secs % 3600) / 60);
+    const s = secs % 60;
+    return h > 0 ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
+  };
   const maxEnergy = c => c?.stats?.generali?.energiaMax ?? c?.stats?.generali?.energia ?? c?.energy ?? 0;
   const curEnergy = c => c?.stats?.generali?.energia ?? c?.energy ?? 0;
   const timerText = c => {
@@ -47,9 +54,7 @@
     if (!Number.isFinite(base)) return 'prossima energia: --:--';
     const next = base + 600000;
     const left = Math.max(0, next - Date.now());
-    const m = Math.floor(left / 60000);
-    const s = Math.floor((left % 60000) / 1000);
-    return `prossima energia: ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    return `prossima energia: ${fmt(Math.ceil(left / 1000))}`;
   };
   const renderEnergyHud = c => {
     if (!energyHud || !c) return;
@@ -89,6 +94,26 @@
       setTile('Energia', `${g.energia ?? c.energy ?? 0}/${g.energiaMax ?? g.energia ?? c.energy ?? 0}`, timerText(c));
       setTile('Nen', `${g.nen ?? 0}/${g.nenMax ?? g.nen ?? 0}`);
       setTile('Salute generale', `${g.saluteGenerale ?? 0}/${g.saluteGeneraleMax ?? g.saluteGenerale ?? 0}`);
+      panel.querySelector('.rest-stat-note')?.remove();
+      if (c?.restPenaltySecondsLeft > 0) {
+        const note = document.createElement('div');
+        note.className = 'rest-stat-note';
+        note.textContent = `Riposo attivo: -1 a tutti i parametri per ${fmt(c.restPenaltySecondsLeft)}.`;
+        panel.querySelector('.stat-section')?.before(note);
+        const labels = { forza:'Forza', robustezza:'Robustezza', nen:'Nen', intelligenza:'Intelligenza', malizia:'Malizia', agilita:'Agilità', oratoria:'Oratoria', percezione:'Percezione' };
+        Object.entries(labels).forEach(([key,label]) => {
+          const row = [...panel.querySelectorAll('.stat-row')].find(r => r.querySelector('span:first-child')?.textContent?.trim() === label);
+          const val = row?.querySelector('.stat-value');
+          if (val && c.paramsEffective && c.params) val.innerHTML = `${c.paramsEffective[key] ?? 0}<small class="param-penalty">base ${c.params[key] ?? 0}, riposo -1</small>`;
+        });
+      }
+      panel.querySelector('.rest-cooldown-note')?.remove();
+      if (c?.restCooldownSecondsLeft > 0) {
+        const cd = document.createElement('div');
+        cd.className = 'rest-stat-note rest-cooldown-note';
+        cd.textContent = `Prossimo riposo disponibile tra ${fmt(c.restCooldownSecondsLeft)}.`;
+        panel.querySelector('.stat-section')?.before(cd);
+      }
     } catch {}
   };
   nav.querySelector('[data-panel="stat"]')?.addEventListener('click', () => setTimeout(() => updateStatPanel(true), 40), true);
@@ -99,7 +124,7 @@
   });
   setInterval(() => updateStatPanel(false), 1000);
   setTimeout(() => updateStatPanel(true), 700);
-  import('/assets/js/greed-location-panel.js?v=20260708-locationpanel-1');
+  import('/assets/js/greed-location-panel.js?v=20260708-locationpanel-2');
   import('/assets/js/greed-entry-gate.js?v=20260708-entrygate-2');
   import('/assets/js/greed-delete-confirm.js?v=20260708-deleteconfirm-1');
 })();
