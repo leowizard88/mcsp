@@ -29,16 +29,19 @@ title: Greed Island
   <div class="greed-card"><h1>Crea il tuo personaggio</h1><form class="greed-form" data-greed-form><div class="greed-field"><label for="gi-name">Nome:</label><input id="gi-name" name="nome" required></div><div class="greed-field"><label for="gi-surname">Cognome:</label><input id="gi-surname" name="cognome" required></div><div class="greed-field"><label for="gi-age">Età:</label><input id="gi-age" name="eta" type="number" min="1" max="999" required></div><div class="greed-field"><label for="gi-sex">Sesso:</label><select id="gi-sex" name="sesso" required><option value="">Scegli</option><option>Maschio</option><option>Femmina</option><option>Altro</option><option>Non specificato</option></select></div><div class="greed-field"><label for="gi-story">Storia:</label><textarea id="gi-story" name="storia" required></textarea></div><div class="greed-field"><label for="gi-nen">Abilità Nen:</label><textarea id="gi-nen" name="nen" required></textarea></div><div class="greed-field"><label for="gi-author">Autore preferito:</label><input id="gi-author" name="autore" required></div><button class="greed-submit" type="submit">Invia</button></form></div>
   <main class="greed-game" data-greed-game><button class="map-label" style="left:53%;top:40%" data-place="Masadora">Masadora</button><button class="map-label" style="left:89%;top:37%" data-place="Aiai">Aiai</button><button class="map-label" style="left:17%;top:33%" data-place="Soufrabi">Soufrabi</button><button class="map-label" style="left:61%;top:46%" data-place="Antokiba">Antokiba</button><button class="map-label" style="left:64%;top:62%" data-place="Dorias">Dorias</button><button class="map-label" style="left:73%;top:54%" data-place="Rubicuta">Rubicuta</button><button class="map-label" style="left:61%;top:26%" data-place="Limeiro">Limeiro</button><button class="map-label" style="left:28%;top:38%" data-place="Bunzen">Bunzen</button><button class="map-label forest-label" style="left:39%;top:39%" data-place="Foresta Oscura">Foresta Oscura</button><button class="menu-button" type="button" data-menu-toggle>Menù</button><div class="location-display">Location: <strong data-location-label>Sperduto</strong></div><nav class="side-menu" aria-label="Menu Greed Island"><button type="button" data-panel="players">Giocatori</button><button type="button" data-panel="explore">Esplora</button><button type="button" data-panel="info">Info</button><button type="button" data-panel="guide">Guida</button></nav><section class="menu-panel" data-menu-panel></section><aside class="city-popup" data-city-popup><h2 data-city-title></h2><p data-city-info></p><div class="city-actions"><button type="button" data-city-close>Chiudi</button><button type="button" data-city-enter>Entra</button></div></aside></main>
 </section>
-<script src="/assets/js/greed-island-game.js?v=20260708-bootstrap-safe-1"></script>
-<script src="/assets/js/greed-param-enter-direct.js?v=20260708-direct-param-1"></script>
-<script src="/assets/js/greed-map-visual-rescue.js?v=20260708-maprescue-1"></script>
-<script src="/assets/js/greed-island-guide.js?v=20260708-guide-modes-1"></script>
+<script src="/assets/js/greed-pig-rarity-fix.js?v=20260708-pigfix-1"></script>
+<script src="/assets/js/greed-xp-normalize.js?v=20260708-xpfix-1"></script>
+<script src="/assets/js/greed-energy-sync.js?v=20260708-energyfix-1"></script>
+<script src="/assets/js/greed-explore-energy-start-fix.js?v=20260708-startenergy-1"></script>
+<script src="/assets/js/greed-island-game.js?v=20260708-pnghud-1"></script>
+<script src="/assets/js/greed-entry-gate.js?v=20260708-entry-restore-1"></script>
+<script src="/assets/js/greed-island-guide.js?v=20260708-guide-zetsu-1"></script>
 <script src="/assets/js/greed-map-single-layer.js?v=20260708-singlemap-1"></script>
 <script src="/assets/js/greed-location-font.js?v=20260708-locationfont-1"></script>
 <script src="/assets/js/greed-new-locations.js?v=20260708-sleep-3"></script>
 <script src="/assets/js/greed-inventory-energy.js?v=20260708-pig-1"></script>
 <script src="/assets/js/greed-location-panel-stable.js?v=20260708-sleep-3"></script>
-<script src="/assets/js/greed-wild-zone-info.js?v=20260708-wildinfo-modes-1"></script>
+<script src="/assets/js/greed-wild-zone-info.js?v=20260708-wildinfo-zetsu-1"></script>
 <script src="/assets/js/greed-values-panel.js?v=20260708-damage-1"></script>
 <script src="/assets/js/greed-mobile-layout.js?v=20260708-sleep-3"></script>
 <script src="/assets/js/greed-card-detail-panels.js?v=20260708-carddetail-1"></script>
@@ -49,4 +52,6 @@ title: Greed Island
 <script src="/assets/js/greed-shiso-image-fix.js?v=20260708-shiso-1"></script>
 <script src="/assets/js/greed-special-materialize.js?v=20260708-specialmat-1"></script>
 <script src="/assets/js/greed-exploration-system.js?v=20260708-explore-4"></script>
+<script src="/assets/js/greed-zetsu-mode-patch.js?v=20260708-zetsu-1"></script>
 <script src="/assets/js/greed-explore-summary.js?v=20260708-results-1"></script>
+<script src="/assets/js/greed-explore-claim-fix.js?v=20260708-claimfix-1"></script>
