@@ -1,5 +1,5 @@
 ---
-title: "Vannacci è un po"
+title: "Vannacci è un po' confuso?"
 subtitle: "Hanno fottuto il cervello ai nostri vecchi."
 author: "Glacen"
 rubrica: "Cappuccino politico"
