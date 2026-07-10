@@ -3,54 +3,72 @@
   const nav = document.querySelector('.side-menu');
   const locationBox = document.querySelector('.location-display');
   if (!panel || !nav) return;
+
   const token = () => localStorage.getItem('mancuspieAuthToken') || '';
-  let currentCharacter = null;
-  let lastFetch = 0;
-  let refreshingEnergy = false;
   const clamp = v => Math.max(0, Math.floor(Number(v) || 0));
-  const maxEnergyFor = level => 3 + ((clamp(level || 1) - 1) * 2);
-  const curEnergyRaw = c => clamp(c?.stats?.generali?.energia ?? c?.energy ?? 0);
-  const maxEnergyRaw = c => clamp(c?.stats?.generali?.energiaMax ?? maxEnergyFor(c?.stats?.generali?.livello ?? c?.level ?? 1));
-  const energyExpired = c => {
-    if (!c) return false;
-    if (curEnergyRaw(c) >= maxEnergyRaw(c)) return false;
-    const base = Date.parse(c?.energyUpdatedAt || c?.updatedAt || c?.createdAt || new Date().toISOString());
-    return Number.isFinite(base) && Date.now() >= base + 600000;
+  const avg = values => values.length ? Math.ceil(values.reduce((a,b) => a + b, 0) / values.length) : 0;
+  const fmt = secs => {
+    secs = Math.max(0, Math.floor(Number(secs) || 0));
+    const h = Math.floor(secs / 3600), m = Math.floor((secs % 3600) / 60), s = secs % 60;
+    return h > 0 ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
   };
-  const getCharacter = async (force = false) => {
-    const now = Date.now();
-    const mustRefreshEnergy = currentCharacter && energyExpired(currentCharacter);
-    if (!force && !mustRefreshEnergy && currentCharacter && now - lastFetch < 15000) return currentCharacter;
-    const res = await fetch('/api/hxh-character', { headers:{ authorization:`Bearer ${token()}` }, cache:'no-store' });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || 'Errore personaggio');
-    currentCharacter = data.character;
-    lastFetch = now;
-    window.dispatchEvent(new CustomEvent('greed-character-updated', { detail:data.character }));
-    return currentCharacter;
+  const esc = s => String(s || '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const maxEnergyFor = level => 3 + ((clamp(level || 1) - 1) * 2);
+  const healthBase = { testa:5, corpo:8, braccioDx:6, braccioSx:6, gambaDx:7, gambaSx:7 };
+  const healthLabels = { testa:'Testa', corpo:'Corpo', braccioDx:'Braccio dx', braccioSx:'Braccio sx', gambaDx:'Gamba dx', gambaSx:'Gamba sx' };
+  const paramLabels = { forza:'Forza', robustezza:'Robustezza', nen:'Nen', intelligenza:'Intelligenza', malizia:'Malizia', agilita:'Agilità', oratoria:'Oratoria', percezione:'Percezione' };
+
+  let currentCharacter = window.__greedCurrentCharacter || null;
+  let energyRefreshPending = false;
+  let lastRenderedSignature = '';
+
+  const gOf = c => c?.stats?.generali || {};
+  const levelOf = c => clamp(gOf(c).livello ?? c?.level ?? 1);
+  const energyCur = c => clamp(gOf(c).energia ?? c?.energy ?? 0);
+  const energyMax = c => clamp(gOf(c).energiaMax ?? maxEnergyFor(levelOf(c)));
+  const healthMax = (c, key) => {
+    const fromStats = c?.stats?.saluteMax?.[key];
+    if (fromStats != null) return clamp(fromStats);
+    const p = c?.paramsEffective || c?.params || {};
+    return (healthBase[key] || 0) + clamp(p.robustezza) * 2 + Math.max(0, levelOf(c) - 1);
+  };
+  const healthCur = (c, key) => clamp(c?.stats?.salute?.[key] ?? c?.health?.[key] ?? healthMax(c, key));
+  const healthGeneralCur = c => clamp(gOf(c).saluteGenerale ?? avg(Object.keys(healthBase).map(k => healthCur(c, k))));
+  const healthGeneralMax = c => clamp(gOf(c).saluteGeneraleMax ?? avg(Object.keys(healthBase).map(k => healthMax(c, k))));
+  const energyLeftMs = c => {
+    if (!c || energyCur(c) >= energyMax(c)) return null;
+    const base = Date.parse(c.energyUpdatedAt || c.updatedAt || c.createdAt || new Date().toISOString());
+    if (!Number.isFinite(base)) return null;
+    return base + 600000 - Date.now();
+  };
+  const energyTimerText = c => {
+    const left = energyLeftMs(c);
+    if (left === null) return energyCur(c) >= energyMax(c) ? 'energia full' : 'prossima energia: --:--';
+    if (left <= 0) return 'aggiornamento energia...';
+    return `prossima energia: ${fmt(Math.ceil(left / 1000))}`;
+  };
+  const refreshCharacter = async () => {
+    if (energyRefreshPending) return;
+    energyRefreshPending = true;
+    try {
+      const res = await fetch('/api/hxh-character', { headers:{ authorization:`Bearer ${token()}` }, cache:'no-store' });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Errore personaggio');
+      currentCharacter = data.character;
+      window.greedPublishCharacter?.(data.character);
+    } catch {} finally {
+      setTimeout(() => { energyRefreshPending = false; }, 650);
+    }
   };
   const postAction = async action => {
     const res = await fetch('/api/hxh-character', { method:'POST', headers:{ 'content-type':'application/json', authorization:`Bearer ${token()}` }, body:JSON.stringify({ action }), cache:'no-store' });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || 'Errore Greed Island');
     currentCharacter = data.character;
-    lastFetch = Date.now();
-    window.dispatchEvent(new CustomEvent('greed-character-updated', { detail:data.character }));
+    window.greedPublishCharacter?.(data.character);
     return data.character;
   };
-  const esc = s => String(s || '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-  const avg = values => values.length ? Math.ceil(values.reduce((a,b) => a + b, 0) / values.length) : 0;
-  const healthBase = { testa:5, corpo:8, braccioDx:6, braccioSx:6, gambaDx:7, gambaSx:7 };
-  const healthLabels = { testa:'Testa', corpo:'Corpo', braccioDx:'Braccio dx', braccioSx:'Braccio sx', gambaDx:'Gamba dx', gambaSx:'Gamba sx' };
-  const healthMax = (c, key) => {
-    const fromStats = c?.stats?.saluteMax?.[key];
-    if (fromStats != null) return clamp(fromStats);
-    const p = c?.paramsEffective || c?.params || {};
-    return (healthBase[key] || 0) + clamp(p.robustezza) * 2 + Math.max(0, clamp(c?.level || 1) - 1);
-  };
-  const healthCur = (c, key) => clamp(c?.stats?.salute?.[key] ?? c?.health?.[key] ?? healthMax(c, key));
-  const healthGeneralCur = c => clamp(c?.stats?.generali?.saluteGenerale ?? avg(Object.keys(healthBase).map(k => healthCur(c, k))));
-  const healthGeneralMax = c => clamp(c?.stats?.generali?.saluteGeneraleMax ?? avg(Object.keys(healthBase).map(k => healthMax(c, k))));
+
   const css = document.createElement('style');
   css.textContent = `
     .inventory-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}.inventory-list li{border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.45);padding:10px 11px;color:#f4ffe8}.inventory-empty{color:#d9d9d9;font:400 14px/1.35 Arial,Helvetica,sans-serif}
@@ -63,11 +81,6 @@
   exhaustionScreen.className = 'exhaustion-screen';
   exhaustionScreen.innerHTML = '<div class="exhaustion-box"><h1>Esaurimento</h1><div class="exhaustion-timer" data-exhaustion-timer>10:00</div><p>Sei collassato a terra. Ogni attività è bloccata finché non ti riprendi.</p></div>';
   document.body.appendChild(exhaustionScreen);
-  const updateExhaustionScreen = c => {
-    const active = !!c?.exhaustionActive && (c.exhaustionSecondsLeft || 0) > 0;
-    exhaustionScreen.classList.toggle('is-active', active);
-    if (active) exhaustionScreen.querySelector('[data-exhaustion-timer]').textContent = fmt(c.exhaustionSecondsLeft);
-  };
 
   let energyHud = document.querySelector('[data-energy-hud]');
   if (!energyHud && locationBox) {
@@ -81,34 +94,6 @@
     const r = locationBox.getBoundingClientRect();
     energyHud.style.top = `${Math.ceil(r.bottom + 6)}px`;
   };
-  const fmt = secs => {
-    secs = Math.max(0, Math.floor(Number(secs) || 0));
-    const h = Math.floor(secs / 3600);
-    const m = Math.floor((secs % 3600) / 60);
-    const s = secs % 60;
-    return h > 0 ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
-  };
-  const timerText = c => {
-    const cur = curEnergyRaw(c);
-    const max = maxEnergyRaw(c);
-    if (cur >= max) return 'energia full';
-    const base = Date.parse(c?.energyUpdatedAt || c?.updatedAt || c?.createdAt || new Date().toISOString());
-    if (!Number.isFinite(base)) return 'prossima energia: --:--';
-    const left = base + 600000 - Date.now();
-    if (left <= 0) {
-      if (!refreshingEnergy) {
-        refreshingEnergy = true;
-        setTimeout(() => getCharacter(true).finally(() => { refreshingEnergy = false; }), 20);
-      }
-      return 'aggiornamento energia...';
-    }
-    return `prossima energia: ${fmt(Math.ceil(left / 1000))}`;
-  };
-  const renderEnergyHud = c => {
-    if (!energyHud || !c) return;
-    placeEnergyHud();
-    energyHud.innerHTML = `Energia ${curEnergyRaw(c)} / ${maxEnergyRaw(c)}<small>${timerText(c)}</small>`;
-  };
 
   if (!nav.querySelector('[data-panel="inventory"]')) {
     const b = document.createElement('button');
@@ -117,34 +102,48 @@
     b.textContent = 'Inventario';
     nav.insertBefore(b, nav.querySelector('[data-panel="guide"]'));
     b.addEventListener('click', async () => {
-      try {
-        const c = await getCharacter(true);
-        const items = Array.isArray(c?.inventory) ? c.inventory : [];
-        panel.innerHTML = `<h2>Inventario</h2>${items.length ? `<ul class="inventory-list">${items.map(item => `<li>${esc(item.name || item.nome || item)}</li>`).join('')}</ul>` : '<p class="inventory-empty">Inventario vuoto. Qui verranno conservati oggetti, carte e altri strumenti del giocatore.</p>'}`;
-      } catch (err) {
-        panel.innerHTML = `<h2>Inventario</h2><p class="inventory-empty">${esc(err.message)}</p>`;
-      }
+      await refreshCharacter();
+      const items = Array.isArray(currentCharacter?.inventory) ? currentCharacter.inventory : [];
+      panel.innerHTML = `<h2>Inventario</h2>${items.length ? `<ul class="inventory-list">${items.map(item => `<li>${esc(item.name || item.nome || item)}</li>`).join('')}</ul>` : '<p class="inventory-empty">Inventario vuoto. Qui verranno conservati oggetti, carte e altri strumenti del giocatore.</p>'}`;
       panel.classList.add('is-active');
     });
   }
-  const patchStatPanel = c => {
+
+  const setTile = (name, value, timer = '') => {
+    const tile = [...panel.querySelectorAll('.stat-tile')].find(t => t.querySelector('strong')?.textContent?.trim() === name);
+    const span = tile?.querySelector('span');
+    if (span) span.innerHTML = `${value}${timer ? `<small class="stat-energy-timer">${timer}</small>` : ''}`;
+  };
+  const removeNotes = () => panel.querySelectorAll('.rest-stat-note,.rest-cooldown-note').forEach(n => n.remove());
+  const updateExhaustionScreen = c => {
+    const active = !!c?.exhaustionActive && clamp(c.exhaustionSecondsLeft) > 0;
+    exhaustionScreen.classList.toggle('is-active', active);
+    if (active) exhaustionScreen.querySelector('[data-exhaustion-timer]').textContent = fmt(c.exhaustionSecondsLeft);
+  };
+  const render = (c, force = false) => {
     if (!c) return;
-    renderEnergyHud(c);
+    currentCharacter = c;
+    placeEnergyHud();
+    const signature = JSON.stringify({
+      energy:energyCur(c), energyMax:energyMax(c), energyText:energyTimerText(c),
+      hp:Object.fromEntries(Object.keys(healthBase).map(k => [k, healthCur(c, k)])),
+      restPenalty:c.restPenaltySecondsLeft, restCooldown:c.restCooldownSecondsLeft,
+      fatigue:c.fatigue, fatigueLabel:c.fatigueLabel || gOf(c).stato, exhaustion:c.exhaustionSecondsLeft,
+      activePanel: panel.classList.contains('is-active') ? panel.querySelector('h2')?.textContent : ''
+    });
+    if (!force && signature === lastRenderedSignature) return;
+    lastRenderedSignature = signature;
+
+    if (energyHud) energyHud.innerHTML = `Energia ${energyCur(c)} / ${energyMax(c)}<small>${energyTimerText(c)}</small>`;
     updateExhaustionScreen(c);
-    const g = c?.stats?.generali || {};
-    const tiles = [...panel.querySelectorAll('.stat-tile')];
-    const setTile = (name, value, timer = '') => {
-      const tile = tiles.find(t => t.querySelector('strong')?.textContent?.trim() === name);
-      const span = tile?.querySelector('span');
-      if (span) span.innerHTML = `${value}${timer ? `<small class="stat-energy-timer">${timer}</small>` : ''}`;
-    };
-    setTile('Energia', `${curEnergyRaw(c)}/${maxEnergyRaw(c)}`, timerText(c));
-    setTile('Nen', `${g.nen ?? 0}/${g.nenMax ?? g.nen ?? 0}`);
+    if (panel.querySelector('h2')?.textContent?.trim() !== 'STAT') return;
+
+    setTile('Energia', `${energyCur(c)}/${energyMax(c)}`, energyTimerText(c));
+    setTile('Nen', `${gOf(c).nen ?? 0}/${gOf(c).nenMax ?? gOf(c).nen ?? 0}`);
     setTile('Salute generale', `${healthGeneralCur(c)}/${healthGeneralMax(c)}`);
     Object.entries(healthLabels).forEach(([key, label]) => setTile(label, `${healthCur(c, key)} / ${healthMax(c, key)}`));
-    let statoValue = `${c.fatigueLabel || g.stato || 'Normale'} (${c.fatigue || 0}/30)`;
-    if (c.energySurcharge > 0) statoValue += `<small class="stat-energy-timer">costo energia +${c.energySurcharge}</small>`;
-    if ((c.fatigue || 0) >= 30 && !c.exhaustionActive) statoValue += `<button type="button" class="collapse-button" data-collapse-ground>Collassa a terra</button>`;
+
+    const tiles = [...panel.querySelectorAll('.stat-tile')];
     let statoTile = tiles.find(t => t.querySelector('strong')?.textContent?.trim() === 'Stato');
     if (!statoTile) {
       const grid = panel.querySelector('.stat-mini-grid');
@@ -155,13 +154,16 @@
         grid.appendChild(statoTile);
       }
     }
+    let statoValue = `${c.fatigueLabel || gOf(c).stato || 'Normale'} (${c.fatigue || 0}/30)`;
+    if (c.energySurcharge > 0) statoValue += `<small class="stat-energy-timer">costo energia +${c.energySurcharge}</small>`;
+    if ((c.fatigue || 0) >= 30 && !c.exhaustionActive) statoValue += `<button type="button" class="collapse-button" data-collapse-ground>Collassa a terra</button>`;
     const statoSpan = statoTile?.querySelector('span');
     if (statoSpan) statoSpan.innerHTML = statoValue;
     statoTile?.querySelector('[data-collapse-ground]')?.addEventListener('click', async () => {
-      try { patchStatPanel(await postAction('collapse')); } catch (err) { alert(err.message); }
+      try { render(await postAction('collapse'), true); } catch (err) { alert(err.message); }
     });
-    panel.querySelector('.rest-stat-note')?.remove();
-    panel.querySelector('.rest-cooldown-note')?.remove();
+
+    removeNotes();
     if (c?.exhaustionSecondsLeft > 0) {
       const ex = document.createElement('div');
       ex.className = 'rest-stat-note';
@@ -173,8 +175,7 @@
       note.className = 'rest-stat-note';
       note.textContent = `Riposo attivo: -1 a tutti i parametri per ${fmt(c.restPenaltySecondsLeft)}.`;
       panel.querySelector('.stat-section')?.before(note);
-      const labels = { forza:'Forza', robustezza:'Robustezza', nen:'Nen', intelligenza:'Intelligenza', malizia:'Malizia', agilita:'Agilità', oratoria:'Oratoria', percezione:'Percezione' };
-      Object.entries(labels).forEach(([key,label]) => {
+      Object.entries(paramLabels).forEach(([key,label]) => {
         const row = [...panel.querySelectorAll('.stat-row')].find(r => r.querySelector('span:first-child')?.textContent?.trim() === label);
         const val = row?.querySelector('.stat-value');
         if (val && c.paramsEffective && c.params) val.innerHTML = `${c.paramsEffective[key] ?? 0}<small class="param-penalty">base ${c.params[key] ?? 0}, riposo -1</small>`;
@@ -187,25 +188,15 @@
       panel.querySelector('.stat-section')?.before(cd);
     }
   };
-  const updateStatPanel = async (force = false) => {
-    try { patchStatPanel(await getCharacter(force)); } catch {}
-  };
-  nav.querySelector('[data-panel="stat"]')?.addEventListener('click', () => setTimeout(() => updateStatPanel(true), 40), true);
+
+  nav.querySelector('[data-panel="stat"]')?.addEventListener('click', () => setTimeout(() => refreshCharacter().then(() => render(currentCharacter, true)), 40), true);
   window.addEventListener('resize', placeEnergyHud);
-  window.addEventListener('greed-character-updated', e => {
-    if (e.detail) { currentCharacter = e.detail; lastFetch = Date.now(); patchStatPanel(currentCharacter); }
-  });
+  window.addEventListener('greed-character-updated', e => render(e.detail, true));
   setInterval(() => {
-    if (currentCharacter?.exhaustionSecondsLeft > 0) {
-      currentCharacter.exhaustionSecondsLeft = Math.max(0, currentCharacter.exhaustionSecondsLeft - 1);
-      updateExhaustionScreen(currentCharacter);
-      if (currentCharacter.exhaustionSecondsLeft <= 0) updateStatPanel(true);
-    }
-    updateStatPanel(false);
+    if (!currentCharacter) return;
+    const left = energyLeftMs(currentCharacter);
+    render(currentCharacter, false);
+    if (left !== null && left <= 0) refreshCharacter();
   }, 1000);
-  setTimeout(() => updateStatPanel(true), 700);
-  import('/assets/js/greed-location-panel-stable.js?v=20260708-sleep-3');
-  import('/assets/js/greed-entry-gate.js?v=20260708-entrygate-safe-3');
-  import('/assets/js/greed-delete-confirm.js?v=20260708-deleteconfirm-1');
-  import('/assets/js/greed-binder-book.js?v=20260708-binder-2');
+  setTimeout(() => refreshCharacter(), 700);
 })();
