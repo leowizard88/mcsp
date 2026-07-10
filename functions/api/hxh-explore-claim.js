@@ -51,10 +51,10 @@ export async function onRequestPost({ request, env }) {
       inventory: Array.isArray(exploration.final?.inventory) ? exploration.final.inventory : (character.inventory || []),
       xp: clampInt(exploration.final?.xp, clampInt(character.xp)),
       jenny: clampInt(exploration.final?.jenny, clampInt(character.jenny)),
-      paramPoints: clampInt(character.paramPoints) + 2,
       activeExploration: null
     };
-    exploration.summary = { ...(exploration.summary || {}), paramPointsGained:2 };
+    const { paramPointsGained, ...summaryWithoutParamPoints } = exploration.summary || {};
+    exploration.summary = summaryWithoutParamPoints;
   } else {
     character = { ...character, activeExploration:null };
   }
