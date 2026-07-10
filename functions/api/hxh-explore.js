@@ -32,8 +32,7 @@ const normalizeLevelXp = c => {
 };
 const applyEnergyRegen = c => {
   if (!c) return null;
-  const character = normalizeLevelXp(c);
-  const maxEnergy = maxEnergyFor(character.level);
+  const character = normalizeLevelXp(c), maxEnergy = maxEnergyFor(character.level);
   const current = clampInt(character.energy ?? maxEnergy, 0, maxEnergy);
   const last = Date.parse(character.energyUpdatedAt || character.updatedAt || character.createdAt || new Date().toISOString());
   if (current >= maxEnergy || !Number.isFinite(last)) return { ...character, energy:current, energyUpdatedAt:character.energyUpdatedAt || new Date().toISOString() };
@@ -96,8 +95,7 @@ function enemyByPool(state) { let roll = rollInt(1,100), enemy = roll <= 65 ? EN
 function playerDamage(character, health) {
   const p = paramsOf(character), inv = Array.isArray(character.inventory) ? character.inventory : [];
   const weapon = inv.filter(i => i?.weapon || i?.damageMod || i?.dannoMod).sort((a,b) => clampInt(b.damageMod ?? b.dannoMod) - clampInt(a.damageMod ?? a.dannoMod))[0];
-  let damage = 2 + clampInt(p.forza) + clampInt(weapon?.damageMod ?? weapon?.dannoMod);
-  let note = '';
+  let damage = 2 + clampInt(p.forza) + clampInt(weapon?.damageMod ?? weapon?.dannoMod), note = '';
   if (['braccioDx','braccioSx','gambaDx','gambaSx'].some(k => clampInt(health[k]) <= 0)) damage = Math.max(1, Math.floor(damage * 0.5));
   const nen = clampInt(p.nen), badChance = nen > 20 ? 10 : 20, goodChance = nen > 20 ? 10 : 5, roll = rnd() * 100;
   if (roll < badChance) { damage = Math.max(1, Math.floor(damage * 0.5)); note = 'La tua concentrazione è scesa per un attimo e hai fatto un brutto colpo.'; }
@@ -157,8 +155,9 @@ function buildExploration(character, mode) {
   const moduleMin = Math.max(1, Math.floor(durationMin / 5));
   const remainderMin = durationMin - moduleMin * 5;
   const enemyChance = enemyChanceFor(mode, diff, p);
+  const forcedEnemyModule = rollInt(1, 5);
   const logs = [], startHealth = normalizeHealth(character), startGeneral = generalHealth(startHealth);
-  const state = { character, health:structuredClone(startHealth), maxHealth:maxHealthFor(character), cards:[...(Array.isArray(character.cards) ? character.cards : [])], inventory:[...(Array.isArray(character.inventory) ? character.inventory : [])], rewardCards:[], startXp:clampInt(character.xp), startJenny:clampInt(character.jenny), rewardXp:0, rewardJenny:0, critical:false, criticalAtSec:null, lastEnemyKey:null, snapshots:[], summary:{ killed:{}, jenny:0, exp:0, cardsGained:[], itemsGained:[], healthLost:0, cardsLost:[], itemsLost:[], paramPointsGained:2 } };
+  const state = { character, health:structuredClone(startHealth), maxHealth:maxHealthFor(character), cards:[...(Array.isArray(character.cards) ? character.cards : [])], inventory:[...(Array.isArray(character.inventory) ? character.inventory : [])], rewardCards:[], startXp:clampInt(character.xp), startJenny:clampInt(character.jenny), rewardXp:0, rewardJenny:0, critical:false, criticalAtSec:null, lastEnemyKey:null, snapshots:[], summary:{ killed:{}, jenny:0, exp:0, cardsGained:[], itemsGained:[], healthLost:0, cardsLost:[], itemsLost:[] } };
   snapshot(state, 0);
   addLog(logs, 0, `Esplorazione avviata in ${location}. Modalità ${modeLabel(mode)}. Durata base effettiva: ${durationMin} minuti.`, 'system');
   addLog(logs, 0, `Modulo normale: ${moduleMin} minuti. ${remainderMin > 0 ? `Modulo bonus finale: ${remainderMin} minuti.` : 'Nessun modulo bonus.'}`, 'system');
@@ -171,7 +170,7 @@ function buildExploration(character, mode) {
   for (const ev of events) {
     if (state.critical) break; const at = ev.t;
     if (ev.type === 'minute') minuteEvent(logs, state, at);
-    if (ev.type === 'enemy') { addLog(logs, at, `Modulo ${ev.module}/5.`, 'system'); if (chance(enemyChance)) simulateCombat(logs, state, at); else addLog(logs, at, `Modulo ${ev.module}/5: nessun nemico incontrato.`, 'info'); }
+    if (ev.type === 'enemy') { addLog(logs, at, `Modulo ${ev.module}/5.`, 'system'); if (ev.module === forcedEnemyModule || chance(enemyChance)) simulateCombat(logs, state, at); else addLog(logs, at, `Modulo ${ev.module}/5: nessun nemico incontrato.`, 'info'); }
     if (ev.type === 'accident') { const part = pick(['corpo','braccioDx','braccioSx','gambaDx','gambaSx']); const damage = 4 + Math.floor((clampInt(character.level, 1) - 1) / 2) + diff.trapMod; state.health[part] = Math.max(0, clampInt(state.health[part]) - damage); addLog(logs, at, `Sei inciampato in una trappola della location! Hai preso ${damage} danni a ${part}.`, 'bad'); snapshot(state, at); handleZeroParts(logs, state, at); }
   }
   let totalSeconds = durationMin * 60;
@@ -180,7 +179,7 @@ function buildExploration(character, mode) {
   if (state.critical) totalSeconds = Math.floor(state.criticalAtSec || totalSeconds); else addLog(logs, totalSeconds, 'Esplorazione conclusa. Puoi vedere i risultati.', 'system');
   snapshot(state, totalSeconds);
   logs.sort((a,b) => a.atSec - b.atSec || logOrder(a) - logOrder(b)); state.snapshots.sort((a,b) => a.atSec - b.atSec);
-  return { id:crypto.randomUUID(), location, difficulty:diffKey, difficultyLabel:diff.label, mode, modeLabel:modeLabel(mode), status:state.critical ? 'critical' : 'active', startedAt:new Date().toISOString(), totalSeconds, baseMinutes:durationMin, moduleMinutes:moduleMin, bonusMinutes:remainderMin, enemyChance, antiRepeatBoss:true, logs, snapshots:state.snapshots, appliedSnapshotAt:0, summary:state.summary, final:{ health:state.health, cards:state.cards, inventory:state.inventory, xp:state.startXp + state.rewardXp, jenny:state.startJenny + state.rewardJenny, rewardCards:state.rewardCards, critical:state.critical, criticalAtSec:state.criticalAtSec }, claimed:false };
+  return { id:crypto.randomUUID(), location, difficulty:diffKey, difficultyLabel:diff.label, mode, modeLabel:modeLabel(mode), status:state.critical ? 'critical' : 'active', startedAt:new Date().toISOString(), totalSeconds, baseMinutes:durationMin, moduleMinutes:moduleMin, bonusMinutes:remainderMin, enemyChance, guaranteedEnemy:true, antiRepeatBoss:true, logs, snapshots:state.snapshots, appliedSnapshotAt:0, summary:state.summary, final:{ health:state.health, cards:state.cards, inventory:state.inventory, xp:state.startXp + state.rewardXp, jenny:state.startJenny + state.rewardJenny, rewardCards:state.rewardCards, critical:state.critical, criticalAtSec:state.criticalAtSec }, claimed:false };
 }
 function visibleExploration(e) { if (!e) return null; const elapsed = Math.max(0, Math.floor((Date.now() - Date.parse(e.startedAt || new Date().toISOString())) / 1000)); const done = elapsed >= clampInt(e.totalSeconds); const critical = e.status === 'critical' && elapsed >= clampInt(e.final?.criticalAtSec || e.totalSeconds); return { ...e, elapsedSeconds:elapsed, secondsLeft:Math.max(0, clampInt(e.totalSeconds) - elapsed), done, criticalNow:critical, visibleLogs:(e.logs || []).filter(l => clampInt(l.atSec) <= elapsed) }; }
 function latestSnapshot(e, elapsed) { return (e?.snapshots || []).filter(s => clampInt(s.atSec) <= elapsed).sort((a,b) => b.atSec - a.atSec)[0] || null; }
@@ -197,9 +196,9 @@ async function claimRewards(env, user, character, exploration) {
   const view = visibleExploration(exploration);
   if (!view.done) throw new Error('Esplorazione ancora in corso.');
   if (exploration.final?.critical) throw new Error('Esplorazione cancellata: sei in stato critico.');
-  if (!exploration.rewardsPaid) character = { ...character, health:exploration.final?.health || character.health, cards:Array.isArray(exploration.final?.cards) ? exploration.final.cards : (character.cards || []), inventory:Array.isArray(exploration.final?.inventory) ? exploration.final.inventory : (character.inventory || []), xp:clampInt(exploration.final?.xp, clampInt(character.xp)), jenny:clampInt(exploration.final?.jenny, clampInt(character.jenny)), paramPoints:clampInt(character.paramPoints) + 2, activeExploration:null };
+  if (!exploration.rewardsPaid) character = { ...character, health:exploration.final?.health || character.health, cards:Array.isArray(exploration.final?.cards) ? exploration.final.cards : (character.cards || []), inventory:Array.isArray(exploration.final?.inventory) ? exploration.final.inventory : (character.inventory || []), xp:clampInt(exploration.final?.xp, clampInt(character.xp)), jenny:clampInt(exploration.final?.jenny, clampInt(character.jenny)), activeExploration:null };
   else character = { ...character, activeExploration:null };
-  character = applyEnergyRegen(character); exploration.summary = { ...(exploration.summary || {}), paramPointsGained:2 }; exploration.claimed = true; exploration.status = 'claimed'; exploration.rewardsPaid = true; exploration.rewardsPaidAt = new Date().toISOString();
+  character = applyEnergyRegen(character); exploration.claimed = true; exploration.status = 'claimed'; exploration.rewardsPaid = true; exploration.rewardsPaidAt = new Date().toISOString();
   await saveCharacter(env, user, character); await saveExplore(env, user, exploration); return character;
 }
 export async function onRequestGet({ request, env }) {
