@@ -30,7 +30,7 @@
   };
   const fallbackSummary = exp => {
     const logs = exp?.logs || exp?.visibleLogs || [];
-    const s = { killed:{}, jenny:0, exp:0, cardsGained:[], itemsGained:[], healthLost:0, cardsLost:[], itemsLost:[], paramPointsGained:2 };
+    const s = { killed:{}, jenny:0, exp:0, cardsGained:[], itemsGained:[], healthLost:0, cardsLost:[], itemsLost:[] };
     logs.forEach(l => {
       const t = String(l.text || '');
       const dead = t.match(/^(.+?) è esausto\. Ottenuti (\d+) EXP e (\d+) Jenny\./);
@@ -63,7 +63,6 @@
       <div class="gi-res-tile"><strong>Nemici uccisi</strong>${kills(s.killed)}</div>
       <div class="gi-res-tile"><strong>Jenny ottenuti</strong><b>${esc(s.jenny || 0)} Ｊ</b></div>
       <div class="gi-res-tile"><strong>EXP ottenuti</strong><b>${esc(s.exp || 0)}</b></div>
-      <div class="gi-res-tile"><strong>Punti parametro</strong><b>+${esc(s.paramPointsGained || 2)}</b></div>
       <div class="gi-res-tile"><strong>Carte ottenute</strong>${list(s.cardsGained)}</div>
       <div class="gi-res-tile"><strong>Oggetti ottenuti</strong>${list(s.itemsGained)}</div>
       <div class="gi-res-tile"><strong>Salute generale persa</strong><b>${esc(s.healthLost || 0)}</b></div>
