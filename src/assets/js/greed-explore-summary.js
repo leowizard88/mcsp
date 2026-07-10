@@ -48,7 +48,7 @@
   };
   const css = document.createElement('style');
   css.textContent = `
-    .gi-results-modal{position:fixed;inset:0;z-index:330;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.72);backdrop-filter:blur(2px);padding:18px}.gi-results-modal.is-open{display:flex}.gi-results-card{width:min(720px,calc(100vw - var(--side,44px) - 34px));max-height:calc(100vh - 48px);overflow:auto;border:3px solid #dfff73;background:#071009;color:#f4ffe8;box-shadow:9px 9px 0 rgba(0,0,0,.82),0 0 42px rgba(120,255,60,.16);font-family:Arial,Helvetica,sans-serif;padding:18px}.gi-results-card h2{margin:0 0 14px;color:#ffe16a;font:900 34px/1 Impact,Haettenschweiler,'Arial Black',sans-serif;text-transform:uppercase;text-shadow:3px 3px 0 #000}.gi-results-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.gi-res-tile{border:1px solid rgba(255,255,255,.24);background:#101810;padding:10px;min-height:58px}.gi-res-tile strong{display:block;color:#dfff73;font:900 11px/1 'Courier New',monospace;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}.gi-res-tile b{font-size:22px;color:#fff}.gi-res-tile ul{margin:0;padding-left:18px;display:grid;gap:4px}.gi-res-empty{opacity:.62}.gi-results-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:14px}.gi-results-actions button{border:1px solid #dfff73;background:rgba(22,75,0,.96);color:#dfff73;font:900 12px/1 'Courier New',monospace;text-transform:uppercase;padding:11px 13px;cursor:pointer;box-shadow:3px 3px 0 #000}.gi-results-actions .gi-results-close{background:#222;color:#fff;border-color:#fff}.gi-results-error{color:#ffb0b0;font:800 13px/1.3 Arial,Helvetica,sans-serif;margin-top:10px}@media(max-width:760px){.gi-results-grid{grid-template-columns:1fr}.gi-results-card{width:calc(100vw - var(--side,38px) - 20px)}}
+    .gi-results-modal{position:fixed;inset:0;z-index:330;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.72);backdrop-filter:blur(2px);padding:18px}.gi-results-modal.is-open{display:flex}.gi-results-card{width:min(720px,calc(100vw - var(--side,44px) - 34px));max-height:calc(100vh - 48px);overflow:auto;border:3px solid #dfff73;background:#071009;color:#f4ffe8;box-shadow:9px 9px 0 rgba(0,0,0,.82),0 0 42px rgba(120,255,60,.16);font-family:Arial,Helvetica,sans-serif;padding:18px}.gi-results-card h2{margin:0 0 14px;color:#ffe16a;font:900 34px/1 Impact,Haettenschweiler,'Arial Black',sans-serif;text-transform:uppercase;text-shadow:3px 3px 0 #000}.gi-results-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.gi-res-tile{border:1px solid rgba(255,255,255,.24);background:#101810;padding:10px;min-height:58px}.gi-res-tile strong{display:block;color:#dfff73;font:900 11px/1 'Courier New',monospace;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}.gi-res-tile b{font-size:22px;color:#fff}.gi-res-tile ul{margin:0;padding-left:18px;display:grid;gap:4px}.gi-res-empty{opacity:.62}.gi-results-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:14px}.gi-results-actions button{border:1px solid #dfff73;background:rgba(22,75,0,.96);color:#dfff73;font:900 12px/1 'Courier New',monospace;text-transform:uppercase;padding:11px 13px;cursor:pointer;box-shadow:3px 3px 0 #000}.gi-results-actions .gi-results-close{background:#222;color:#fff;border-color:#fff}.gi-results-error{color:#ffb0b0;font:800 13px/1.3 Arial,Helvetica,sans-serif;margin-top:10px}.explore-results-btn{pointer-events:auto!important;cursor:pointer!important;position:relative!important;z-index:450!important;opacity:1!important}.explore-results-btn:not([hidden]){display:block!important}@media(max-width:760px){.gi-results-grid{grid-template-columns:1fr}.gi-results-card{width:calc(100vw - var(--side,38px) - 20px)}}
   `;
   document.head.appendChild(css);
   const modal = document.createElement('div');
@@ -72,9 +72,19 @@
     err.textContent = '';
     modal.classList.add('is-open');
   };
+  const forceResultsButton = async () => {
+    const btn = document.querySelector('[data-explore-results]');
+    const timer = document.querySelector('[data-explore-timer]');
+    if (btn && timer?.textContent?.trim() === 'COMPLETATA') {
+      btn.hidden = false;
+      btn.disabled = false;
+      btn.removeAttribute('aria-disabled');
+    }
+  };
+  setInterval(forceResultsButton, 700);
   document.addEventListener('click', async e => {
     const btn = e.target.closest('[data-explore-results]');
-    if (!btn || btn.hidden) return;
+    if (!btn) return;
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
@@ -94,7 +104,7 @@
     btn.disabled = true;
     try {
       const data = await claimApi();
-      if (data.character) window.dispatchEvent(new CustomEvent('greed-character-updated', { detail:data.character }));
+      if (data.character) window.greedPublishCharacter?.(data.character);
       modal.classList.remove('is-open');
       document.querySelector('.explore-log-panel')?.classList.remove('is-open');
     } catch (ex) {
