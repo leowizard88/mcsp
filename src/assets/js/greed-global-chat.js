@@ -26,6 +26,9 @@
   let oldest = null;
   let loadingOlder = false;
   let olderLoaded = 0;
+  let lastRevision = null;
+  let polling = false;
+  let pollDelay = 2000;
   const introKey = 'greedGlobalChatIntroV2';
   const firstEnterKey = 'greedGlobalChatFirstEnterV2';
   const pigNotifyKey = 'greedGlobalChatPigNotifyV2';
@@ -44,7 +47,9 @@
       return true;
     });
   };
+  const nearBottom = () => log.scrollHeight - log.scrollTop - log.clientHeight < 42;
   const render = (keepScroll = false) => {
+    const shouldPin = !keepScroll && nearBottom();
     const beforeBottom = log.scrollHeight - log.scrollTop;
     const all = [...globalMessages.map(m => ({ ...m, kind:'global' })), ...localMessages]
       .filter(m => m?.text)
@@ -56,14 +61,17 @@
       return `<div class="gi-chat-line ${cls}"><time>${fmtTime(m.createdAt)}</time>${author}${esc(m.text)}</div>`;
     }).join('')}`;
     if (keepScroll) log.scrollTop = Math.max(0, log.scrollHeight - beforeBottom);
-    else log.scrollTop = log.scrollHeight;
+    else if (shouldPin) log.scrollTop = log.scrollHeight;
   };
-  const fetchChat = async ({ before = '', appendOlder = false } = {}) => {
-    const qs = before ? `?limit=20&before=${encodeURIComponent(before)}` : '?limit=40';
-    const res = await fetch(`/api/hxh-chat${qs}`, { headers:{ authorization:`Bearer ${token()}` }, cache:'no-store' });
+  const fetchChat = async ({ before = '', appendOlder = false, force = false } = {}) => {
+    const qs = before ? `?limit=20&before=${encodeURIComponent(before)}&_=${Date.now()}` : `?limit=40&_=${Date.now()}`;
+    const res = await fetch(`/api/hxh-chat${qs}`, { headers:{ authorization:`Bearer ${token()}`, 'cache-control':'no-cache' }, cache:'no-store' });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || 'Errore chat');
     const rows = Array.isArray(data.messages) ? data.messages : [];
+    const revision = data.revision ?? data.newest ?? rows.at(-1)?.createdAt ?? null;
+    if (!appendOlder && !force && revision != null && revision === lastRevision) return;
+    if (!appendOlder) lastRevision = revision;
     if (appendOlder) {
       globalMessages = uniqById([...rows, ...globalMessages]).sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
       olderLoaded += rows.length;
@@ -76,20 +84,36 @@
     hasMore = !!data.hasMore && olderLoaded < 100;
     oldest = globalMessages[0]?.createdAt || data.oldest || null;
   };
+  const schedulePoll = () => setTimeout(pollChat, pollDelay);
+  const pollChat = async () => {
+    if (polling) return schedulePoll();
+    polling = true;
+    try {
+      await fetchChat();
+      pollDelay = 2000;
+    } catch {
+      pollDelay = Math.min(12000, pollDelay + 2000);
+    } finally {
+      polling = false;
+      schedulePoll();
+    }
+  };
   const loadOlder = async () => {
     if (loadingOlder || !hasMore || !oldest || olderLoaded >= 100) return;
     loadingOlder = true;
     render(true);
-    try { await fetchChat({ before:oldest, appendOlder:true }); }
+    try { await fetchChat({ before:oldest, appendOlder:true, force:true }); }
     catch (err) { local(err.message, 'bad'); }
     finally { loadingOlder = false; render(true); }
   };
   const postChat = async text => {
-    const res = await fetch('/api/hxh-chat', { method:'POST', headers:{ 'content-type':'application/json', authorization:`Bearer ${token()}` }, body:JSON.stringify({ text }), cache:'no-store' });
+    const res = await fetch(`/api/hxh-chat?_=${Date.now()}`, { method:'POST', headers:{ 'content-type':'application/json', authorization:`Bearer ${token()}`, 'cache-control':'no-cache' }, body:JSON.stringify({ text }), cache:'no-store' });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.error || 'Errore chat');
+    lastRevision = data.revision ?? data.updatedAt ?? null;
     globalMessages = uniqById([...globalMessages, ...(Array.isArray(data.messages) ? data.messages : [data.message].filter(Boolean))]).sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
     render();
+    setTimeout(() => fetchChat({ force:true }).catch(() => {}), 350);
   };
   log.addEventListener('scroll', () => { if (log.scrollTop <= 18) loadOlder(); });
   form.addEventListener('submit', async e => {
@@ -150,7 +174,7 @@
       if (res.ok && data.character) diffCharacter(data.character);
     } catch {}
   };
-  fetchChat().catch(() => render());
+  fetchChat({ force:true }).catch(() => render());
   initCharacter();
-  setInterval(() => fetchChat().catch(() => {}), 6000);
+  schedulePoll();
 })();
