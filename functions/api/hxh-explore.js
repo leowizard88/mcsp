@@ -99,17 +99,9 @@ function playerDamage(character, health) {
   let damage = 2 + clampInt(p.forza) + clampInt(weapon?.damageMod ?? weapon?.dannoMod);
   let note = '';
   if (['braccioDx','braccioSx','gambaDx','gambaSx'].some(k => clampInt(health[k]) <= 0)) damage = Math.max(1, Math.floor(damage * 0.5));
-  const nen = clampInt(p.nen);
-  const badChance = nen > 20 ? 10 : 20;
-  const goodChance = nen > 20 ? 10 : 5;
-  const roll = rnd() * 100;
-  if (roll < badChance) {
-    damage = Math.max(1, Math.floor(damage * 0.5));
-    note = 'La tua concentrazione è scesa per un attimo e hai fatto un brutto colpo.';
-  } else if (roll < badChance + goodChance) {
-    damage = Math.max(1, Math.ceil(damage * 1.5));
-    note = 'La tua concentrazione ti ha permesso di fare un danno aumentato.';
-  }
+  const nen = clampInt(p.nen), badChance = nen > 20 ? 10 : 20, goodChance = nen > 20 ? 10 : 5, roll = rnd() * 100;
+  if (roll < badChance) { damage = Math.max(1, Math.floor(damage * 0.5)); note = 'La tua concentrazione è scesa per un attimo e hai fatto un brutto colpo.'; }
+  else if (roll < badChance + goodChance) { damage = Math.max(1, Math.ceil(damage * 1.5)); note = 'La tua concentrazione ti ha permesso di fare un danno aumentato.'; }
   return { damage, weaponName:weapon?.name || weapon?.nome || 'mani nude', note };
 }
 const enemyHitDamage = (raw, robustezza) => Math.max(1, Math.round(raw * (1 - Math.min(0.60, clampInt(robustezza) * 0.02))));
@@ -166,19 +158,20 @@ function buildExploration(character, mode) {
   const remainderMin = durationMin - moduleMin * 5;
   const enemyChance = enemyChanceFor(mode, diff, p);
   const logs = [], startHealth = normalizeHealth(character), startGeneral = generalHealth(startHealth);
-  const state = { character, health:structuredClone(startHealth), maxHealth:maxHealthFor(character), cards:[...(Array.isArray(character.cards) ? character.cards : [])], inventory:[...(Array.isArray(character.inventory) ? character.inventory : [])], rewardCards:[], startXp:clampInt(character.xp), startJenny:clampInt(character.jenny), rewardXp:0, rewardJenny:0, critical:false, criticalAtSec:null, lastEnemyKey:null, snapshots:[], summary:{ killed:{}, jenny:0, exp:0, cardsGained:[], itemsGained:[], healthLost:0, cardsLost:[], itemsLost:[] } };
+  const state = { character, health:structuredClone(startHealth), maxHealth:maxHealthFor(character), cards:[...(Array.isArray(character.cards) ? character.cards : [])], inventory:[...(Array.isArray(character.inventory) ? character.inventory : [])], rewardCards:[], startXp:clampInt(character.xp), startJenny:clampInt(character.jenny), rewardXp:0, rewardJenny:0, critical:false, criticalAtSec:null, lastEnemyKey:null, snapshots:[], summary:{ killed:{}, jenny:0, exp:0, cardsGained:[], itemsGained:[], healthLost:0, cardsLost:[], itemsLost:[], paramPointsGained:2 } };
   snapshot(state, 0);
   addLog(logs, 0, `Esplorazione avviata in ${location}. Modalità ${modeLabel(mode)}. Durata base effettiva: ${durationMin} minuti.`, 'system');
   addLog(logs, 0, `Modulo normale: ${moduleMin} minuti. ${remainderMin > 0 ? `Modulo bonus finale: ${remainderMin} minuti.` : 'Nessun modulo bonus.'}`, 'system');
   const events = [];
   for (let m = 1; m <= durationMin; m++) events.push({ t:m * 60, type:'minute' });
-  for (let i = 1; i <= 5; i++) events.push({ t:Math.max(1, i * moduleMin) * 60, type:'enemy' });
+  for (let i = 0; i < 5; i++) events.push({ t:i * moduleMin * 60, type:'enemy', module:i + 1 });
   for (let block = 0; block < Math.floor(durationMin / 10); block++) { const used = []; for (let i = 0; i < rollAccidentCount(diffKey); i++) { let sec = block * 600 + rollInt(1, 599), tries = 0; while (used.some(x => Math.abs(x - sec) < 130) && tries++ < 20) sec = block * 600 + rollInt(1, 599); used.push(sec); events.push({ t:sec, type:'accident' }); } }
-  events.sort((a,b) => a.t - b.t || (a.type === 'accident' ? -1 : 1));
+  const typeOrder = { enemy:0, accident:1, minute:2 };
+  events.sort((a,b) => a.t - b.t || (typeOrder[a.type] ?? 9) - (typeOrder[b.type] ?? 9));
   for (const ev of events) {
     if (state.critical) break; const at = ev.t;
     if (ev.type === 'minute') minuteEvent(logs, state, at);
-    if (ev.type === 'enemy') { if (chance(enemyChance)) simulateCombat(logs, state, at); else addLog(logs, at, 'Nessun nemico incontrato nel modulo.', 'info'); }
+    if (ev.type === 'enemy') { addLog(logs, at, `Modulo ${ev.module}/5.`, 'system'); if (chance(enemyChance)) simulateCombat(logs, state, at); else addLog(logs, at, `Modulo ${ev.module}/5: nessun nemico incontrato.`, 'info'); }
     if (ev.type === 'accident') { const part = pick(['corpo','braccioDx','braccioSx','gambaDx','gambaSx']); const damage = 4 + Math.floor((clampInt(character.level, 1) - 1) / 2) + diff.trapMod; state.health[part] = Math.max(0, clampInt(state.health[part]) - damage); addLog(logs, at, `Sei inciampato in una trappola della location! Hai preso ${damage} danni a ${part}.`, 'bad'); snapshot(state, at); handleZeroParts(logs, state, at); }
   }
   let totalSeconds = durationMin * 60;
