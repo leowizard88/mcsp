@@ -93,7 +93,25 @@ const ENEMIES = {
 function snapshot(state, atSec) { state.snapshots.push({ atSec:Math.floor(atSec), health:structuredClone(state.health), cards:structuredClone(state.cards), inventory:structuredClone(state.inventory), xp:state.startXp, jenny:state.startJenny, critical:state.critical }); }
 function generalHealth(health) { const vals = Object.values(health || {}).map(v => clampInt(v)); return vals.length ? Math.round(vals.reduce((a,b) => a + b, 0) / vals.length) : 0; }
 function enemyByPool(state) { let roll = rollInt(1,100), enemy = roll <= 65 ? ENEMIES.goblin : roll <= 92 ? ENEMIES.goat : ENEMIES.bossGoblin; if (state.lastEnemyKey === 'bossGoblin' && enemy.key === 'bossGoblin') enemy = chance(70) ? ENEMIES.goblin : ENEMIES.goat; state.lastEnemyKey = enemy.key; return enemy; }
-function playerDamage(character, health) { const p = paramsOf(character), inv = Array.isArray(character.inventory) ? character.inventory : []; const weapon = inv.filter(i => i?.weapon || i?.damageMod || i?.dannoMod).sort((a,b) => clampInt(b.damageMod ?? b.dannoMod) - clampInt(a.damageMod ?? a.dannoMod))[0]; let damage = 2 + clampInt(p.forza) + clampInt(weapon?.damageMod ?? weapon?.dannoMod); if (['braccioDx','braccioSx','gambaDx','gambaSx'].some(k => clampInt(health[k]) <= 0)) damage = Math.max(1, Math.floor(damage * 0.5)); return { damage, weaponName:weapon?.name || weapon?.nome || 'mani nude' }; }
+function playerDamage(character, health) {
+  const p = paramsOf(character), inv = Array.isArray(character.inventory) ? character.inventory : [];
+  const weapon = inv.filter(i => i?.weapon || i?.damageMod || i?.dannoMod).sort((a,b) => clampInt(b.damageMod ?? b.dannoMod) - clampInt(a.damageMod ?? a.dannoMod))[0];
+  let damage = 2 + clampInt(p.forza) + clampInt(weapon?.damageMod ?? weapon?.dannoMod);
+  let note = '';
+  if (['braccioDx','braccioSx','gambaDx','gambaSx'].some(k => clampInt(health[k]) <= 0)) damage = Math.max(1, Math.floor(damage * 0.5));
+  const nen = clampInt(p.nen);
+  const badChance = nen > 20 ? 10 : 20;
+  const goodChance = nen > 20 ? 10 : 5;
+  const roll = rnd() * 100;
+  if (roll < badChance) {
+    damage = Math.max(1, Math.floor(damage * 0.5));
+    note = 'La tua concentrazione è scesa per un attimo e hai fatto un brutto colpo.';
+  } else if (roll < badChance + goodChance) {
+    damage = Math.max(1, Math.ceil(damage * 1.5));
+    note = 'La tua concentrazione ti ha permesso di fare un danno aumentato.';
+  }
+  return { damage, weaponName:weapon?.name || weapon?.nome || 'mani nude', note };
+}
 const enemyHitDamage = (raw, robustezza) => Math.max(1, Math.round(raw * (1 - Math.min(0.60, clampInt(robustezza) * 0.02))));
 function handleZeroParts(logs, state, atSec) {
   const max = state.maxHealth;
@@ -109,7 +127,7 @@ function simulateCombat(logs, state, atSec) {
   for (let round = 1; round <= 20 && enemyHp > 0 && !state.critical; round++) {
     if (chance(Math.max(5, 40 - clampInt(p.agilita) * 2))) addLog(logs, atSec, 'Attacchi ma manchi il colpo.', 'info');
     else if (chance(enemy.dodge)) addLog(logs, atSec, `${enemy.name} schiva il tuo attacco.`, 'info');
-    else { const pd = playerDamage(state.character, state.health); enemyHp = Math.max(0, enemyHp - pd.damage); addLog(logs, atSec, `Attacchi con ${pd.weaponName} e causi ${pd.damage} danni. ${enemy.name}: ${enemyHp}/${enemy.hp}.`, 'good'); }
+    else { const pd = playerDamage(state.character, state.health); enemyHp = Math.max(0, enemyHp - pd.damage); addLog(logs, atSec, `${pd.note ? `${pd.note} ` : ''}Attacchi con ${pd.weaponName} e causi ${pd.damage} danni. ${enemy.name}: ${enemyHp}/${enemy.hp}.`, pd.note ? 'system' : 'good'); }
     if (enemyHp <= 0) break;
     if (chance(enemy.miss)) addLog(logs, atSec, `${enemy.name} attacca ma manca il colpo.`, 'info');
     else if (chance(Math.min(80, 5 + clampInt(p.agilita) * 2))) addLog(logs, atSec, `${enemy.name} ti attacca ma riesci a schivare.`, 'good');
