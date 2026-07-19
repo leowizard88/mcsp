@@ -136,7 +136,7 @@ Il professor Mush assunse un’aria preoccupata e sognante allo stesso tempo, fi
 
 Chiamò ad alta voce un Kiln e arrivò impacciatamente il modello con sulla testa la scritta KILL. Notai che era leggermente giallognolo.
 
-- Lui è con me da quando sono a Fortuna. Penso si sia un po’ stancato dopo tutto questo tempo, rise e si mise ad accarezzarlo, poi gli chiede di andare a prendergli la rosa al piano di sopra.
+- Lui è con me da quando sono a Fortuna. Penso si sia un po’ stancato dopo tutto questo tempo, rise e si mise ad accarezzarlo, poi gli chiese gentilmente di andare a prendergli la rosa al piano di sopra.
 
 La creatura grigia e bassa mi guardò con curiosità. Poi salì e nel tempo di qualche minuto arrivò con una rosa viola sotto un vetro. 
 
@@ -155,7 +155,7 @@ Il Kiln si avvicinò a me, poi avvisò il professore che le posate in cucina dov
 - Ah! Il cibo per il Kiln… si diresse velocemente in cucina e tornò con un piccolo sacchetto pieno di biscotti, ecco, tre al giorno, è un po’ viziato ma si adegua. È timido quindi dovrai sciogliere te il ghiaccio. 
 - D’accordo, d’accordo.
 
-Il professore mi accompagnò all’uscita e mi diede altre raccomandazioni sul Kiln. Aveva portato una penna ma non ci fece nulla, possibilmente voleva darmi il suo numero di telefono, ma lasciò perdere. Si bloccò sull’uscio con un calice di vino rosso in mano che prese senza che io nemmeno me ne accorgessi.
+Il professore mi accompagnò all’uscita e mi diede altre raccomandazioni sul Kiln. Aveva portato una penna ma non ci fece nulla, possibilmente voleva darmi il suo numero di telefono, ma lasciò perdere. Si bloccò sull’uscio con un calice di vino rosso in mano che prese chissà quando.
 
 - Arrivederci e grazie ancora professore.
 - Butah, spero andiate d’accordo. Riferisci a quella spatola di Err Kolf che mi piacerebbe una bevanda fresca sul mio portico un giorno di questi. Non preoccuparti per avvisarmi, quando avrai lasciato la rosa al becchino ci penserà lui.
@@ -170,7 +170,7 @@ Ci salutò mentre la sua figura si assottigliava in lontananza, distorcendosi in
 - Può anche scegliere la prima cosa che le viene in mente.
 - Mh… ti piace il nome… Kill?
 
-La creatura grigia ponderava quel nome teatralmente.
+La creatura grigia e gialla ponderava quel nome teatralmente.
 
 - Sembra perfetto!
 - Il mio nome è Iris, preferirei non mi considerassi come un proprietario.
