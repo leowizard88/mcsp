@@ -1,5 +1,5 @@
 ---
-title: "Endocritica ad exocapitalism"
+title: "Endocritica ad Exocapitalism"
 subtitle: "Perché la nostalgia è un buco nero"
 author: "LeQuaal"
 tipo: "saggio"
