@@ -238,7 +238,8 @@ permalink: /archivio/
   const esc = value => String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
   const label = value => value || 'senza voce';
   const chronological = items => [...items].sort((a, b) => String(b.date).localeCompare(String(a.date)));
-  const unique = field => [...new Set(posts.map(post => post[field]).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'it'));
+  const types = ['racconto', 'romanzo', 'poesia', 'visivo', 'marginalia', 'impressioni', 'notizie', 'manifesto', 'saggio', 'idee'];
+  const unique = field => field === 'tipo' ? types : [...new Set(posts.map(post => post[field]).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'it'));
 
   const renderList = items => {
     if (!items.length) {
