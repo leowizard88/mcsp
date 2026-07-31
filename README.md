@@ -53,3 +53,5 @@ Dopo il primo deploy riuscito:
 - `src/content/progetti`: progetti modificabili.
 
 
+
+<!-- Trigger Pages rebuild: update README -->
