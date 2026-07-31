@@ -1,0 +1,15 @@
+---
+layout: base.njk
+title: Lettore materiali | MANCUSPIE
+permalink: /lettore-materiali/
+---
+<section class="material-reader panel" data-reader-root>
+  <a class="reader-back" href="/materiali/">← Materiali</a><p class="reader-status">Apertura materiale...</p><div class="reader-content" data-reader-content></div>
+</section>
+<style>
+  body:has(.material-reader),body:has(.material-reader) .site-main{background:#111!important}.material-reader{min-height:100vh;box-sizing:border-box;padding:24px;color:#f5f0dd;background:#111!important}.reader-back{display:inline-block;margin-bottom:18px;color:inherit;font:400 11px/1 var(--font-sans,system-ui,sans-serif);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:6px}.reader-status{font:300 18px/1.3 var(--font-serif,Georgia,serif)}.reader-content{min-height:80vh}.reader-content iframe{display:block;width:100%;height:82vh;border:0;background:#333}.epub-view{height:82vh;background:#f5f0dd;color:#111}.epub-view iframe{height:100%!important}.reader-error{color:#ffb8a6}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
+<script>
+(() => {const params=new URLSearchParams(location.search),file=params.get('file')||'',type=params.get('type')||'',status=document.querySelector('.reader-status'),content=document.querySelector('[data-reader-content]');if(!file.startsWith('/assets/materiali/')||!['pdf','epub'].includes(type)){status.textContent='Materiale non valido.';status.classList.add('reader-error');return}if(type==='pdf'){status.remove();content.innerHTML='<iframe title="Lettore PDF" src="'+encodeURI(file)+'"></iframe>';return}if(!window.ePub){status.textContent='Il lettore EPUB non è disponibile.';status.classList.add('reader-error');return}status.remove();content.innerHTML='<div class="epub-view" data-epub></div>';const book=ePub(file),rendition=book.renderTo(content.querySelector('[data-epub]'),{width:'100%',height:'100%'});rendition.display();})();
+</script>
