@@ -6,7 +6,7 @@ date: "2026-07-31T21:18:21.946Z"
 tags: testi
 ---
 
-<p style="text-align:center">Quando tornerà l’età del ferro
+Quando tornerà l’età del ferro
 E saremo tutti
 Nere formiche
 Tornerà il mio spettro a scrivere
@@ -30,4 +30,4 @@ Saranno grandi
 Le messe vuote
 Perché bipedi volpi
 Aspetteranno l’oro
-Dell’età del ferro.</p>
+Dell’età del ferro.
