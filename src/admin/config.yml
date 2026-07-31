@@ -42,7 +42,7 @@ collections:
       - label: "Tipo"
         name: "tipo"
         widget: "select"
-        options: ["racconto", "romanzo", "visivo", "marginalia", "impressioni", "notizie", "manifesto", "saggio", "idee"]
+        options: ["racconto", "romanzo", "visivo", "marginalia", "impressioni", "notizie", "manifesto", "saggio", "idee", "poesia"]
       - { label: "Data", name: "date", widget: "datetime" }
       - { label: "Tags", name: "tags", widget: "hidden", default: "testi" }
       - { label: "Testo", name: "body", widget: "markdown" }
